@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Activity,
@@ -15,12 +15,18 @@ import StorefrontFooter from '../../components/common/StorefrontFooter';
 import ProductCard from '../../components/products/ProductCard';
 import CategoryCard from '../../components/products/CategoryCard';
 import {
+  ErrorAlert,
   SectionHeading,
   ToastBanner,
   useDocumentMeta,
 } from '../../components/common/StorefrontDesignSystem';
 import { checkBackendHealth, commerceApi, publicCatalogApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import {
+  assertArrayResponse,
+  assertObjectResponse,
+  assertPaginatedResponse,
+} from '../../utils/apiValidation';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -34,6 +40,7 @@ const HomePage = () => {
   const [recentProducts, setRecentProducts] = useState([]);
   const [discountedProducts, setDiscountedProducts] = useState([]);
   const [storeSettings, setStoreSettings] = useState({});
+  const [catalogError, setCatalogError] = useState('');
   const [toast, setToast] = useState({ type: '', message: '' });
 
   useDocumentMeta({
@@ -43,46 +50,122 @@ const HomePage = () => {
     canonicalPath: '/',
   });
 
-  useEffect(() => {
-    checkBackendHealth()
-      .then((data) => setHealthStatus(data?.status === 'healthy' ? 'online' : 'degraded'))
-      .catch(() => setHealthStatus('offline'));
+  const loadHomeData = useCallback(async () => {
+    setCatalogError('');
 
-    publicCatalogApi
-      .listBanners()
-      .then((data) => setBanners(data || []))
-      .catch(() => {});
+    const [
+      healthRes,
+      bannersRes,
+      videosRes,
+      settingsRes,
+      categoriesRes,
+      bestRes,
+      recentRes,
+      dealsRes,
+    ] = await Promise.allSettled([
+      checkBackendHealth(),
+      publicCatalogApi.listBanners(),
+      publicCatalogApi.listVideos(),
+      publicCatalogApi.getPublicSettings(),
+      publicCatalogApi.listCategories({ page: 1, page_size: 8 }),
+      publicCatalogApi.listProducts({ page: 1, page_size: 4, sort_by: 'popularity' }),
+      publicCatalogApi.listProducts({ page: 1, page_size: 8, sort_by: 'newest' }),
+      publicCatalogApi.listProducts({ page: 1, page_size: 4, on_sale: true }),
+    ]);
 
-    publicCatalogApi
-      .listVideos()
-      .then((data) => setVideos(data || []))
-      .catch(() => {});
+    if (healthRes.status === 'fulfilled') {
+      const healthData = healthRes.value;
+      setHealthStatus(healthData?.status === 'healthy' ? 'online' : 'degraded');
+    } else {
+      setHealthStatus('offline');
+    }
 
-    publicCatalogApi
-      .getPublicSettings()
-      .then((data) => setStoreSettings(data || {}))
-      .catch(() => {});
+    if (bannersRes.status === 'fulfilled') {
+      try {
+        setBanners(assertArrayResponse(bannersRes.value, 'banners'));
+      } catch {
+        setBanners([]);
+      }
+    } else {
+      setBanners([]);
+    }
 
-    publicCatalogApi
-      .listCategories({ page: 1, page_size: 8 })
-      .then((res) => setCategories(res.items || []))
-      .catch(() => {});
+    if (videosRes.status === 'fulfilled') {
+      try {
+        setVideos(assertArrayResponse(videosRes.value, 'videos'));
+      } catch {
+        setVideos([]);
+      }
+    } else {
+      setVideos([]);
+    }
 
-    publicCatalogApi
-      .listProducts({ page: 1, page_size: 4, sort_by: 'popularity' })
-      .then((res) => setBestSellers(res.items || []))
-      .catch(() => {});
+    if (settingsRes.status === 'fulfilled') {
+      try {
+        setStoreSettings(assertObjectResponse(settingsRes.value, 'public settings'));
+      } catch {
+        setStoreSettings({});
+      }
+    }
 
-    publicCatalogApi
-      .listProducts({ page: 1, page_size: 8, sort_by: 'newest' })
-      .then((res) => setRecentProducts(res.items || []))
-      .catch(() => {});
+    let coreFailureCount = 0;
 
-    publicCatalogApi
-      .listProducts({ page: 1, page_size: 4, on_sale: true })
-      .then((res) => setDiscountedProducts(res.items || []))
-      .catch(() => {});
+    if (categoriesRes.status === 'fulfilled') {
+      try {
+        setCategories(assertPaginatedResponse(categoriesRes.value, 'categories').items);
+      } catch {
+        setCategories([]);
+        coreFailureCount += 1;
+      }
+    } else {
+      setCategories([]);
+      coreFailureCount += 1;
+    }
+
+    if (bestRes.status === 'fulfilled') {
+      try {
+        setBestSellers(assertPaginatedResponse(bestRes.value, 'best sellers').items);
+      } catch {
+        setBestSellers([]);
+        coreFailureCount += 1;
+      }
+    } else {
+      setBestSellers([]);
+      coreFailureCount += 1;
+    }
+
+    if (recentRes.status === 'fulfilled') {
+      try {
+        setRecentProducts(assertPaginatedResponse(recentRes.value, 'recent products').items);
+      } catch {
+        setRecentProducts([]);
+        coreFailureCount += 1;
+      }
+    } else {
+      setRecentProducts([]);
+      coreFailureCount += 1;
+    }
+
+    if (dealsRes.status === 'fulfilled') {
+      try {
+        setDiscountedProducts(assertPaginatedResponse(dealsRes.value, 'discounted products').items);
+      } catch {
+        setDiscountedProducts([]);
+      }
+    } else {
+      setDiscountedProducts([]);
+    }
+
+    if (coreFailureCount >= 3) {
+      setCatalogError(
+        'Marketplace catalog services are currently unavailable. Check backend connectivity or API configuration and try again.'
+      );
+    }
   }, []);
+
+  useEffect(() => {
+    loadHomeData();
+  }, [loadHomeData]);
 
   const handleAddToCart = async (e, prod) => {
     e.preventDefault();
@@ -135,6 +218,8 @@ const HomePage = () => {
         {toast.message && (
           <ToastBanner toast={toast} onDismiss={() => setToast({ type: '', message: '' })} />
         )}
+
+        {catalogError && <ErrorAlert message={catalogError} onRetry={loadHomeData} />}
 
         {/* 1. Hero Section (Soft White Elevated Surface) */}
         <section className="relative overflow-hidden rounded-3xl bg-[#F8FAFC] border border-[#D5DEE8] p-6 sm:p-10 md:p-12 shadow-[0_8px_28px_-8px_rgba(38,52,69,0.08)]">

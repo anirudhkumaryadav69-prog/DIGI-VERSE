@@ -1,6 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { adminAuthApi, commerceApi, customerAuthApi } from '../services/api';
+import {
+  isPlainObject,
+  isValidAdminProfile,
+  isValidCustomerProfile,
+} from '../utils/apiValidation';
 
 const AuthContext = createContext(null);
 
@@ -21,8 +26,8 @@ export const AuthProvider = ({ children }) => {
         commerceApi.getCart(),
         commerceApi.getWishlist(),
       ]);
-      setCartCount(cartData?.total_quantity || 0);
-      setWishlistCount(wishData?.total_items || 0);
+      setCartCount(isPlainObject(cartData) ? Number(cartData.total_quantity || 0) : 0);
+      setWishlistCount(isPlainObject(wishData) ? Number(wishData.total_items || 0) : 0);
     } catch {
       setCartCount(0);
       setWishlistCount(0);
@@ -32,6 +37,9 @@ export const AuthProvider = ({ children }) => {
   const refreshCustomerProfile = useCallback(async () => {
     try {
       const profile = await customerAuthApi.getProfile();
+      if (!isValidCustomerProfile(profile)) {
+        throw new Error('Invalid customer profile payload');
+      }
       setCustomer(profile);
       await refreshCartAndWishlistCounts();
       return profile;
@@ -48,6 +56,9 @@ export const AuthProvider = ({ children }) => {
   const refreshAdminProfile = useCallback(async () => {
     try {
       const profile = await adminAuthApi.getMe();
+      if (!isValidAdminProfile(profile)) {
+        throw new Error('Invalid administrator profile payload');
+      }
       setAdmin(profile);
       return profile;
     } catch {
@@ -86,6 +97,9 @@ export const AuthProvider = ({ children }) => {
 
   const registerCustomer = async (payload) => {
     const data = await customerAuthApi.register(payload);
+    if (!isPlainObject(data) || !isValidCustomerProfile(data.customer)) {
+      throw new Error('Unexpected registration response from API server.');
+    }
     setCustomer(data.customer);
     setOtpDeliveryStatus({
       status: data.otp_delivery_status,
@@ -97,6 +111,9 @@ export const AuthProvider = ({ children }) => {
 
   const loginCustomer = async (payload) => {
     const data = await customerAuthApi.login(payload);
+    if (!isPlainObject(data) || !isValidCustomerProfile(data.customer)) {
+      throw new Error('Unexpected login response from API server.');
+    }
     setCustomer(data.customer);
     await refreshCartAndWishlistCounts();
     return data;
@@ -124,6 +141,9 @@ export const AuthProvider = ({ children }) => {
 
   const loginAdmin = async (payload) => {
     const data = await adminAuthApi.login(payload);
+    if (!isPlainObject(data) || !isValidAdminProfile(data.admin)) {
+      throw new Error('Unexpected administrator login response from API server.');
+    }
     setAdmin(data.admin);
     return data;
   };

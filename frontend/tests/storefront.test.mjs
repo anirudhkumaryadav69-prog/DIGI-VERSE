@@ -409,9 +409,18 @@ test('17. Stage A: Razorpay Checkout SDK loads lazily, prevents duplicates, and 
     'vercel.json must not contain placeholder backend hostnames'
   );
   assert.ok(
-    vercelJson.rewrites?.some((r) => r.source === '/(.*)' && r.destination === '/index.html'),
-    'vercel.json must preserve SPA fallback rewrite'
+    vercelJson.rewrites?.some(
+      (r) => r.destination === '/index.html' && r.source === '/((?!api/).*)'
+    ),
+    'vercel.json must preserve SPA fallback rewrite while excluding /api/* routes'
   );
+  const spaRegex = new RegExp(`^${vercelJson.rewrites[0].source}$`);
+  assert.equal(spaRegex.test('/api/banners'), false, '/api/banners must not match SPA rewrite');
+  assert.equal(spaRegex.test('/api/auth/me'), false, '/api/auth/me must not match SPA rewrite');
+  assert.equal(spaRegex.test('/'), true, 'Root / must match SPA rewrite');
+  assert.equal(spaRegex.test('/products'), true, '/products must match SPA rewrite');
+  assert.equal(spaRegex.test('/stores'), true, '/stores must match SPA rewrite');
+  assert.equal(spaRegex.test('/admin/login'), true, '/admin/login must match SPA rewrite');
 
   const { loadRazorpaySdk, RAZORPAY_CHECKOUT_SCRIPT_URL, resetRazorpayLoaderForTests } = await import(
     '../src/utils/razorpay.js'
@@ -498,4 +507,109 @@ test('17. Stage A: Razorpay Checkout SDK loads lazily, prevents duplicates, and 
   const missingCtorPromise = loadRazorpaySdk({ doc: dom3.doc, timeoutMs: 2000 });
   dom3.scripts[0].dispatch('load');
   await assert.rejects(missingCtorPromise, /window\.Razorpay is unavailable/);
+});
+
+test('18. Vercel Preview HTML fallback guard, response shape validation, auth safety, binary bypass & ErrorBoundary', async () => {
+  const {
+    validateApiResponse,
+    assertArrayResponse,
+    assertObjectResponse,
+    assertPaginatedResponse,
+    isValidCustomerProfile,
+    isValidAdminProfile,
+  } = await import('../src/utils/apiValidation.js');
+
+  const htmlPayload = '<!doctype html><html lang="en"><body><div id="root"></div></body></html>';
+
+  // 1. HTML returned from /api/* with text/html Content-Type must reject cleanly
+  assert.throws(
+    () =>
+      validateApiResponse({
+        status: 200,
+        headers: { 'content-type': 'text/html; charset=utf-8' },
+        config: {},
+        data: htmlPayload,
+      }),
+    (err) => err.code === 'API_HTML_RESPONSE' && typeof err.response?.data?.detail === 'string'
+  );
+
+  // 2. <!doctype html> string received even with application/json header must still reject cleanly
+  assert.throws(
+    () =>
+      validateApiResponse({
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+        config: {},
+        data: htmlPayload,
+      }),
+    (err) => err.code === 'API_HTML_RESPONSE'
+  );
+
+  // 3. Non-array payloads where arrays are expected must throw instead of crashing .map()
+  for (const invalidArray of [htmlPayload, {}, null, undefined, 42, { items: [] }]) {
+    assert.throws(
+      () => assertArrayResponse(invalidArray, 'banners'),
+      (err) => err.code === 'API_INVALID_ARRAY'
+    );
+  }
+
+  // 4. Malformed object and paginated payloads must throw
+  for (const invalidObj of [htmlPayload, [], null, undefined, 'bad']) {
+    assert.throws(
+      () => assertObjectResponse(invalidObj, 'settings'),
+      (err) => err.code === 'API_INVALID_OBJECT'
+    );
+  }
+  for (const invalidPage of [htmlPayload, {}, { items: 'not-array' }, null, []]) {
+    assert.throws(
+      () => assertPaginatedResponse(invalidPage, 'products'),
+      (err) => err.code === 'API_INVALID_PAGINATED_RESPONSE'
+    );
+  }
+
+  // 5. Authentication safety: HTML strings and malformed payloads must never authenticate
+  assert.equal(isValidCustomerProfile(htmlPayload), false);
+  assert.equal(isValidCustomerProfile(null), false);
+  assert.equal(isValidCustomerProfile({}), false);
+  assert.equal(
+    isValidCustomerProfile({ id: 'cust-1', email: 'buyer@example.com', full_name: 'Buyer' }),
+    true
+  );
+
+  assert.equal(isValidAdminProfile(htmlPayload), false);
+  assert.equal(isValidAdminProfile({ id: '1', role: 'CUSTOMER' }), false);
+  assert.equal(isValidAdminProfile({ id: 'adm-1', role: 'ADMIN', email: 'admin@digiverse.local' }), true);
+
+  // 6. Valid arrays, objects, paginated data, and 204 No Content continue to pass
+  assert.deepEqual(assertArrayResponse([{ id: 'b1' }], 'banners'), [{ id: 'b1' }]);
+  assert.deepEqual(assertObjectResponse({ 'store.name': 'DIGI-VERSE' }, 'settings'), {
+    'store.name': 'DIGI-VERSE',
+  });
+  assert.deepEqual(assertPaginatedResponse({ items: [{ id: 'p1' }], total: 1 }, 'products').items, [
+    { id: 'p1' },
+  ]);
+
+  const noContentRes = validateApiResponse({ status: 204, headers: {}, config: {}, data: '' });
+  assert.equal(noContentRes.status, 204);
+
+  // 7. Legitimate binary / explicit non-JSON responses remain unaffected
+  const blobSentinel = { size: 1024, type: 'application/zip' };
+  const blobRes = validateApiResponse({
+    status: 200,
+    headers: { 'content-type': 'application/octet-stream' },
+    config: { responseType: 'blob' },
+    data: blobSentinel,
+  });
+  assert.equal(blobRes.data, blobSentinel);
+
+  // 8. Wire checks across App, api.js, AuthContext, and HomePage
+  const appSrc = readSrc('App.jsx');
+  assert.ok(appSrc.includes('AppErrorBoundary'), 'App.jsx must wrap routes in AppErrorBoundary');
+  const apiSrc = readSrc('services/api.js');
+  assert.ok(apiSrc.includes('validateApiResponse'), 'api.js must validate responses in interceptor');
+  const homeSrc = readSrc('pages/customer/HomePage.jsx');
+  assert.ok(homeSrc.includes('assertArrayResponse'), 'HomePage must validate banner/video arrays');
+  const authSrc = readSrc('context/AuthContext.jsx');
+  assert.ok(authSrc.includes('isValidCustomerProfile'), 'AuthContext must validate customer profile');
+  assert.ok(authSrc.includes('isValidAdminProfile'), 'AuthContext must validate admin profile');
 });

@@ -18,6 +18,7 @@ import {
 import { resolveStorefrontTheme } from '../../utils/categoryTheme';
 import { commerceApi, publicCatalogApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { assertObjectResponse, assertPaginatedResponse } from '../../utils/apiValidation';
 
 const SellerStorefrontPage = () => {
   const { storeSlug } = useParams();
@@ -58,7 +59,10 @@ const SellerStorefrontPage = () => {
         category: selectedCategory || undefined,
         sort_by: sortBy,
       });
-      setStorefront(res);
+      const valid = assertObjectResponse(res, 'storefront');
+      assertObjectResponse(valid.seller, 'storefront seller');
+      assertPaginatedResponse(valid.products, 'storefront products');
+      setStorefront(valid);
     } catch (err) {
       const detail = err.response?.data?.detail;
       setError(

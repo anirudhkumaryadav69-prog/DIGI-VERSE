@@ -32,6 +32,7 @@ import {
   resolveProductGalleryImages,
   resolveProductThumbnailUrl,
 } from '../../utils/productThumbnails';
+import { assertObjectResponse, assertPaginatedResponse } from '../../utils/apiValidation';
 
 const ProductDetailPage = () => {
   const { slug } = useParams();
@@ -60,7 +61,8 @@ const ProductDetailPage = () => {
     setRelatedProducts([]);
     publicCatalogApi
       .getProductBySlug(slug)
-      .then((p) => {
+      .then((raw) => {
+        const p = assertObjectResponse(raw, 'product');
         setProduct(p);
         const gallery = resolveProductGalleryImages(p);
         setActiveImage(gallery[0]?.image_url || resolveProductThumbnailUrl(p, p.image_url, 0));
@@ -68,13 +70,15 @@ const ProductDetailPage = () => {
           publicCatalogApi
             .listProducts({ category: p.category.slug, page: 1, page_size: 4 })
             .then((rel) => {
-              const filtered = (rel.items || []).filter((item) => item.id !== p.id).slice(0, 3);
+              const validRel = assertPaginatedResponse(rel, 'related products');
+              const filtered = validRel.items.filter((item) => item.id !== p.id).slice(0, 3);
               setRelatedProducts(filtered);
             })
-            .catch(() => {});
+            .catch(() => setRelatedProducts([]));
         }
       })
       .catch((err) => {
+        setProduct(null);
         const detail = err.response?.data?.detail;
         setError(
           typeof detail === 'string'

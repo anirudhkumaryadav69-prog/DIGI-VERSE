@@ -10,6 +10,7 @@ import {
   useDocumentMeta,
 } from '../../components/common/StorefrontDesignSystem';
 import { publicCatalogApi } from '../../services/api';
+import { assertPaginatedResponse } from '../../utils/apiValidation';
 
 const CategoriesPage = () => {
   const [categories, setCategories] = useState([]);
@@ -28,8 +29,12 @@ const CategoriesPage = () => {
     setError('');
     publicCatalogApi
       .listCategories({ page: 1, page_size: 50, search: search.trim() || undefined })
-      .then((res) => setCategories(res.items || []))
-      .catch(() => setError('Unable to load categories right now.'))
+      .then((res) => setCategories(assertPaginatedResponse(res, 'categories').items))
+      .catch((err) => {
+        const detail = err.response?.data?.detail;
+        setCategories([]);
+        setError(typeof detail === 'string' ? detail : 'Unable to load categories right now.');
+      })
       .finally(() => setLoading(false));
   }, [search]);
 
@@ -68,7 +73,7 @@ const CategoriesPage = () => {
 
       {loading ? (
         <LoadingState label="Loading categories..." />
-      ) : categories.length === 0 ? (
+      ) : error ? null : categories.length === 0 ? (
         <EmptyState
           icon={FolderTree}
           title="No categories found"

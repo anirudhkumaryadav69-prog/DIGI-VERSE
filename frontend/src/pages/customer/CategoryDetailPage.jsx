@@ -14,6 +14,7 @@ import {
 import { commerceApi, publicCatalogApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { getCategoryTheme } from '../../utils/categoryTheme';
+import { assertObjectResponse, assertPaginatedResponse } from '../../utils/apiValidation';
 import {
   CategoryDisciplineStrip,
   CategoryVisualIcon,
@@ -64,9 +65,10 @@ const CategoryDetailPage = () => {
     publicCatalogApi
       .getCategoryBySlug(slug)
       .then((catData) => {
-        setCategory(catData);
+        setCategory(assertObjectResponse(catData, 'category'));
       })
       .catch(() => {
+        setCategory(null);
         setError('Category not found or currently inactive.');
       })
       .finally(() => setCategoryLoading(false));
@@ -88,11 +90,13 @@ const CategoryDetailPage = () => {
       .listProducts(params)
       .then((prodData) => {
         if (reqId !== latestReqRef.current) return;
-        setProducts(prodData.items || []);
-        setTotalMatching(prodData.total ?? (prodData.items?.length || 0));
+        const valid = assertPaginatedResponse(prodData, 'category products');
+        setProducts(valid.items);
+        setTotalMatching(valid.total ?? valid.items.length);
       })
       .catch(() => {
         if (reqId !== latestReqRef.current) return;
+        setProducts([]);
         setError('Unable to load products for this category right now.');
       })
       .finally(() => {

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { validateApiResponse } from '../utils/apiValidation';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
@@ -59,12 +60,13 @@ let adminRefreshPromise = null;
 
 api.interceptors.response.use(
   (response) => {
-    const headerCsrf = response.headers?.['x-csrf-token'];
-    const bodyCsrf = response.data?.csrf_token;
+    const validated = validateApiResponse(response);
+    const headerCsrf = validated.headers?.['x-csrf-token'];
+    const bodyCsrf = validated.data?.csrf_token;
     if (headerCsrf || bodyCsrf) {
       setCsrfToken(headerCsrf || bodyCsrf);
     }
-    return response;
+    return validated;
   },
   async (error) => {
     const status = error.response?.status;

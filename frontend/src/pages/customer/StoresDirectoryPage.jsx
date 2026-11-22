@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MapPin, Package, Search, Store } from 'lucide-react';
 import StorefrontLayout from '../../components/common/StorefrontLayout';
@@ -17,6 +17,7 @@ import {
 } from '../../components/products/StorefrontVisual';
 import { resolveStorefrontTheme } from '../../utils/categoryTheme';
 import { publicCatalogApi } from '../../services/api';
+import { assertPaginatedResponse } from '../../utils/apiValidation';
 
 const StoresDirectoryPage = () => {
   const [data, setData] = useState({ items: [], total: 0, page: 1, total_pages: 1 });
@@ -37,15 +38,23 @@ const StoresDirectoryPage = () => {
     return () => clearTimeout(t);
   }, [search]);
 
-  useEffect(() => {
+  const fetchStores = useCallback(() => {
     setLoading(true);
     setError('');
     publicCatalogApi
       .listStores({ page, page_size: 18, search: debounced.trim() || undefined })
-      .then((res) => setData(res))
-      .catch(() => setError('Unable to load creator stores right now.'))
+      .then((res) => setData(assertPaginatedResponse(res, 'stores')))
+      .catch((err) => {
+        const detail = err.response?.data?.detail;
+        setData({ items: [], total: 0, page: 1, total_pages: 1 });
+        setError(typeof detail === 'string' ? detail : 'Unable to load creator stores right now.');
+      })
       .finally(() => setLoading(false));
   }, [page, debounced]);
+
+  useEffect(() => {
+    fetchStores();
+  }, [fetchStores]);
 
   return (
     <StorefrontLayout>
@@ -79,11 +88,11 @@ const StoresDirectoryPage = () => {
       />
 
       <div className="space-y-8">
-        {error && <ErrorAlert message={error} />}
+        {error && <ErrorAlert message={error} onRetry={fetchStores} />}
 
         {loading ? (
           <LoadingState label="Loading creator storefronts..." />
-        ) : !data.items.length ? (
+        ) : error ? null : !data.items.length ? (
           <EmptyState
             icon={Store}
             title="No creator storefronts match your search"

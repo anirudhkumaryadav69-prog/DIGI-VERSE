@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import StorefrontHeader from './StorefrontHeader';
 import StorefrontFooter from './StorefrontFooter';
 import { publicCatalogApi } from '../../services/api';
+import { isPlainObject } from '../../utils/apiValidation';
 
 let cachedPublicSettings = null;
 
@@ -13,7 +14,8 @@ const StorefrontLayout = ({ children }) => {
     publicCatalogApi
       .getPublicSettings()
       .then((data) => {
-        cachedPublicSettings = data || {};
+        if (!isPlainObject(data)) return;
+        cachedPublicSettings = data;
         setStoreSettings(cachedPublicSettings);
       })
       .catch(() => {});

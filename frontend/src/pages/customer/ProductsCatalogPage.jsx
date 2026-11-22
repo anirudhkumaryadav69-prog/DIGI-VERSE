@@ -16,6 +16,7 @@ import {
 import { commerceApi, publicCatalogApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { getCategoryTheme } from '../../utils/categoryTheme';
+import { assertPaginatedResponse } from '../../utils/apiValidation';
 
 const ProductsCatalogPage = () => {
   const navigate = useNavigate();
@@ -69,12 +70,12 @@ const ProductsCatalogPage = () => {
   useEffect(() => {
     publicCatalogApi
       .listCategories({ page: 1, page_size: 50 })
-      .then((res) => setCategories(res.items || []))
-      .catch(() => {});
+      .then((res) => setCategories(assertPaginatedResponse(res, 'categories').items))
+      .catch(() => setCategories([]));
     publicCatalogApi
       .listStores({ page: 1, page_size: 60 })
-      .then((res) => setStores(res.items || []))
-      .catch(() => {});
+      .then((res) => setStores(assertPaginatedResponse(res, 'stores').items))
+      .catch(() => setStores([]));
   }, []);
 
   const fetchProducts = useCallback(async () => {
@@ -121,9 +122,10 @@ const ProductsCatalogPage = () => {
     try {
       const res = await publicCatalogApi.listProducts(apiParams);
       if (reqId !== latestRequestIdRef.current) return;
-      setData(res);
+      setData(assertPaginatedResponse(res, 'products'));
     } catch (err) {
       if (reqId !== latestRequestIdRef.current) return;
+      setData({ items: [], total: 0, page: 1, page_size: 12, total_pages: 1 });
       const detail = err.response?.data?.detail;
       setError(
         typeof detail === 'string'
@@ -464,7 +466,7 @@ const ProductsCatalogPage = () => {
           count={8}
           gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch"
         />
-      ) : data.items.length === 0 ? (
+      ) : error ? null : data.items.length === 0 ? (
         <EmptyState
           icon={PackageSearch}
           title="No products match your search criteria"
