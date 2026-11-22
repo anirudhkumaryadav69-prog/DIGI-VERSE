@@ -111,6 +111,13 @@ class OrderItem(Base):
     original_price_snapshot: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
     purchase_price: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
     quantity: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("1"))
+    commission_rate_snapshot: Mapped[Optional[Decimal]] = mapped_column(Numeric(9, 6))
+    commission_amount_snapshot: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 2))
+    gross_amount_snapshot: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 2))
+    net_amount_snapshot: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 2))
+    commission_currency_snapshot: Mapped[Optional[str]] = mapped_column(String(3))
+    commission_source_snapshot: Mapped[Optional[str]] = mapped_column(String(32))
+    commission_snapshotted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
 
     order: Mapped[Order] = relationship(back_populates="items")
     product: Mapped[Optional["Product"]] = relationship()

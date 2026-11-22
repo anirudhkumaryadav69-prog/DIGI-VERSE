@@ -14,6 +14,7 @@ from app.api.routes import (
     seller,
     webhooks,
 )
+from app.api.routes.financial import admin_financial_router, seller_financial_router
 from app.core.config import settings
 from app.core.database import check_database_connection
 
@@ -28,6 +29,8 @@ api_router.include_router(public_catalog.router)
 api_router.include_router(seller.router)
 api_router.include_router(seller.admin_seller_router)
 api_router.include_router(webhooks.router)
+api_router.include_router(seller_financial_router)
+api_router.include_router(admin_financial_router)
 
 
 @api_router.get("/health", tags=["Health"])

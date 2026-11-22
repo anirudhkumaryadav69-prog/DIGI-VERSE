@@ -12,6 +12,7 @@ import {
   Store,
   UserCheck,
   X,
+  WalletCards,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -22,6 +23,7 @@ const SELLER_NAV = [
   { label: 'Orders', to: '/seller/orders', icon: ShoppingBag },
   { label: 'Store Profile', to: '/seller/profile', icon: Store },
   { label: 'Sales Analytics', to: '/seller/analytics', icon: BarChart3 },
+  { label: 'Financials', to: '/seller/financial', icon: WalletCards, exact: true },
   { label: 'Account Settings', to: '/profile', icon: Settings },
 ];
 

@@ -17,6 +17,14 @@ from app.models.order import DownloadRecord, Order, OrderItem, Payment, PaymentW
 from app.models.seller import SellerProfile
 from app.models.settings import StoreSetting
 from app.models.shopping import Cart, CartItem, Wishlist
+from app.models.financial import (
+    CommissionConfiguration,
+    CommissionHistory,
+    FinancialLedgerEntry,
+    FinancialTransaction,
+    RefundRecord,
+    SellerCommissionOverride,
+)
 
 __all__ = [
     "Base",
@@ -51,4 +59,10 @@ __all__ = [
     "MarketingWebhookEvent",
     "WorkerHeartbeat",
     "StoreSetting",
+    "CommissionConfiguration",
+    "SellerCommissionOverride",
+    "CommissionHistory",
+    "RefundRecord",
+    "FinancialTransaction",
+    "FinancialLedgerEntry",
 ]

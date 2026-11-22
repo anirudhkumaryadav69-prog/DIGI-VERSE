@@ -18,6 +18,7 @@ import {
   Menu,
   Store,
   X,
+  WalletCards,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -29,6 +30,7 @@ const NAV_ITEMS = [
   { label: 'Orders', to: '/admin/orders', icon: ShoppingCart, activePhase: true },
   { label: 'Customers', to: '/admin/customers', icon: Users, activePhase: true },
   { label: 'Sellers', to: '/admin/sellers', icon: Store, activePhase: true },
+  { label: 'Financial Management', to: '/admin/financial', icon: WalletCards, activePhase: true },
   { label: 'Banners', to: '/admin/banners', icon: ImageIcon, activePhase: true },
   { label: 'Advertisement Videos', to: '/admin/videos', icon: Video, activePhase: true },
   { label: 'Marketing Campaigns', to: '/admin/marketing', icon: Megaphone, activePhase: true },

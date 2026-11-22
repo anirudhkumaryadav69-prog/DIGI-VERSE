@@ -233,3 +233,56 @@ test('10. Phase 9 Multi-vendor Seller Studio, Public Storefronts & Admin Governa
     'ProductCard must link seller attribution to /store/:storeSlug'
   );
 });
+
+test('11. Phase 10.1 Seller Financial Dashboard is routed and uses backend financial APIs', () => {
+  const routes = readSrc('routes/AppRoutes.jsx');
+  const layout = readSrc('layouts/SellerLayout.jsx');
+  const api = readSrc('services/api.js');
+  const page = readSrc('pages/seller/SellerFinancialPage.jsx');
+
+  assert.ok(routes.includes('<Route path="/seller/financial" element={<SellerFinancialPage />} />'));
+  assert.ok(layout.includes("to: '/seller/financial'"));
+  for (const method of [
+    'getFinancialSummary',
+    'getFinancialTransactions',
+    'getFinancialOrders',
+    'getFinancialOrderItems',
+  ]) {
+    assert.ok(api.includes(method), `Seller API must expose ${method}`);
+  }
+  assert.ok(page.includes('/api/seller/financial') === false);
+  assert.ok(page.includes('Gross sales'));
+  assert.ok(page.includes('Pending earnings'));
+  assert.ok(page.includes('Available earnings'));
+  assert.ok(page.includes('Settled amount'));
+  assert.ok(page.includes('LoadingState'));
+  assert.ok(page.includes('Pagination'));
+});
+
+test('12. Phase 10.1 Admin Financial Management is guarded and integrates all financial endpoints', () => {
+  const routes = readSrc('routes/AppRoutes.jsx');
+  const layout = readSrc('layouts/AdminLayout.jsx');
+  const api = readSrc('services/api.js');
+  const page = readSrc('pages/admin/AdminFinancialPage.jsx');
+
+  assert.ok(routes.includes('<Route path="/admin/financial" element={<AdminFinancialPage />} />'));
+  assert.ok(layout.includes("to: '/admin/financial'"));
+  for (const method of [
+    'getCommission',
+    'updateCommission',
+    'listSellerCommissions',
+    'getSellerCommission',
+    'updateSellerCommission',
+    'removeSellerCommission',
+    'getLedger',
+    'getCommissionReport',
+  ]) {
+    assert.ok(api.includes(method), `Admin financial API must expose ${method}`);
+  }
+  assert.ok(page.includes('Global commission'));
+  assert.ok(page.includes('Seller commission overrides'));
+  assert.ok(page.includes('Financial ledger'));
+  assert.ok(page.includes('Commission report'));
+  assert.ok(page.includes('Commission history'));
+  assert.ok(page.includes('aria-label="Seller filter"'));
+});

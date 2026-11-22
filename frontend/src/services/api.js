@@ -243,6 +243,26 @@ export const adminSellersApi = {
     api.post(`/admin/sellers/${id}/review`, { action, reason }).then((r) => r.data),
 };
 
+export const adminFinancialApi = {
+  getCommission: () => api.get('/admin/financial/commission').then((r) => r.data),
+  updateCommission: (data) => api.put('/admin/financial/commission', data).then((r) => r.data),
+  listSellerCommissions: (params) =>
+    api.get('/admin/financial/sellers', { params }).then((r) => r.data),
+  getSellerCommission: (sellerId) =>
+    api.get(`/admin/financial/sellers/${sellerId}/commission`).then((r) => r.data),
+  updateSellerCommission: (sellerId, data) =>
+    api.put(`/admin/financial/sellers/${sellerId}/commission`, data).then((r) => r.data),
+  removeSellerCommission: (sellerId, reason) =>
+    api
+      .delete(`/admin/financial/sellers/${sellerId}/commission`, {
+        params: reason ? { reason } : undefined,
+      })
+      .then((r) => r.data),
+  getLedger: (params) => api.get('/admin/financial/ledger', { params }).then((r) => r.data),
+  getCommissionReport: (params) =>
+    api.get('/admin/financial/commission/report', { params }).then((r) => r.data),
+};
+
 // ---------------------------------------------------------------------------
 // Administrator Order Management API
 // ---------------------------------------------------------------------------
@@ -351,6 +371,14 @@ export const sellerApi = {
 
   getOverview: () => api.get('/seller/overview').then((r) => r.data),
   getAnalytics: () => api.get('/seller/analytics').then((r) => r.data),
+  getFinancialSummary: (params) =>
+    api.get('/seller/financial/summary', { params }).then((r) => r.data),
+  getFinancialTransactions: (params) =>
+    api.get('/seller/financial/transactions', { params }).then((r) => r.data),
+  getFinancialOrders: (params) =>
+    api.get('/seller/financial/orders', { params }).then((r) => r.data),
+  getFinancialOrderItems: (params) =>
+    api.get('/seller/financial/order-items', { params }).then((r) => r.data),
   getProfile: () => api.get('/seller/profile').then((r) => r.data),
   updateProfile: (data) => api.patch('/seller/profile', data).then((r) => r.data),
 

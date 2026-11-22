@@ -62,6 +62,12 @@ from app.services.catalog_service import (
 from app.services.asset_storage_service import AssetStorageError, get_asset_storage
 from app.services.email_service import safe_send_commerce_notification
 from app.services.payment_gateway import get_payment_provider
+from app.services.financial_service import (
+    post_payment_capture,
+    post_refund_reversal,
+    quantize_money,
+    snapshot_order_commissions,
+)
 
 DOWNLOAD_TOKEN_AUDIENCE = "digiverse:download"
 
@@ -633,6 +639,7 @@ def initialize_checkout(
             )
         )
     db.flush()
+    snapshot_order_commissions(db, order)
 
     # 4. Initialize payment with configured provider
     provider = get_payment_provider()
@@ -863,6 +870,7 @@ def _finalize_successful_capture(
         )
     )
     db.flush()
+    post_payment_capture(db=db, order=order, payment=payment)
 
     customer = order.customer or db.get(Customer, order.customer_id)
     if customer:
@@ -1048,7 +1056,11 @@ def process_payment_webhook(
         or parsed_body.get("gateway_payment_id")
     )
     refund_id = refund_entity.get("id") or parsed_body.get("refund_id")
-    amount_subunits = payment_entity.get("amount") or parsed_body.get("amount_subunits")
+    amount_subunits = (
+        refund_entity.get("amount")
+        if refund_entity and refund_entity.get("amount") is not None
+        else payment_entity.get("amount") or parsed_body.get("amount_subunits")
+    )
     currency = payment_entity.get("currency") or parsed_body.get("currency")
 
     try:
@@ -1094,7 +1106,7 @@ def process_payment_webhook(
     customer = order.customer or db.get(Customer, order.customer_id)
 
     # Validate amount and currency if present in the webhook payload
-    if amount_subunits is not None:
+    if amount_subunits is not None and event_type not in ("payment.refunded", "refund.processed"):
         try:
             parsed_subunits = int(amount_subunits)
         except (TypeError, ValueError) as exc:
@@ -1187,15 +1199,32 @@ def process_payment_webhook(
                 detail="Cannot refund a payment that has not been captured.",
             )
         now = datetime.now(timezone.utc)
-        payment.status = PaymentStatus.REFUNDED
-        payment.refund_id = refund_id or f"rfnd_{uuid.uuid4().hex[:12]}"
-        payment.refunded_at = now
-        order.payment_status = OrderPaymentStatus.REFUNDED
-        order.status = OrderStatus.REFUNDED
-
-        # Revoke any download grants for the refunded order
-        for d in order.downloads or []:
-            d.status = DownloadStatus.REVOKED
+        refund_amount = (
+            Decimal(str(int(amount_subunits))) / Decimal("100")
+            if amount_subunits is not None
+            else Decimal(str(payment.amount))
+        )
+        resolved_refund_id = refund_id or f"rfnd_{uuid.uuid4().hex[:12]}"
+        refund_record, _ = post_refund_reversal(
+            db=db,
+            order=order,
+            payment=payment,
+            refund_id=resolved_refund_id,
+            refund_amount=refund_amount,
+            gateway_event_id=event_id,
+        )
+        if refund_record and refund_record.status == "processed":
+            is_full_refund = refund_amount >= quantize_money(payment.amount)
+            if is_full_refund:
+                payment.status = PaymentStatus.REFUNDED
+                payment.refund_id = resolved_refund_id
+                payment.refunded_at = now
+                order.payment_status = OrderPaymentStatus.REFUNDED
+                order.status = OrderStatus.REFUNDED
+                for d in order.downloads or []:
+                    d.status = DownloadStatus.REVOKED
+            else:
+                payment.refunded_at = payment.refunded_at or now
         db.flush()
 
         if customer:
@@ -1527,9 +1556,24 @@ def update_admin_order_status(
             refund_res = get_payment_provider().initiate_refund(
                 captured_payment.gateway_payment_id, order.total_amount
             )
-            captured_payment.status = PaymentStatus.REFUNDED
-            captured_payment.refund_id = refund_res.refund_id
-            captured_payment.refunded_at = now
+            refund_status = str(refund_res.status).lower()
+            if refund_status not in ("processed", "succeeded", "success", "refunded"):
+                raise HTTPException(
+                    status_code=status.HTTP_502_BAD_GATEWAY,
+                    detail="Refund provider did not confirm a successful refund.",
+                )
+            refund_record, _ = post_refund_reversal(
+                db=db,
+                order=order,
+                payment=captured_payment,
+                refund_id=refund_res.refund_id,
+                refund_amount=order.total_amount,
+                gateway_event_id=None,
+            )
+            if refund_record and refund_record.status == "processed":
+                captured_payment.status = PaymentStatus.REFUNDED
+                captured_payment.refund_id = refund_res.refund_id
+                captured_payment.refunded_at = now
         order.payment_status = OrderPaymentStatus.REFUNDED
         for d in order.downloads or []:
             d.status = DownloadStatus.REVOKED
