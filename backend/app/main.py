@@ -60,8 +60,12 @@ def create_application() -> FastAPI:
         req_id = (request.headers.get("X-Request-ID") or "").strip()[:64] or uuid.uuid4().hex
         token = request_id_ctx.set(req_id)
         try:
+            api_prefix = re.escape(settings.API_V1_PREFIX.rstrip("/"))
             is_asset_upload = request.method.upper() == "POST" and bool(
-                re.match(r"^/api/admin/products/[0-9a-fA-F-]+/asset/?$", request.url.path)
+                re.match(
+                    rf"^{api_prefix}/(admin|seller)/products/[0-9a-fA-F-]+/asset/?$",
+                    request.url.path,
+                )
             )
             max_body_bytes = (
                 max(settings.MAX_REQUEST_BODY_BYTES, settings.MAX_ASSET_UPLOAD_BYTES + (2 * 1024 * 1024))

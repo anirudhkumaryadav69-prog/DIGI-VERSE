@@ -2,73 +2,103 @@
 
 @theme {
   /* Backgrounds */
-  --color-canvas: #FFFAF5;
-  --color-section: #FFF6ED;
+  --color-canvas: #EAF4FC;
+  --color-secondary: #DCE6EF;
+  --color-ash: #E5E7EB;
+  --color-section: #F8FAFC;
   --color-surface: #FFFFFF;
-  --color-highlight: #FFF2E6;
-  --color-hoverwarm: #FFF0E2;
+  --color-highlight: #EDF5FC;
+  --color-hoverwarm: #EDF5FC;
 
-  /* Orange Accents */
-  --color-brand: #FF6B0A;
-  --color-brand-secondary: #F4510B;
-  --color-brand-dark: #D94300;
-  --color-brand-border: #FFD4AE;
-  --color-brand-tint: #FFE9D6;
+  /* Blue Accents */
+  --color-brand: #2563EB;
+  --color-brand-secondary: #0EA5E9;
+  --color-brand-dark: #1D4ED8;
+  --color-brand-border: #D5DEE8;
+  --color-brand-tint: #DCE6EF;
 
   /* Typography */
-  --color-heading: #1F2937;
-  --color-ink: #243247;
+  --color-heading: #263445;
+  --color-ink: #263445;
   --color-slate: #64748B;
-  --color-muted: #8490A0;
+  --color-muted: #94A3B8;
 
-  /* Borders */
-  --color-line: #E5E7EB;
+  /* Borders & States */
+  --color-line: #D5DEE8;
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-error: #DC2626;
 }
 
 :root {
-  --dv-bg-page: #FFFAF5;
-  --dv-bg-section: #FFF6ED;
+  --dv-bg-page: #EAF4FC;
+  --dv-bg-secondary: #DCE6EF;
+  --dv-bg-ash: #E5E7EB;
+  --dv-bg-section: #F8FAFC;
   --dv-bg-card: #FFFFFF;
-  --dv-bg-highlight: #FFF2E6;
-  --dv-bg-hover: #FFF0E2;
+  --dv-bg-highlight: #EDF5FC;
+  --dv-bg-hover: #EDF5FC;
 
-  --dv-orange: #FF6B0A;
-  --dv-orange-secondary: #F4510B;
-  --dv-orange-dark: #D94300;
-  --dv-orange-border: #FFD4AE;
-  --dv-orange-tint: #FFE9D6;
+  --dv-blue: #2563EB;
+  --dv-blue-secondary: #0EA5E9;
+  --dv-blue-dark: #1D4ED8;
+  --dv-border: #D5DEE8;
+  --dv-blue-tint: #DCE6EF;
 
-  --dv-heading: #1F2937;
-  --dv-text: #243247;
+  --dv-heading: #263445;
+  --dv-text: #263445;
   --dv-text-secondary: #64748B;
-  --dv-text-muted: #8490A0;
-  --dv-border: #E5E7EB;
+  --dv-text-muted: #94A3B8;
 
-  --dv-shadow-card: 0 2px 10px -2px rgba(31, 41, 55, 0.05), 0 1px 3px 0 rgba(255, 107, 10, 0.04);
-  --dv-shadow-card-hover: 0 10px 24px -6px rgba(31, 41, 55, 0.08), 0 4px 12px -3px rgba(255, 107, 10, 0.12);
-  --dv-shadow-button: 0 4px 14px -2px rgba(255, 107, 10, 0.28);
+  --dv-success: #16A34A;
+  --dv-warning: #D97706;
+  --dv-error: #DC2626;
+
+  --dv-shadow-card: 0 1px 3px rgba(38, 52, 69, 0.05), 0 1px 2px rgba(38, 52, 69, 0.03);
+  --dv-shadow-card-hover: 0 12px 26px -8px rgba(38, 52, 69, 0.12), 0 4px 10px -2px rgba(37, 99, 235, 0.08);
+  --dv-shadow-button: 0 2px 8px -1px rgba(37, 99, 235, 0.25);
 }
 
 @layer base {
+  html {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     background-color: var(--dv-bg-page);
     color: var(--dv-text);
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     margin: 0;
     padding: 0;
   }
 
   h1, h2, h3, h4 {
     color: var(--dv-heading);
+    letter-spacing: -0.02em;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--dv-blue);
+    outline-offset: 2px;
   }
 
   input[type="checkbox"],
   input[type="radio"] {
-    accent-color: var(--dv-orange);
+    accent-color: var(--dv-blue);
   }
 }
 
 @layer components {
+  .font-display {
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
   .dv-card {
     background-color: var(--dv-bg-card);
     border: 1px solid var(--dv-border);
@@ -77,8 +107,8 @@
   }
 
   .dv-card-warm {
-    background-color: var(--dv-bg-card);
-    border: 1px solid var(--dv-orange-border);
+    background-color: var(--dv-bg-section);
+    border: 1px solid var(--dv-border);
     border-radius: 1rem;
     box-shadow: var(--dv-shadow-card);
   }
@@ -88,40 +118,41 @@
     border: 1px solid var(--dv-border);
     border-radius: 1rem;
     box-shadow: var(--dv-shadow-card);
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .dv-card-interactive:hover {
     transform: translateY(-2px);
-    border-color: var(--dv-orange-border);
+    border-color: #93C5FD;
     box-shadow: var(--dv-shadow-card-hover);
   }
 
   .dv-btn-primary {
-    background-color: var(--dv-orange);
+    background-color: var(--dv-blue);
     color: #FFFFFF;
-    border: 1px solid var(--dv-orange);
+    border: 1px solid var(--dv-blue);
     border-radius: 0.75rem;
     box-shadow: var(--dv-shadow-button);
     transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   }
 
   .dv-btn-primary:hover:not(:disabled) {
-    background-color: var(--dv-orange-dark);
-    border-color: var(--dv-orange-dark);
+    background-color: var(--dv-blue-dark);
+    border-color: var(--dv-blue-dark);
   }
 
   .dv-btn-secondary {
-    background-color: #FFFFFF;
-    color: var(--dv-orange-dark);
-    border: 1px solid var(--dv-orange-border);
+    background-color: var(--dv-bg-page);
+    color: var(--dv-text);
+    border: 1px solid var(--dv-border);
     border-radius: 0.75rem;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   }
 
   .dv-btn-secondary:hover:not(:disabled) {
     background-color: var(--dv-bg-hover);
-    border-color: var(--dv-orange);
+    border-color: #93C5FD;
+    color: var(--dv-blue-dark);
   }
 
   .dv-input {
@@ -129,6 +160,7 @@
     background-color: #FFFFFF;
     border: 1px solid var(--dv-border);
     border-radius: 0.75rem;
+    padding: 0.5625rem 0.875rem;
     color: var(--dv-text);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
@@ -139,7 +171,7 @@
 
   .dv-input:focus {
     outline: none;
-    border-color: var(--dv-orange);
-    box-shadow: 0 0 0 3px rgba(255, 107, 10, 0.14);
+    border-color: var(--dv-blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
   }
 }

@@ -50,13 +50,13 @@ const ResetPasswordPage = () => {
   return (
     <StorefrontLayout>
       <div className="w-full max-w-md mx-auto my-6 dv-card-warm p-6 sm:p-8">
-        <div className="w-11 h-11 rounded-2xl bg-[#FFF2E6] border border-[#FFD4AE] text-[#FF6B0A] flex items-center justify-center mb-4">
+        <div className="w-11 h-11 rounded-2xl bg-[#EAF4FC] border border-[#BFDBFE] text-[#2563EB] flex items-center justify-center mb-4">
           <KeyRound className="w-5 h-5" aria-hidden="true" />
         </div>
-        <p className="text-xs uppercase tracking-[0.2em] text-[#FF6B0A] font-semibold mb-2">
+        <p className="text-xs text-[#2563EB] font-semibold mb-1.5">
           Password Reset
         </p>
-        <h1 className="text-2xl font-bold tracking-tight text-[#1F2937] mb-6">
+        <h1 className="text-2xl font-bold tracking-tight text-[#263445] mb-6">
           Set a new password
         </h1>
 
@@ -84,7 +84,7 @@ const ResetPasswordPage = () => {
           <div>
             <label
               htmlFor="reset-token"
-              className="block text-xs font-medium text-[#243247] mb-1.5"
+              className="block text-xs font-medium text-[#263445] mb-1.5"
             >
               Reset Token
             </label>
@@ -102,7 +102,7 @@ const ResetPasswordPage = () => {
           <div>
             <label
               htmlFor="reset-new-password"
-              className="block text-xs font-medium text-[#243247] mb-1.5"
+              className="block text-xs font-medium text-[#263445] mb-1.5"
             >
               New Password
             </label>
@@ -121,7 +121,7 @@ const ResetPasswordPage = () => {
           <div>
             <label
               htmlFor="reset-confirm-password"
-              className="block text-xs font-medium text-[#243247] mb-1.5"
+              className="block text-xs font-medium text-[#263445] mb-1.5"
             >
               Confirm New Password
             </label>
@@ -140,7 +140,7 @@ const ResetPasswordPage = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="dv-btn-primary w-full py-3 px-4 text-xs font-semibold uppercase tracking-wider disabled:opacity-50"
+            className="dv-btn-primary w-full py-3 px-4 text-[13.5px] font-semibold disabled:opacity-50"
           >
             {submitting ? 'Resetting...' : 'Reset Password'}
           </button>

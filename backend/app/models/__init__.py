@@ -25,6 +25,14 @@ from app.models.financial import (
     RefundRecord,
     SellerCommissionOverride,
 )
+from app.models.payout import (
+    PayoutAccountVerificationHistory,
+    PayoutReconciliationHistory,
+    PayoutConfiguration,
+    PayoutExecutionAttempt,
+    PayoutRequest,
+    SellerPayoutAccount,
+)
 
 __all__ = [
     "Base",
@@ -65,4 +73,10 @@ __all__ = [
     "RefundRecord",
     "FinancialTransaction",
     "FinancialLedgerEntry",
+    "PayoutConfiguration",
+    "PayoutAccountVerificationHistory",
+    "PayoutReconciliationHistory",
+    "SellerPayoutAccount",
+    "PayoutRequest",
+    "PayoutExecutionAttempt",
 ]

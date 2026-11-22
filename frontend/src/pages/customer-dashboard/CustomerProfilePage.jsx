@@ -143,10 +143,10 @@ const CustomerProfilePage = () => {
         {/* Account Overview Banner */}
         <section className="dv-card-warm p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[#FF6B0A] font-semibold mb-1">
+            <p className="text-xs text-[#2563EB] font-semibold mb-1">
               Customer Account
             </p>
-            <h1 className="text-2xl font-bold tracking-tight text-[#1F2937]">
+            <h1 className="text-2xl font-bold tracking-tight text-[#263445]">
               {customer?.full_name}
             </h1>
             <p className="text-xs text-[#64748B] mt-1">{customer?.email}</p>
@@ -159,12 +159,12 @@ const CustomerProfilePage = () => {
                 <span>Phone Verified ({customer.phone_number})</span>
               </div>
             ) : (
-              <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#FFF2E6] border border-[#FFD4AE] text-[#D94300] text-xs">
-                <ShieldAlert className="w-4 h-4 shrink-0 text-[#FF6B0A]" aria-hidden="true" />
+              <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8] text-xs">
+                <ShieldAlert className="w-4 h-4 shrink-0 text-[#2563EB]" aria-hidden="true" />
                 <span>Phone verification required for sensitive operations.</span>
                 <Link
                   to="/verify-phone"
-                  className="font-semibold underline text-[#1F2937] ml-1"
+                  className="font-semibold underline text-[#263445] ml-1"
                 >
                   Verify Now
                 </Link>
@@ -174,14 +174,14 @@ const CustomerProfilePage = () => {
             <button
               type="button"
               onClick={handleLogoutAll}
-              className="dv-btn-secondary text-xs font-semibold uppercase tracking-wider px-3.5 py-2"
+              className="dv-btn-secondary text-xs font-semibold px-3.5 py-2"
             >
               Sign Out All Devices
             </button>
             <button
               type="button"
               onClick={handleLogout}
-              className="dv-btn-primary text-xs font-semibold uppercase tracking-wider px-3.5 py-2 inline-flex items-center gap-1.5"
+              className="dv-btn-primary text-xs font-semibold px-3.5 py-2 inline-flex items-center gap-1.5"
             >
               <LogOut className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Sign Out</span>
@@ -196,12 +196,12 @@ const CustomerProfilePage = () => {
             className="dv-card-interactive p-5 flex items-center justify-between"
           >
             <div>
-              <p className="text-[11px] uppercase tracking-wider text-[#FF6B0A] font-semibold">
+              <p className="text-xs text-[#2563EB] font-semibold">
                 Purchase History
               </p>
-              <p className="text-base font-semibold text-[#1F2937] mt-1">Orders &amp; Invoices</p>
+              <p className="text-base font-semibold text-[#263445] mt-1">Orders &amp; Invoices</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-[#FFF2E6] border border-[#FFD4AE] flex items-center justify-center text-[#FF6B0A]">
+            <div className="w-10 h-10 rounded-xl bg-[#EAF4FC] border border-[#BFDBFE] flex items-center justify-center text-[#2563EB]">
               <Package className="w-5 h-5" aria-hidden="true" />
             </div>
           </Link>
@@ -211,12 +211,12 @@ const CustomerProfilePage = () => {
             className="dv-card-interactive p-5 flex items-center justify-between"
           >
             <div>
-              <p className="text-[11px] uppercase tracking-wider text-[#FF6B0A] font-semibold">
+              <p className="text-xs text-[#2563EB] font-semibold">
                 Digital Library
               </p>
-              <p className="text-base font-semibold text-[#1F2937] mt-1">Purchased Downloads</p>
+              <p className="text-base font-semibold text-[#263445] mt-1">Purchased Downloads</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-[#FFF2E6] border border-[#FFD4AE] flex items-center justify-center text-[#FF6B0A]">
+            <div className="w-10 h-10 rounded-xl bg-[#EAF4FC] border border-[#BFDBFE] flex items-center justify-center text-[#2563EB]">
               <Download className="w-5 h-5" aria-hidden="true" />
             </div>
           </Link>
@@ -226,22 +226,22 @@ const CustomerProfilePage = () => {
             className="dv-card-interactive p-5 flex items-center justify-between"
           >
             <div>
-              <p className="text-[11px] uppercase tracking-wider text-[#FF6B0A] font-semibold">
+              <p className="text-xs text-[#2563EB] font-semibold">
                 Saved Items ({wishlistCount})
               </p>
-              <p className="text-base font-semibold text-[#1F2937] mt-1">Your Wishlist</p>
+              <p className="text-base font-semibold text-[#263445] mt-1">Your Wishlist</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-[#FFF2E6] border border-[#FFD4AE] flex items-center justify-center text-[#FF6B0A]">
+            <div className="w-10 h-10 rounded-xl bg-[#EAF4FC] border border-[#BFDBFE] flex items-center justify-center text-[#2563EB]">
               <Heart className="w-5 h-5" aria-hidden="true" />
             </div>
           </Link>
 
           <Link
             to={customer?.is_seller ? '/seller' : '/seller/apply'}
-            className="dv-card-interactive p-5 flex items-center justify-between sm:col-span-3 bg-linear-to-r from-white to-[#FFF6ED]"
+            className="dv-card-interactive p-5 flex items-center justify-between sm:col-span-3 bg-linear-to-r from-white to-[#F8FAFC]"
           >
             <div>
-              <p className="text-[11px] uppercase tracking-wider text-[#FF6B0A] font-semibold">
+              <p className="text-xs text-[#2563EB] font-semibold">
                 {customer?.is_seller
                   ? 'Approved Creator Store'
                   : customer?.seller_status === 'pending'
@@ -252,7 +252,7 @@ const CustomerProfilePage = () => {
                         ? 'Seller Account Suspended'
                         : 'Creator Marketplace'}
               </p>
-              <p className="text-base font-semibold text-[#1F2937] mt-1">
+              <p className="text-base font-semibold text-[#263445] mt-1">
                 {customer?.is_seller
                   ? 'Open Seller Studio & Manage Your Storefront'
                   : customer?.seller_status
@@ -260,7 +260,7 @@ const CustomerProfilePage = () => {
                     : 'Apply to Sell Digital Products on DIGI-VERSE'}
               </p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-[#FF6B0A] text-white flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[#2563EB] text-white flex items-center justify-center shrink-0">
               <Store className="w-5 h-5" aria-hidden="true" />
             </div>
           </Link>
@@ -270,8 +270,8 @@ const CustomerProfilePage = () => {
           {/* Permitted Profile Update */}
           <section className="dv-card p-6 md:p-8">
             <div className="flex items-center gap-2.5 mb-5">
-              <UserCheck className="w-4 h-4 text-[#FF6B0A]" aria-hidden="true" />
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-[#1F2937]">
+              <UserCheck className="w-4 h-4 text-[#2563EB]" aria-hidden="true" />
+              <h2 className="text-base font-semibold text-[#263445]">
                 Profile &amp; Communication Preferences
               </h2>
             </div>
@@ -299,7 +299,7 @@ const CustomerProfilePage = () => {
               <div>
                 <label
                   htmlFor="profile-full-name"
-                  className="block text-xs font-medium text-[#243247] mb-1.5"
+                  className="block text-xs font-medium text-[#263445] mb-1.5"
                 >
                   Full Name
                 </label>
@@ -316,7 +316,7 @@ const CustomerProfilePage = () => {
               <div>
                 <label
                   htmlFor="profile-email-readonly"
-                  className="block text-xs font-medium text-[#243247] mb-1.5"
+                  className="block text-xs font-medium text-[#263445] mb-1.5"
                 >
                   Registered Email (Read-Only)
                 </label>
@@ -325,26 +325,26 @@ const CustomerProfilePage = () => {
                   type="email"
                   disabled
                   value={customer?.email || ''}
-                  className="dv-input bg-[#FFF6ED] px-3.5 py-2.5 text-sm text-[#64748B] cursor-not-allowed"
+                  className="dv-input bg-[#F8FAFC] px-3.5 py-2.5 text-sm text-[#64748B] cursor-not-allowed"
                 />
               </div>
 
               <div className="pt-2 space-y-2 text-xs text-[#64748B]">
-                <label className="flex items-center gap-2 cursor-pointer text-[#243247]">
+                <label className="flex items-center gap-2 cursor-pointer text-[#263445]">
                   <input
                     type="checkbox"
                     checked={emailConsent}
                     onChange={(e) => setEmailConsent(e.target.checked)}
-                    className="accent-[#FF6B0A]"
+                    className="accent-[#2563EB]"
                   />
                   <span>Email marketing notifications</span>
                 </label>
-                <label className="flex items-center gap-2 cursor-pointer text-[#243247]">
+                <label className="flex items-center gap-2 cursor-pointer text-[#263445]">
                   <input
                     type="checkbox"
                     checked={whatsappConsent}
                     onChange={(e) => setWhatsappConsent(e.target.checked)}
-                    className="accent-[#FF6B0A]"
+                    className="accent-[#2563EB]"
                   />
                   <span>WhatsApp marketing notifications</span>
                 </label>
@@ -353,7 +353,7 @@ const CustomerProfilePage = () => {
               <button
                 type="submit"
                 disabled={profileStatus.loading}
-                className="dv-btn-primary py-2.5 px-5 text-xs font-semibold uppercase tracking-wider disabled:opacity-50"
+                className="dv-btn-primary py-2.5 px-5 text-[13px] font-semibold disabled:opacity-50"
               >
                 {profileStatus.loading ? 'Saving...' : 'Save Profile'}
               </button>
@@ -363,14 +363,14 @@ const CustomerProfilePage = () => {
           {/* Phone Number Update with OTP Re-verification */}
           <section className="dv-card p-6 md:p-8">
             <div className="flex items-center gap-2.5 mb-5">
-              <Smartphone className="w-4 h-4 text-[#FF6B0A]" aria-hidden="true" />
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-[#1F2937]">
+              <Smartphone className="w-4 h-4 text-[#2563EB]" aria-hidden="true" />
+              <h2 className="text-base font-semibold text-[#263445]">
                 Phone Number &amp; OTP Re-Verification
               </h2>
             </div>
 
             <p className="text-xs text-[#64748B] mb-4 leading-relaxed">
-              Current phone: <strong className="text-[#1F2937]">{customer?.phone_number}</strong>.
+              Current phone: <strong className="text-[#263445]">{customer?.phone_number}</strong>.
               Updating your phone number sends a new 6-digit OTP before activating the change.
             </p>
 
@@ -397,7 +397,7 @@ const CustomerProfilePage = () => {
               <div>
                 <label
                   htmlFor="profile-new-phone"
-                  className="block text-xs font-medium text-[#243247] mb-1.5"
+                  className="block text-xs font-medium text-[#263445] mb-1.5"
                 >
                   New Phone Number (E.164)
                 </label>
@@ -415,7 +415,7 @@ const CustomerProfilePage = () => {
               <button
                 type="submit"
                 disabled={phoneStatus.loading}
-                className="dv-btn-secondary py-2.5 px-5 text-xs font-semibold uppercase tracking-wider disabled:opacity-50"
+                className="dv-btn-secondary py-2.5 px-5 text-[13px] font-semibold disabled:opacity-50"
               >
                 {phoneStatus.loading ? 'Sending OTP...' : 'Send Verification OTP'}
               </button>
@@ -426,8 +426,8 @@ const CustomerProfilePage = () => {
         {/* Change Password Section */}
         <section className="dv-card p-6 md:p-8">
           <div className="flex items-center gap-2.5 mb-5">
-            <KeyRound className="w-4 h-4 text-[#FF6B0A]" aria-hidden="true" />
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-[#1F2937]">
+            <KeyRound className="w-4 h-4 text-[#2563EB]" aria-hidden="true" />
+            <h2 className="text-base font-semibold text-[#263445]">
               Change Password
             </h2>
           </div>
@@ -458,7 +458,7 @@ const CustomerProfilePage = () => {
             <div>
               <label
                 htmlFor="profile-current-password"
-                className="block text-xs font-medium text-[#243247] mb-1.5"
+                className="block text-xs font-medium text-[#263445] mb-1.5"
               >
                 Current Password
               </label>
@@ -477,7 +477,7 @@ const CustomerProfilePage = () => {
             <div>
               <label
                 htmlFor="profile-new-password"
-                className="block text-xs font-medium text-[#243247] mb-1.5"
+                className="block text-xs font-medium text-[#263445] mb-1.5"
               >
                 New Password
               </label>
@@ -494,7 +494,7 @@ const CustomerProfilePage = () => {
             <div>
               <label
                 htmlFor="profile-confirm-password"
-                className="block text-xs font-medium text-[#243247] mb-1.5"
+                className="block text-xs font-medium text-[#263445] mb-1.5"
               >
                 Confirm New Password
               </label>
@@ -514,7 +514,7 @@ const CustomerProfilePage = () => {
               <button
                 type="submit"
                 disabled={pwStatus.loading}
-                className="dv-btn-primary py-2.5 px-6 text-xs font-semibold uppercase tracking-wider disabled:opacity-50"
+                className="dv-btn-primary py-2.5 px-6 text-[13px] font-semibold disabled:opacity-50"
               >
                 {pwStatus.loading ? 'Updating Password...' : 'Update Password'}
               </button>

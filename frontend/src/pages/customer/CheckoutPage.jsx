@@ -23,6 +23,7 @@ import {
 } from '../../components/common/StorefrontDesignSystem';
 import { commerceApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { loadRazorpaySdk } from '../../utils/razorpay';
 
 const CHECKOUT_STAGES = [
   { id: 1, label: '1. Review Order' },
@@ -123,12 +124,43 @@ const CheckoutPage = () => {
     }
   };
 
-  const launchGatewayFlow = (session) => {
+  const launchGatewayFlow = async (session) => {
     setStage(4);
     setOutcome('awaiting_gateway');
 
-    if (session.payment.gateway_name === 'razorpay' && typeof window.Razorpay === 'function') {
-      const rzp = new window.Razorpay({
+    if (session?.payment?.gateway_name !== 'razorpay') {
+      setOutcome('failed');
+      setStage(6);
+      setError(
+        `Unsupported payment gateway "${session?.payment?.gateway_name || 'unknown'}". Your order reference is saved and you can retry when payment is available.`
+      );
+      return;
+    }
+
+    let RazorpayCheckout;
+    try {
+      RazorpayCheckout = await loadRazorpaySdk();
+    } catch (sdkErr) {
+      setOutcome('failed');
+      setStage(6);
+      setError(
+        sdkErr?.message ||
+          'Unable to load the Razorpay payment window. Your order is saved and you can retry payment anytime.'
+      );
+      return;
+    }
+
+    if (typeof RazorpayCheckout !== 'function') {
+      setOutcome('failed');
+      setStage(6);
+      setError(
+        'Razorpay payment window is unavailable right now. Your order reference is saved and you can retry payment anytime.'
+      );
+      return;
+    }
+
+    try {
+      const rzp = new RazorpayCheckout({
         key: session.payment.public_key_id,
         amount: session.payment.amount_subunits,
         currency: session.payment.currency,
@@ -158,7 +190,24 @@ const CheckoutPage = () => {
           });
         },
       });
+      if (typeof rzp.on === 'function') {
+        rzp.on('payment.failed', (failureResp) => {
+          setOutcome('failed');
+          setStage(6);
+          setError(
+            failureResp?.error?.description ||
+              'Payment failed in the gateway. Your order reference is saved and you can retry payment anytime.'
+          );
+        });
+      }
       rzp.open();
+    } catch (openErr) {
+      setOutcome('failed');
+      setStage(6);
+      setError(
+        openErr?.message ||
+          'Unable to open the Razorpay payment window. Your order reference is saved and you can retry payment anytime.'
+      );
     }
   };
 
@@ -172,7 +221,7 @@ const CheckoutPage = () => {
         ? await commerceApi.retryOrderPayment(checkoutSession.order_id)
         : await commerceApi.checkout(idempotencyKey);
       setCheckoutSession(session);
-      launchGatewayFlow(session);
+      await launchGatewayFlow(session);
     } catch (err) {
       const detail = err.response?.data?.detail;
       setError(
@@ -195,7 +244,7 @@ const CheckoutPage = () => {
     try {
       const session = await commerceApi.retryOrderPayment(checkoutSession.order_id);
       setCheckoutSession(session);
-      launchGatewayFlow(session);
+      await launchGatewayFlow(session);
     } catch (err) {
       const detail = err.response?.data?.detail;
       setError(typeof detail === 'string' ? detail : 'Could not re-initialize payment.');
@@ -247,9 +296,9 @@ const CheckoutPage = () => {
                 key={s.id}
                 className={`px-3 py-2.5 rounded-xl border text-center transition ${
                   isActive
-                    ? 'bg-[#FF6B0A] text-white border-[#FF6B0A] font-semibold shadow-xs'
+                    ? 'bg-[#2563EB] text-white border-[#2563EB] font-semibold shadow-xs'
                     : isCompleted
-                    ? 'bg-[#FFF2E6] text-[#D94300] border-[#FFD4AE]'
+                    ? 'bg-[#EAF4FC] text-[#1D4ED8] border-[#BFDBFE]'
                     : 'bg-white text-[#64748B] border-[#E5E7EB]'
                 }`}
               >
@@ -281,31 +330,31 @@ const CheckoutPage = () => {
           <div className="flex items-center gap-3 text-emerald-700">
             <CheckCircle2 className="w-7 h-7 shrink-0" aria-hidden="true" />
             <div>
-              <p className="text-xs uppercase tracking-wider text-[#FF6B0A] font-semibold">
+              <p className="text-xs text-[#2563EB] font-semibold">
                 Backend Signature Verified
               </p>
-              <h2 className="text-2xl font-bold text-[#1F2937]">
+              <h2 className="text-2xl font-bold text-[#263445]">
                 Payment Confirmed &amp; Digital Downloads Unlocked
               </h2>
             </div>
           </div>
 
-          <div className="bg-[#FFF6ED] border border-[#FFD4AE] rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div className="bg-[#F8FAFC] border border-[#BFDBFE] rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
             <div>
-              <p className="text-[#64748B] uppercase tracking-wider text-[10px]">Order Number</p>
-              <p className="font-mono font-bold text-[#1F2937] text-sm mt-1">
+              <p className="text-[#64748B] text-[11px] font-medium">Order Number</p>
+              <p className="font-mono font-bold text-[#263445] text-sm mt-1">
                 {verifiedOrder.order_number}
               </p>
             </div>
             <div>
-              <p className="text-[#64748B] uppercase tracking-wider text-[10px]">Payment Status</p>
-              <p className="uppercase font-semibold text-emerald-700 mt-1">
+              <p className="text-[#64748B] text-[11px] font-medium">Payment Status</p>
+              <p className="capitalize font-semibold text-emerald-700 mt-1">
                 {verifiedOrder.payment_status} ({verifiedOrder.status})
               </p>
             </div>
             <div>
-              <p className="text-[#64748B] uppercase tracking-wider text-[10px]">Amount Paid</p>
-              <p className="font-mono font-bold text-[#F4510B] text-sm mt-1">
+              <p className="text-[#64748B] text-[11px] font-medium">Amount Paid</p>
+              <p className="font-mono font-bold text-[#1D4ED8] text-sm mt-1">
                 {formatINR(verifiedOrder.total_amount)}
               </p>
             </div>
@@ -314,14 +363,14 @@ const CheckoutPage = () => {
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Link
               to="/downloads"
-              className="dv-btn-primary px-6 py-3 text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2"
+              className="dv-btn-primary px-6 py-3 text-[13px] font-semibold inline-flex items-center gap-2"
             >
               <Download className="w-4 h-4" aria-hidden="true" />
               <span>Access Digital Downloads</span>
             </Link>
             <Link
               to={`/orders/${verifiedOrder.id}`}
-              className="dv-btn-secondary px-6 py-3 text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2"
+              className="dv-btn-secondary px-6 py-3 text-[13px] font-semibold inline-flex items-center gap-2"
             >
               <FileText className="w-4 h-4" aria-hidden="true" />
               <span>View Order &amp; Invoice</span>
@@ -337,31 +386,31 @@ const CheckoutPage = () => {
           <div className="flex items-center gap-3 text-red-700">
             <XCircle className="w-7 h-7 shrink-0" aria-hidden="true" />
             <div>
-              <p className="text-xs uppercase tracking-wider font-semibold">
+              <p className="text-xs font-semibold">
                 {outcome === 'cancelled' ? 'Payment Cancelled' : 'Payment Verification Failed'}
               </p>
-              <h2 className="text-2xl font-bold text-[#1F2937]">
+              <h2 className="text-2xl font-bold text-[#263445]">
                 Your order is saved and awaiting verified payment
               </h2>
             </div>
           </div>
 
-          <div className="bg-[#FFF6ED] border border-[#E5E7EB] rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div className="bg-[#F8FAFC] border border-[#E5E7EB] rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
             <div>
-              <p className="text-[#64748B] uppercase tracking-wider text-[10px]">Order Reference</p>
-              <p className="font-mono font-semibold text-sm text-[#1F2937] mt-1">
+              <p className="text-[#64748B] text-[11px] font-medium">Order Reference</p>
+              <p className="font-mono font-semibold text-sm text-[#263445] mt-1">
                 {checkoutSession.order_number}
               </p>
             </div>
             <div>
-              <p className="text-[#64748B] uppercase tracking-wider text-[10px]">Gateway Order ID</p>
-              <p className="font-mono text-xs text-[#243247] mt-1">
+              <p className="text-[#64748B] text-[11px] font-medium">Gateway Order ID</p>
+              <p className="font-mono text-xs text-[#263445] mt-1">
                 {checkoutSession.payment.gateway_order_id}
               </p>
             </div>
             <div>
-              <p className="text-[#64748B] uppercase tracking-wider text-[10px]">Total Payable</p>
-              <p className="font-mono font-bold text-[#F4510B] text-sm mt-1">
+              <p className="text-[#64748B] text-[11px] font-medium">Total Payable</p>
+              <p className="font-mono font-bold text-[#1D4ED8] text-sm mt-1">
                 {formatINR(checkoutSession.total_amount)}
               </p>
             </div>
@@ -377,7 +426,7 @@ const CheckoutPage = () => {
             </Button>
             <Link
               to={`/orders/${checkoutSession.order_id}`}
-              className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] underline px-3 py-2"
+              className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] underline px-3 py-2"
             >
               View Pending Order →
             </Link>
@@ -391,7 +440,7 @@ const CheckoutPage = () => {
           action={
             <Link
               to="/products"
-              className="dv-btn-primary inline-block text-xs font-semibold uppercase tracking-wider px-5 py-2.5"
+              className="dv-btn-primary inline-block text-[13px] font-semibold px-5 py-2.5"
             >
               Browse Products
             </Link>
@@ -404,10 +453,10 @@ const CheckoutPage = () => {
             {/* Stage 1: Order Items Review */}
             <section className="dv-card p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-[#1F2937]">
+                <h2 className="text-sm font-semibold text-[#263445]">
                   1. Review Digital Order Items
                 </h2>
-                <Link to="/cart" className="text-xs font-semibold text-[#FF6B0A] hover:underline">
+                <Link to="/cart" className="text-xs font-semibold text-[#2563EB] hover:underline">
                   Edit Cart
                 </Link>
               </div>
@@ -417,12 +466,12 @@ const CheckoutPage = () => {
                   {cart.items.map((item) => (
                     <div key={item.id} className="py-3 flex items-center justify-between gap-4">
                       <div>
-                        <p className="font-semibold text-[#1F2937]">{item.product_name}</p>
+                        <p className="font-semibold text-[#263445]">{item.product_name}</p>
                         <p className="text-[#64748B]">
                           Qty: {item.quantity} × {formatINR(item.effective_unit_price)}
                         </p>
                       </div>
-                      <span className="font-mono font-bold text-[#1F2937]">
+                      <span className="font-mono font-bold text-[#263445]">
                         {formatINR(item.line_total)}
                       </span>
                     </div>
@@ -432,7 +481,7 @@ const CheckoutPage = () => {
                 checkoutSession && (
                   <p className="text-xs text-[#64748B]">
                     Resuming payment for pending order{' '}
-                    <strong className="font-mono text-[#1F2937]">
+                    <strong className="font-mono text-[#263445]">
                       {checkoutSession.order_number}
                     </strong>
                     .
@@ -443,33 +492,33 @@ const CheckoutPage = () => {
 
             {/* Stage 2: Billing & Delivery Recipient Details */}
             <section className="dv-card p-6 space-y-4">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-[#1F2937] border-b border-[#E5E7EB] pb-3">
+              <h2 className="text-sm font-semibold text-[#263445] border-b border-[#E5E7EB] pb-3">
                 2. Confirm Customer &amp; Delivery Details
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-[#64748B]">
+                  <p className="text-[11px] font-medium text-[#64748B]">
                     Customer Name
                   </p>
-                  <p className="font-semibold text-[#1F2937] mt-0.5">{customer?.full_name}</p>
+                  <p className="font-semibold text-[#263445] mt-0.5">{customer?.full_name}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-[#64748B]">
+                  <p className="text-[11px] font-medium text-[#64748B]">
                     Receipt &amp; Delivery Email
                   </p>
-                  <p className="font-semibold text-[#1F2937] mt-0.5">{customer?.email}</p>
+                  <p className="font-semibold text-[#263445] mt-0.5">{customer?.email}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-[#64748B]">
+                  <p className="text-[11px] font-medium text-[#64748B]">
                     Phone Number
                   </p>
-                  <p className="font-mono text-[#1F2937] mt-0.5">
+                  <p className="font-mono text-[#263445] mt-0.5">
                     {customer?.phone_number || 'Not provided'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-[#64748B]">
+                  <p className="text-[11px] font-medium text-[#64748B]">
                     Fulfillment Method
                   </p>
                   <p className="text-emerald-700 font-semibold mt-0.5">
@@ -478,7 +527,7 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
-              <label className="pt-2 flex items-center gap-2 text-xs text-[#243247] cursor-pointer">
+              <label className="pt-2 flex items-center gap-2 text-xs text-[#263445] cursor-pointer">
                 <input
                   type="checkbox"
                   checked={billingConfirmed}
@@ -486,7 +535,7 @@ const CheckoutPage = () => {
                     setBillingConfirmed(e.target.checked);
                     if (e.target.checked && stage < 2) setStage(2);
                   }}
-                  className="accent-[#FF6B0A]"
+                  className="accent-[#2563EB]"
                 />
                 <span>
                   I confirm my account billing details for invoice generation and digital delivery.
@@ -496,18 +545,18 @@ const CheckoutPage = () => {
 
             {/* Active Checkout Session Status Card */}
             {checkoutSession && (
-              <section className="dv-card-warm p-6 space-y-4 bg-[#FFF6ED]/50">
+              <section className="dv-card-warm p-6 space-y-4 bg-[#F8FAFC]/50">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs uppercase tracking-wider text-[#D94300] font-semibold">
+                  <span className="text-xs text-[#1D4ED8] font-semibold">
                     Payment Session Initialized
                   </span>
-                  <span className="font-mono text-xs rounded-lg bg-[#FFE9D6] text-[#D94300] px-2.5 py-1 font-semibold">
+                  <span className="font-mono text-xs rounded-lg bg-[#EAF4FC] text-[#1D4ED8] px-2.5 py-1 font-semibold">
                     {checkoutSession.order_number}
                   </span>
                 </div>
                 <p className="text-xs text-[#64748B] leading-relaxed">
                   Gateway Reference:{' '}
-                  <strong className="font-mono text-[#1F2937]">
+                  <strong className="font-mono text-[#263445]">
                     {checkoutSession.payment.gateway_order_id}
                   </strong>{' '}
                   ({checkoutSession.payment.gateway_name.toUpperCase()}). Your shopping cart remains
@@ -525,7 +574,7 @@ const CheckoutPage = () => {
                   </Button>
                   <Link
                     to={`/orders/${checkoutSession.order_id}`}
-                    className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] underline"
+                    className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] underline"
                   >
                     View Pending Order Details →
                   </Link>
@@ -536,15 +585,15 @@ const CheckoutPage = () => {
 
           {/* Right Column: Payment Summary & Initialization */}
           <aside className="lg:col-span-5 dv-card-warm p-6 space-y-5">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#1F2937] border-b border-[#E5E7EB] pb-3">
-              <Lock className="w-3.5 h-3.5 text-[#FF6B0A]" aria-hidden="true" />
+            <div className="flex items-center gap-2 text-sm font-semibold text-[#263445] border-b border-[#E5E7EB] pb-3">
+              <Lock className="w-3.5 h-3.5 text-[#2563EB]" aria-hidden="true" />
               <span>Payment Summary</span>
             </div>
 
             <div className="space-y-2.5 text-xs">
               <div className="flex justify-between text-[#64748B]">
                 <span>Subtotal</span>
-                <span className="font-mono font-medium text-[#1F2937]">
+                <span className="font-mono font-medium text-[#263445]">
                   {formatINR(checkoutSession?.subtotal_amount ?? cart?.subtotal)}
                 </span>
               </div>
@@ -554,9 +603,9 @@ const CheckoutPage = () => {
                   -{formatINR(checkoutSession?.discount_amount ?? cart?.total_discount)}
                 </span>
               </div>
-              <div className="pt-3 border-t border-[#E5E7EB] flex justify-between items-baseline text-sm font-semibold text-[#1F2937]">
+              <div className="pt-3 border-t border-[#E5E7EB] flex justify-between items-baseline text-sm font-semibold text-[#263445]">
                 <span>Total Payable</span>
-                <span className="font-mono text-xl font-bold text-[#F4510B]">
+                <span className="font-mono text-xl font-bold text-[#1D4ED8]">
                   {formatINR(checkoutSession?.total_amount ?? cart?.final_payable_amount)}
                 </span>
               </div>
@@ -566,7 +615,7 @@ const CheckoutPage = () => {
               type="button"
               disabled={processing || !billingConfirmed}
               onClick={handleInitializeCheckout}
-              className="dv-btn-primary w-full py-3.5 px-4 text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-45"
+              className="dv-btn-primary w-full py-3.5 px-4 text-[13px] font-semibold flex items-center justify-center gap-2 disabled:opacity-45"
             >
               <span>
                 {processing
@@ -580,7 +629,7 @@ const CheckoutPage = () => {
 
             <div className="flex items-start gap-2 text-[11px] text-[#64748B] leading-relaxed">
               <ShieldCheck
-                className="w-4 h-4 text-[#FF6B0A] shrink-0 mt-0.5"
+                className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5"
                 aria-hidden="true"
               />
               <span>

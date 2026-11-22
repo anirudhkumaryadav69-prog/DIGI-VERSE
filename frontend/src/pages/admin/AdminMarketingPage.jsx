@@ -16,13 +16,13 @@ import { adminOperationsApi } from '../../services/api';
 
 const CampaignMetricsPills = ({ c, isWhatsApp = false }) => (
   <div className="flex flex-wrap gap-1.5 pt-1 text-[10px]">
-    <span className="px-2 py-0.5 rounded-full bg-[#FFF6ED] border border-[#E5E7EB] text-[#64748B]">
-      Targeted: <strong className="text-[#1F2937]">{c.recipient_count ?? 0}</strong>
+    <span className="px-2 py-0.5 rounded-full bg-[#F8FAFC] border border-[#E5E7EB] text-[#64748B]">
+      Targeted: <strong className="text-[#263445]">{c.recipient_count ?? 0}</strong>
     </span>
-    <span className="px-2 py-0.5 rounded-full bg-[#FFF6ED] border border-[#E5E7EB] text-[#64748B]">
-      Queued: <strong className="text-[#1F2937]">{c.queued_count ?? 0}</strong>
+    <span className="px-2 py-0.5 rounded-full bg-[#F8FAFC] border border-[#E5E7EB] text-[#64748B]">
+      Queued: <strong className="text-[#263445]">{c.queued_count ?? 0}</strong>
     </span>
-    <span className="px-2 py-0.5 rounded-full bg-[#FFE9D6] border border-[#FFD4AE] text-[#D94300]">
+    <span className="px-2 py-0.5 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8]">
       Processing: <strong>{c.processing_count ?? 0}</strong>
     </span>
     <span className="px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800">
@@ -252,18 +252,18 @@ const AdminMarketingPage = () => {
     >
       {workerStatus && (
         <div className="mb-6 dv-card p-4 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-xs font-semibold text-[#1F2937]">
-            <Activity className="w-4 h-4 text-[#FF6B0A]" />
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#263445]">
+            <Activity className="w-4 h-4 text-[#2563EB]" />
             <span>Background Campaign Worker Queue</span>
           </div>
           <div className="flex flex-wrap gap-2 text-[11px]">
-            <span className="px-2.5 py-1 rounded-full bg-[#FFF6ED] border border-[#E5E7EB] text-[#64748B]">
-              Scheduled Campaigns: <strong className="text-[#1F2937]">{workerStatus.scheduled_campaigns}</strong>
+            <span className="px-2.5 py-1 rounded-full bg-[#F8FAFC] border border-[#E5E7EB] text-[#64748B]">
+              Scheduled Campaigns: <strong className="text-[#263445]">{workerStatus.scheduled_campaigns}</strong>
             </span>
-            <span className="px-2.5 py-1 rounded-full bg-[#FFF6ED] border border-[#E5E7EB] text-[#64748B]">
-              Queued Jobs: <strong className="text-[#1F2937]">{workerStatus.queued_jobs}</strong>
+            <span className="px-2.5 py-1 rounded-full bg-[#F8FAFC] border border-[#E5E7EB] text-[#64748B]">
+              Queued Jobs: <strong className="text-[#263445]">{workerStatus.queued_jobs}</strong>
             </span>
-            <span className="px-2.5 py-1 rounded-full bg-[#FFE9D6] border border-[#FFD4AE] text-[#D94300]">
+            <span className="px-2.5 py-1 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8]">
               Processing: <strong>{workerStatus.processing_jobs}</strong>
             </span>
             <span className="px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800">
@@ -287,14 +287,14 @@ const AdminMarketingPage = () => {
       )}
 
       {/* Channel Tabs */}
-      <div className="flex flex-wrap gap-2 mb-6 border-b border-[#E5E7EB] pb-3">
+      <div className="flex flex-wrap gap-2 mb-6 border-b border-[#D5DEE8] pb-3">
         <button
           type="button"
           onClick={() => setActiveTab('email')}
-          className={`px-4 py-2 rounded-xl text-xs font-medium uppercase tracking-wider inline-flex items-center gap-2 transition ${
+          className={`px-4 py-2 rounded-lg text-[12.5px] font-semibold inline-flex items-center gap-2 transition ${
             activeTab === 'email'
-              ? 'bg-[#FF6B0A] text-white shadow-sm'
-              : 'bg-white text-[#243247] border border-[#E5E7EB] hover:border-[#FFD4AE] hover:text-[#FF6B0A]'
+              ? 'bg-[#2563EB] text-white shadow-xs'
+              : 'bg-white text-[#263445] border border-[#D5DEE8] hover:border-[#93C5FD] hover:text-[#2563EB]'
           }`}
         >
           <Mail className="w-3.5 h-3.5" />
@@ -304,10 +304,10 @@ const AdminMarketingPage = () => {
         <button
           type="button"
           onClick={() => setActiveTab('whatsapp')}
-          className={`px-4 py-2 rounded-xl text-xs font-medium uppercase tracking-wider inline-flex items-center gap-2 transition ${
+          className={`px-4 py-2 rounded-lg text-[12.5px] font-semibold inline-flex items-center gap-2 transition ${
             activeTab === 'whatsapp'
-              ? 'bg-[#FF6B0A] text-white shadow-sm'
-              : 'bg-white text-[#243247] border border-[#E5E7EB] hover:border-[#FFD4AE] hover:text-[#FF6B0A]'
+              ? 'bg-[#2563EB] text-white shadow-xs'
+              : 'bg-white text-[#263445] border border-[#D5DEE8] hover:border-[#93C5FD] hover:text-[#2563EB]'
           }`}
         >
           <MessageSquare className="w-3.5 h-3.5" />
@@ -317,10 +317,10 @@ const AdminMarketingPage = () => {
         <button
           type="button"
           onClick={() => setActiveTab('templates')}
-          className={`px-4 py-2 rounded-xl text-xs font-medium uppercase tracking-wider inline-flex items-center gap-2 transition ${
+          className={`px-4 py-2 rounded-lg text-[12.5px] font-semibold inline-flex items-center gap-2 transition ${
             activeTab === 'templates'
-              ? 'bg-[#FF6B0A] text-white shadow-sm'
-              : 'bg-white text-[#243247] border border-[#E5E7EB] hover:border-[#FFD4AE] hover:text-[#FF6B0A]'
+              ? 'bg-[#2563EB] text-white shadow-xs'
+              : 'bg-white text-[#263445] border border-[#D5DEE8] hover:border-[#93C5FD] hover:text-[#2563EB]'
           }`}
         >
           <FileText className="w-3.5 h-3.5" />
@@ -333,14 +333,14 @@ const AdminMarketingPage = () => {
         <div className="space-y-6">
           <form
             onSubmit={handleCreateEmailCampaign}
-            className="dv-card p-6 space-y-4"
+            className="bg-white border border-[#D5DEE8] rounded-xl p-6 space-y-4 shadow-2xs"
           >
-            <h2 className="text-xs font-semibold text-[#1F2937] uppercase tracking-widest">
+            <h2 className="text-[14.5px] font-semibold text-[#263445]">
               New Email Marketing Campaign (Opt-In Customers Only)
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                   Campaign Name *
                 </label>
                 <input
@@ -349,11 +349,11 @@ const AdminMarketingPage = () => {
                   value={emailForm.name}
                   onChange={(e) => setEmailForm({ ...emailForm, name: e.target.value })}
                   placeholder="e.g. Monthly Creator Bundle Drop"
-                  className="dv-input px-3 py-2 text-xs"
+                  className="dv-input px-3.5 py-2 text-[13px]"
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                   Email Subject *
                 </label>
                 <input
@@ -362,12 +362,12 @@ const AdminMarketingPage = () => {
                   value={emailForm.subject}
                   onChange={(e) => setEmailForm({ ...emailForm, subject: e.target.value })}
                   placeholder="e.g. New Digital Toolkits Available on DIGI-VERSE"
-                  className="dv-input px-3 py-2 text-xs"
+                  className="dv-input px-3.5 py-2 text-[13px]"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+              <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                 Campaign Content *
               </label>
               <textarea
@@ -376,13 +376,13 @@ const AdminMarketingPage = () => {
                 value={emailForm.content}
                 onChange={(e) => setEmailForm({ ...emailForm, content: e.target.value })}
                 placeholder="Write promotional email content..."
-                className="dv-input px-3 py-2 text-xs"
+                className="dv-input px-3.5 py-2 text-[13px]"
               />
             </div>
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="dv-btn-primary text-xs uppercase tracking-wider px-5 py-2.5 inline-flex items-center gap-1.5"
+                className="dv-btn-primary text-[12px] font-semibold px-5 py-2 inline-flex items-center gap-1.5"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Create Draft Campaign</span>
@@ -390,22 +390,22 @@ const AdminMarketingPage = () => {
             </div>
           </form>
 
-          <div className="dv-card divide-y divide-[#E5E7EB]">
+          <div className="bg-white border border-[#D5DEE8] rounded-xl divide-y divide-[#E5E7EB] shadow-2xs overflow-hidden">
             {loading ? (
-              <p className="p-6 text-xs text-[#64748B]">Loading email campaigns...</p>
+              <p className="p-6 text-[13px] text-[#64748B]">Loading email campaigns...</p>
             ) : emailCampaigns.length === 0 ? (
-              <p className="p-6 text-xs text-[#64748B]">No email campaigns created yet.</p>
+              <p className="p-6 text-[13px] text-[#64748B]">No email campaigns created yet.</p>
             ) : (
               emailCampaigns.map((c) => (
-                <div key={c.id} className="p-5 flex flex-wrap items-center justify-between gap-4">
+                <div key={c.id} className="p-5 flex flex-wrap items-center justify-between gap-4 hover:bg-[#EDF5FC]/35 transition">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-[#1F2937]">{c.name}</span>
-                      <span className="text-[10px] uppercase tracking-wider font-medium px-2.5 py-0.5 rounded-full bg-[#FFE9D6] border border-[#FFD4AE] text-[#D94300]">
-                        {c.status}
+                      <span className="text-[14px] font-semibold text-[#263445]">{c.name}</span>
+                      <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8] capitalize">
+                        {String(c.status || '').replace(/_/g, ' ')}
                       </span>
                     </div>
-                    <p className="text-xs text-[#243247]">Subject: {c.subject}</p>
+                    <p className="text-[12.5px] text-[#475569]">Subject: {c.subject}</p>
                     <CampaignMetricsPills c={c} />
                   </div>
 
@@ -413,7 +413,7 @@ const AdminMarketingPage = () => {
                     <button
                       type="button"
                       onClick={() => handleInspectCampaign('email', c.id)}
-                      className="dv-btn-secondary px-3 py-2 text-[11px] uppercase tracking-wider inline-flex items-center gap-1"
+                      className="dv-btn-secondary px-3 py-1.5 text-[12px] font-medium inline-flex items-center gap-1.5"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>Details</span>
@@ -423,15 +423,15 @@ const AdminMarketingPage = () => {
                         <button
                           type="button"
                           onClick={() => handleScheduleCampaign('email', c.id)}
-                          className="dv-btn-secondary px-3 py-2 text-[11px] uppercase tracking-wider inline-flex items-center gap-1"
+                          className="dv-btn-secondary px-3 py-1.5 text-[12px] font-medium inline-flex items-center gap-1.5"
                         >
-                          <Clock className="w-3.5 h-3.5 text-[#FF6B0A]" />
+                          <Clock className="w-3.5 h-3.5 text-[#2563EB]" />
                           <span>Schedule</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => handleQueueCampaign('email', c.id)}
-                          className="dv-btn-primary px-3.5 py-2 text-[11px] uppercase tracking-wider inline-flex items-center gap-1"
+                          className="dv-btn-primary px-3.5 py-1.5 text-[12px] font-semibold inline-flex items-center gap-1.5"
                         >
                           <Clock className="w-3.5 h-3.5" />
                           <span>Queue Worker</span>
@@ -439,7 +439,7 @@ const AdminMarketingPage = () => {
                         <button
                           type="button"
                           onClick={() => handleLaunchEmailCampaign(c.id)}
-                          className="rounded-xl text-[11px] font-medium uppercase tracking-wider px-3.5 py-2 bg-emerald-600 text-white hover:bg-emerald-700 transition inline-flex items-center gap-1"
+                          className="rounded-xl text-[12px] font-semibold px-3.5 py-1.5 bg-[#16A34A] text-white hover:bg-[#15803D] transition inline-flex items-center gap-1.5"
                         >
                           <Send className="w-3.5 h-3.5" />
                           <span>Send Now</span>
@@ -450,7 +450,7 @@ const AdminMarketingPage = () => {
                       <button
                         type="button"
                         onClick={() => handleCancelCampaign('email', c.id)}
-                        className="rounded-xl px-3 py-2 text-[11px] font-medium uppercase tracking-wider border border-red-200 text-red-600 hover:bg-red-50 transition inline-flex items-center gap-1"
+                        className="rounded-xl px-3 py-1.5 text-[12px] font-medium border border-red-200 text-[#DC2626] hover:bg-red-50 transition inline-flex items-center gap-1.5"
                       >
                         <XCircle className="w-3.5 h-3.5" />
                         <span>Cancel</span>
@@ -469,14 +469,14 @@ const AdminMarketingPage = () => {
         <div className="space-y-6">
           <form
             onSubmit={handleCreateWhatsAppCampaign}
-            className="dv-card p-6 space-y-4"
+            className="bg-white border border-[#D5DEE8] rounded-xl p-6 space-y-4 shadow-2xs"
           >
-            <h2 className="text-xs font-semibold text-[#1F2937] uppercase tracking-widest">
+            <h2 className="text-[14.5px] font-semibold text-[#263445]">
               New WhatsApp Cloud Campaign (Opt-In Customers Only)
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                   Campaign Name *
                 </label>
                 <input
@@ -485,11 +485,11 @@ const AdminMarketingPage = () => {
                   value={waForm.name}
                   onChange={(e) => setWaForm({ ...waForm, name: e.target.value })}
                   placeholder="e.g. Flash Sale WhatsApp Alert"
-                  className="dv-input px-3 py-2 text-xs"
+                  className="dv-input px-3.5 py-2 text-[13px]"
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                   Approved Meta Template Name *
                 </label>
                 <input
@@ -500,12 +500,12 @@ const AdminMarketingPage = () => {
                     setWaForm({ ...waForm, approved_template_name: e.target.value })
                   }
                   placeholder="e.g. digiverse_flash_sale_v1"
-                  className="dv-input px-3 py-2 text-xs"
+                  className="dv-input px-3.5 py-2 text-[13px]"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+              <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                 Message Content *
               </label>
               <textarea
@@ -514,13 +514,13 @@ const AdminMarketingPage = () => {
                 value={waForm.content}
                 onChange={(e) => setWaForm({ ...waForm, content: e.target.value })}
                 placeholder="WhatsApp template body..."
-                className="dv-input px-3 py-2 text-xs"
+                className="dv-input px-3.5 py-2 text-[13px]"
               />
             </div>
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="dv-btn-primary text-xs uppercase tracking-wider px-5 py-2.5 inline-flex items-center gap-1.5"
+                className="dv-btn-primary text-[12px] font-semibold px-5 py-2 inline-flex items-center gap-1.5"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Create WhatsApp Campaign</span>
@@ -528,23 +528,23 @@ const AdminMarketingPage = () => {
             </div>
           </form>
 
-          <div className="dv-card divide-y divide-[#E5E7EB]">
+          <div className="bg-white border border-[#D5DEE8] rounded-xl divide-y divide-[#E5E7EB] shadow-2xs overflow-hidden">
             {whatsappCampaigns.length === 0 ? (
-              <p className="p-6 text-xs text-[#64748B]">No WhatsApp campaigns created yet.</p>
+              <p className="p-6 text-[13px] text-[#64748B]">No WhatsApp campaigns created yet.</p>
             ) : (
               whatsappCampaigns.map((c) => (
-                <div key={c.id} className="p-5 flex flex-wrap items-center justify-between gap-4">
+                <div key={c.id} className="p-5 flex flex-wrap items-center justify-between gap-4 hover:bg-[#EDF5FC]/35 transition">
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-[#1F2937]">{c.name}</span>
-                      <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#FFF6ED] border border-[#E5E7EB] text-[#64748B]">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[14px] font-semibold text-[#263445]">{c.name}</span>
+                      <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#F8FAFC] border border-[#D5DEE8] text-[#475569]">
                         {c.approved_template_name}
                       </span>
-                      <span className="text-[10px] uppercase tracking-wider font-medium px-2.5 py-0.5 rounded-full bg-[#FFE9D6] border border-[#FFD4AE] text-[#D94300]">
-                        {c.status}
+                      <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8] capitalize">
+                        {String(c.status || '').replace(/_/g, ' ')}
                       </span>
                     </div>
-                    <p className="text-xs text-[#243247]">{c.content}</p>
+                    <p className="text-[12.5px] text-[#475569]">{c.content}</p>
                     <CampaignMetricsPills c={c} isWhatsApp />
                   </div>
 
@@ -552,7 +552,7 @@ const AdminMarketingPage = () => {
                     <button
                       type="button"
                       onClick={() => handleInspectCampaign('whatsapp', c.id)}
-                      className="dv-btn-secondary px-3 py-2 text-[11px] uppercase tracking-wider inline-flex items-center gap-1"
+                      className="dv-btn-secondary px-3 py-1.5 text-[12px] font-medium inline-flex items-center gap-1.5"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>Details</span>
@@ -562,15 +562,15 @@ const AdminMarketingPage = () => {
                         <button
                           type="button"
                           onClick={() => handleScheduleCampaign('whatsapp', c.id)}
-                          className="dv-btn-secondary px-3 py-2 text-[11px] uppercase tracking-wider inline-flex items-center gap-1"
+                          className="dv-btn-secondary px-3 py-1.5 text-[12px] font-medium inline-flex items-center gap-1.5"
                         >
-                          <Clock className="w-3.5 h-3.5 text-[#FF6B0A]" />
+                          <Clock className="w-3.5 h-3.5 text-[#2563EB]" />
                           <span>Schedule</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => handleQueueCampaign('whatsapp', c.id)}
-                          className="dv-btn-primary px-3.5 py-2 text-[11px] uppercase tracking-wider inline-flex items-center gap-1"
+                          className="dv-btn-primary px-3.5 py-1.5 text-[12px] font-semibold inline-flex items-center gap-1.5"
                         >
                           <Clock className="w-3.5 h-3.5" />
                           <span>Queue Worker</span>
@@ -578,7 +578,7 @@ const AdminMarketingPage = () => {
                         <button
                           type="button"
                           onClick={() => handleLaunchWhatsAppCampaign(c.id)}
-                          className="rounded-xl text-[11px] font-medium uppercase tracking-wider px-3.5 py-2 bg-emerald-600 text-white hover:bg-emerald-700 transition inline-flex items-center gap-1"
+                          className="rounded-xl text-[12px] font-semibold px-3.5 py-1.5 bg-[#16A34A] text-white hover:bg-[#15803D] transition inline-flex items-center gap-1.5"
                         >
                           <Send className="w-3.5 h-3.5" />
                           <span>Send Now</span>
@@ -589,7 +589,7 @@ const AdminMarketingPage = () => {
                       <button
                         type="button"
                         onClick={() => handleCancelCampaign('whatsapp', c.id)}
-                        className="rounded-xl px-3 py-2 text-[11px] font-medium uppercase tracking-wider border border-red-200 text-red-600 hover:bg-red-50 transition inline-flex items-center gap-1"
+                        className="rounded-xl px-3 py-1.5 text-[12px] font-medium border border-red-200 text-[#DC2626] hover:bg-red-50 transition inline-flex items-center gap-1.5"
                       >
                         <XCircle className="w-3.5 h-3.5" />
                         <span>Cancel</span>
@@ -608,14 +608,14 @@ const AdminMarketingPage = () => {
         <div className="space-y-6">
           <form
             onSubmit={handleCreateTemplate}
-            className="dv-card p-6 space-y-4"
+            className="bg-white border border-[#D5DEE8] rounded-xl p-6 space-y-4 shadow-2xs"
           >
-            <h2 className="text-xs font-semibold text-[#1F2937] uppercase tracking-widest">
+            <h2 className="text-[14.5px] font-semibold text-[#263445]">
               Create Reusable Message Template
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                   Template Name *
                 </label>
                 <input
@@ -623,17 +623,17 @@ const AdminMarketingPage = () => {
                   required
                   value={tplForm.name}
                   onChange={(e) => setTplForm({ ...tplForm, name: e.target.value })}
-                  className="dv-input px-3 py-2 text-xs"
+                  className="dv-input px-3.5 py-2 text-[13px]"
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                   Channel *
                 </label>
                 <select
                   value={tplForm.channel}
                   onChange={(e) => setTplForm({ ...tplForm, channel: e.target.value })}
-                  className="dv-input px-3 py-2 text-xs"
+                  className="dv-input px-3.5 py-2 text-[13px]"
                 >
                   <option value="email">Email</option>
                   <option value="whatsapp">WhatsApp</option>
@@ -641,7 +641,7 @@ const AdminMarketingPage = () => {
               </div>
               {tplForm.channel === 'email' && (
                 <div>
-                  <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+                  <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                     Email Subject *
                   </label>
                   <input
@@ -649,13 +649,13 @@ const AdminMarketingPage = () => {
                     required
                     value={tplForm.subject}
                     onChange={(e) => setTplForm({ ...tplForm, subject: e.target.value })}
-                    className="dv-input px-3 py-2 text-xs"
+                    className="dv-input px-3.5 py-2 text-[13px]"
                   />
                 </div>
               )}
             </div>
             <div>
-              <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+              <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                 Template Body *
               </label>
               <textarea
@@ -663,13 +663,13 @@ const AdminMarketingPage = () => {
                 required
                 value={tplForm.content}
                 onChange={(e) => setTplForm({ ...tplForm, content: e.target.value })}
-                className="dv-input px-3 py-2 text-xs"
+                className="dv-input px-3.5 py-2 text-[13px]"
               />
             </div>
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="dv-btn-primary text-xs uppercase tracking-wider px-5 py-2.5 inline-flex items-center gap-1.5"
+                className="dv-btn-primary text-[12px] font-semibold px-5 py-2 inline-flex items-center gap-1.5"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Save Template</span>
@@ -677,26 +677,27 @@ const AdminMarketingPage = () => {
             </div>
           </form>
 
-          <div className="dv-card divide-y divide-[#E5E7EB]">
+          <div className="bg-white border border-[#D5DEE8] rounded-xl divide-y divide-[#E5E7EB] shadow-2xs overflow-hidden">
             {templates.length === 0 ? (
-              <p className="p-6 text-xs text-[#64748B]">No reusable message templates saved yet.</p>
+              <p className="p-6 text-[13px] text-[#64748B]">No reusable message templates saved yet.</p>
             ) : (
               templates.map((t) => (
-                <div key={t.id} className="p-5 flex items-center justify-between gap-4">
+                <div key={t.id} className="p-5 flex items-center justify-between gap-4 hover:bg-[#EDF5FC]/35 transition">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-[#1F2937]">{t.name}</span>
-                      <span className="text-[10px] uppercase tracking-wider font-medium px-2.5 py-0.5 rounded-full bg-[#FFE9D6] border border-[#FFD4AE] text-[#D94300]">
+                      <span className="text-[14px] font-semibold text-[#263445]">{t.name}</span>
+                      <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8] capitalize">
                         {t.channel}
                       </span>
                     </div>
-                    {t.subject && <p className="text-xs text-[#243247]">Subject: {t.subject}</p>}
-                    <p className="text-xs text-[#64748B]">{t.content}</p>
+                    {t.subject && <p className="text-[12.5px] text-[#263445]">Subject: {t.subject}</p>}
+                    <p className="text-[12.5px] text-[#64748B]">{t.content}</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleDeleteTemplate(t.id)}
-                    className="p-2 rounded-lg border border-red-200 bg-white text-red-600 hover:bg-red-50 transition"
+                    className="p-2 rounded-lg border border-red-200 bg-white text-[#DC2626] hover:bg-red-50 transition"
+                    aria-label={`Delete template ${t.name}`}
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -709,19 +710,23 @@ const AdminMarketingPage = () => {
 
       {/* CAMPAIGN DELIVERY DETAIL MODAL */}
       {selectedDetail && (
-        <div className="fixed inset-0 z-50 bg-[#1F2937]/30 backdrop-blur-[2px] flex items-center justify-center p-4">
-          <div className="bg-white border border-[#FFD4AE] rounded-2xl shadow-xl max-w-3xl w-full max-h-[85vh] flex flex-col overflow-hidden">
-            <div className="p-5 border-b border-[#E5E7EB] bg-[#FFF6ED] flex items-center justify-between">
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-[#263445]/35 backdrop-blur-[2px] flex items-center justify-center p-4"
+        >
+          <div className="bg-white border border-[#D5DEE8] rounded-xl shadow-xl max-w-3xl w-full max-h-[85vh] flex flex-col overflow-hidden">
+            <div className="p-5 border-b border-[#E5E7EB] bg-[#F8FAFC] flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-semibold text-[#1F2937]">{selectedDetail.name}</h3>
-                <p className="text-[11px] text-[#64748B] uppercase tracking-wider">
-                  {selectedDetail.channel} · Status: {selectedDetail.status}
+                <h3 className="text-[15px] font-semibold text-[#263445]">{selectedDetail.name}</h3>
+                <p className="text-[12px] text-[#64748B] capitalize">
+                  {selectedDetail.channel} · Status: {String(selectedDetail.status || '').replace(/_/g, ' ')}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setSelectedDetail(null)}
-                className="dv-btn-secondary px-3 py-1.5 text-xs"
+                className="dv-btn-secondary px-3 py-1.5 text-[12px]"
               >
                 Close
               </button>
@@ -734,13 +739,13 @@ const AdminMarketingPage = () => {
               />
 
               {Object.keys(selectedDetail.failure_summary || {}).length > 0 && (
-                <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs space-y-1">
-                  <p className="font-semibold text-red-700">Failure Code Summary</p>
+                <div className="p-3.5 rounded-lg bg-red-50 border border-red-200 text-[12px] space-y-1">
+                  <p className="font-semibold text-[#DC2626]">Failure Code Summary</p>
                   <div className="flex flex-wrap gap-2">
                     {Object.entries(selectedDetail.failure_summary).map(([code, cnt]) => (
                       <span
                         key={code}
-                        className="px-2 py-0.5 rounded-full bg-white border border-red-200 font-mono text-[11px] text-red-700"
+                        className="px-2 py-0.5 rounded-full bg-white border border-red-200 font-mono text-[11px] text-[#DC2626]"
                       >
                         {code}: {cnt}
                       </span>
@@ -749,18 +754,18 @@ const AdminMarketingPage = () => {
                 </div>
               )}
 
-              <div className="border border-[#E5E7EB] rounded-xl overflow-x-auto">
-                <table className="w-full text-left text-xs">
+              <div className="border border-[#D5DEE8] rounded-lg overflow-x-auto">
+                <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-[#FFF6ED] border-b border-[#E5E7EB] text-[#64748B] uppercase">
-                      <th className="py-2.5 px-3 font-semibold">Recipient</th>
-                      <th className="py-2.5 px-3 font-semibold">Status</th>
-                      <th className="py-2.5 px-3 font-semibold">Attempts</th>
-                      <th className="py-2.5 px-3 font-semibold">Message ID</th>
-                      <th className="py-2.5 px-3 font-semibold">Failure Detail</th>
+                    <tr className="bg-[#F8FAFC] border-b border-[#D5DEE8] text-[#475569] text-[11.5px] font-semibold">
+                      <th className="py-2.5 px-3">Recipient</th>
+                      <th className="py-2.5 px-3">Status</th>
+                      <th className="py-2.5 px-3">Attempts</th>
+                      <th className="py-2.5 px-3">Message ID</th>
+                      <th className="py-2.5 px-3">Failure Detail</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#E5E7EB]">
+                  <tbody className="divide-y divide-[#E5E7EB] text-[12.5px]">
                     {(selectedDetail.recipients || []).length === 0 ? (
                       <tr>
                         <td colSpan={5} className="py-6 text-center text-[#64748B]">
@@ -770,10 +775,10 @@ const AdminMarketingPage = () => {
                     ) : (
                       selectedDetail.recipients.map((rec) => (
                         <tr key={rec.id}>
-                          <td className="py-2.5 px-3 font-medium text-[#1F2937]">
+                          <td className="py-2.5 px-3 font-medium text-[#263445]">
                             {rec.customer_email || rec.customer_id}
                           </td>
-                          <td className="py-2.5 px-3 uppercase font-mono text-[11px] text-[#D94300]">
+                          <td className="py-2.5 px-3 font-mono text-[11.5px] text-[#1D4ED8] capitalize">
                             {rec.delivery_status}
                           </td>
                           <td className="py-2.5 px-3 font-mono text-[#64748B]">
@@ -782,7 +787,7 @@ const AdminMarketingPage = () => {
                           <td className="py-2.5 px-3 font-mono text-[11px] text-[#64748B]">
                             {rec.provider_message_id || '—'}
                           </td>
-                          <td className="py-2.5 px-3 text-[11px] text-red-600 max-w-xs truncate">
+                          <td className="py-2.5 px-3 text-[11.5px] text-[#DC2626] max-w-xs truncate">
                             {rec.failure_reason || '—'}
                           </td>
                         </tr>

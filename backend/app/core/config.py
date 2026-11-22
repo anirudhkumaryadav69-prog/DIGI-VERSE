@@ -1,6 +1,10 @@
+import re
 from typing import List, Optional, Union
+from urllib.parse import urlparse
+
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy.engine import make_url
 
 
 class Settings(BaseSettings):
@@ -34,6 +38,12 @@ class Settings(BaseSettings):
     OTP_MAX_ATTEMPTS: int = 5
     OTP_MAX_SENDS_PER_WINDOW: int = 3
     OTP_RATE_WINDOW_MINUTES: int = 10
+    OTP_DELIVERY_PROVIDER: str = "development"
+    ENABLE_DEV_OTP: bool = False
+    WHATSAPP_OTP_ENABLED: bool = False
+    WHATSAPP_TEMPLATE_NAME: str = "verification_code"
+    WHATSAPP_TEMPLATE_LANGUAGE: str = "en_US"
+    WHATSAPP_REQUEST_TIMEOUT_SECONDS: float = 10.0
     PASSWORD_RESET_EXPIRE_MINUTES: int = 30
     MAX_FAILED_LOGIN_ATTEMPTS: int = 5
     ACCOUNT_LOCKOUT_MINUTES: int = 15
@@ -153,7 +163,149 @@ class Settings(BaseSettings):
         """Return a list of configuration violations when running in production."""
         if not self.is_production:
             return []
-        return self._validate_deployed_common("production")
+        issues = self._validate_deployed_common("production")
+
+        # 1. Production database must not point to localhost and must require TLS
+        try:
+            db_url = make_url(self.DATABASE_URL)
+        except Exception:  # noqa: BLE001
+            issues.append("DATABASE_URL is invalid in production.")
+            db_url = None
+        if db_url is not None:
+            db_host = (db_url.host or "").strip().lower()
+            if (
+                not db_host
+                or db_host in {"localhost", "127.0.0.1", "::1", "0.0.0.0"}
+                or db_host.endswith(".local")
+            ):
+                issues.append("DATABASE_URL cannot reference localhost or loopback addresses in production.")
+            sslmode = str((db_url.query or {}).get("sslmode", "")).strip().lower()
+            if sslmode not in {"require", "verify-ca", "verify-full"}:
+                issues.append(
+                    "DATABASE_URL must require TLS (sslmode=require, verify-ca, or verify-full) in production."
+                )
+
+        # 2. HTTPS-only CORS origins; reject localhost/loopback
+        if not self.CORS_ORIGINS:
+            issues.append("CORS_ORIGINS must include at least one HTTPS origin in production.")
+        else:
+            for origin in self.CORS_ORIGINS:
+                if origin == "*":
+                    continue  # Already flagged by _validate_deployed_common
+                parsed_origin = urlparse(origin)
+                origin_host = (parsed_origin.hostname or "").strip().lower()
+                if parsed_origin.scheme != "https" or not origin_host:
+                    issues.append("CORS_ORIGINS in production must use valid HTTPS URLs.")
+                    break
+                if (
+                    origin_host in {"localhost", "127.0.0.1", "::1"}
+                    or origin_host.endswith(".localhost")
+                    or origin_host.endswith(".local")
+                    or "localhost" in origin.lower()
+                    or "127.0.0.1" in origin
+                ):
+                    issues.append("CORS_ORIGINS in production cannot reference localhost or loopback addresses.")
+                    break
+
+        # 3. Reverse-proxy header trust
+        if not self.TRUST_PROXY_HEADERS:
+            issues.append("TRUST_PROXY_HEADERS must be True in production.")
+
+        # 4. Private S3-compatible object storage (no local ephemeral disk, no placeholders)
+        if (self.ASSET_STORAGE_BACKEND or "").strip().lower() != "s3":
+            issues.append("ASSET_STORAGE_BACKEND must be 's3' in production.")
+        else:
+            if (self.ASSET_STORAGE_BUCKET or "").strip() == "your_private_asset_bucket_name":
+                issues.append("ASSET_STORAGE_BUCKET cannot use a placeholder value in production.")
+            if (self.ASSET_STORAGE_ACCESS_KEY or "").strip() == "your_s3_access_key_placeholder":
+                issues.append("ASSET_STORAGE_ACCESS_KEY cannot use a placeholder value in production.")
+            if (self.ASSET_STORAGE_SECRET_KEY or "").strip() == "your_s3_secret_key_placeholder":
+                issues.append("ASSET_STORAGE_SECRET_KEY cannot use a placeholder value in production.")
+            s3_endpoint = (self.ASSET_STORAGE_ENDPOINT_URL or "").strip()
+            if s3_endpoint == "https://your-s3-compatible-endpoint.example.com":
+                issues.append("ASSET_STORAGE_ENDPOINT_URL cannot use a placeholder value in production.")
+            elif s3_endpoint and not s3_endpoint.startswith("https://"):
+                issues.append("ASSET_STORAGE_ENDPOINT_URL must use HTTPS in production.")
+
+        # 5. Razorpay live credentials and webhook secret
+        payment_provider = (self.PAYMENT_PROVIDER or "").strip().lower()
+        if payment_provider != "razorpay":
+            if payment_provider != "mock":  # 'mock' already flagged by _validate_deployed_common
+                issues.append("PAYMENT_PROVIDER must be 'razorpay' in production.")
+        else:
+            rzp_key = (self.RAZORPAY_KEY_ID or "").strip()
+            rzp_secret = (self.RAZORPAY_KEY_SECRET or "").strip()
+            rzp_wh = (self.RAZORPAY_WEBHOOK_SECRET or "").strip()
+            if not rzp_key or rzp_key == "your_razorpay_key_id_placeholder" or not rzp_key.startswith("rzp_live_"):
+                issues.append("RAZORPAY_KEY_ID must be a live Razorpay key ('rzp_live_...') in production.")
+            if not rzp_secret or rzp_secret == "your_razorpay_key_secret_placeholder":
+                issues.append("RAZORPAY_KEY_SECRET must be configured in production.")
+            if not rzp_wh or rzp_wh == "your_razorpay_webhook_secret_placeholder":
+                issues.append("RAZORPAY_WEBHOOK_SECRET must be configured in production.")
+
+        # 6. OTP & WhatsApp configuration consistency
+        if self.ENABLE_DEV_OTP:
+            issues.append("ENABLE_DEV_OTP must be False in production.")
+        otp_provider = (self.OTP_DELIVERY_PROVIDER or "").strip().lower()
+        if otp_provider != "whatsapp":
+            issues.append("OTP_DELIVERY_PROVIDER must be 'whatsapp' in production.")
+        if not self.WHATSAPP_OTP_ENABLED:
+            issues.append("WHATSAPP_OTP_ENABLED must be True in production.")
+
+        wa_placeholders = {
+            "",
+            "your_whatsapp_cloud_api_token_placeholder",
+            "your_whatsapp_phone_number_id_placeholder",
+            "your_meta_app_secret_placeholder",
+            "your_whatsapp_webhook_verify_token_placeholder",
+        }
+        wa_app_secret = (self.WHATSAPP_APP_SECRET or "").strip()
+        wa_verify_token = (self.WHATSAPP_WEBHOOK_VERIFY_TOKEN or "").strip()
+        wa_webhook_partially_set = bool(wa_app_secret or wa_verify_token)
+        wa_enabled = bool(self.WHATSAPP_OTP_ENABLED or otp_provider == "whatsapp" or wa_webhook_partially_set)
+        if wa_enabled:
+            token = (self.WHATSAPP_ACCESS_TOKEN or "").strip()
+            if token in wa_placeholders:
+                issues.append("WHATSAPP_ACCESS_TOKEN must be configured when WhatsApp is enabled in production.")
+            phone_id = (self.WHATSAPP_PHONE_NUMBER_ID or "").strip()
+            if phone_id in wa_placeholders:
+                issues.append("WHATSAPP_PHONE_NUMBER_ID must be configured when WhatsApp is enabled in production.")
+            tpl_name = (self.WHATSAPP_TEMPLATE_NAME or "").strip()
+            if not tpl_name or tpl_name.startswith("your_"):
+                issues.append("WHATSAPP_TEMPLATE_NAME must be configured when WhatsApp is enabled in production.")
+            graph_ver = (self.WHATSAPP_GRAPH_API_VERSION or "").strip()
+            if not re.match(r"^v[0-9]+\.[0-9]+$", graph_ver):
+                issues.append("WHATSAPP_GRAPH_API_VERSION must follow 'v<major>.<minor>' format in production.")
+            if wa_webhook_partially_set:
+                if wa_app_secret in wa_placeholders:
+                    issues.append("WHATSAPP_APP_SECRET must be configured when WhatsApp webhooks are configured.")
+                if wa_verify_token in wa_placeholders:
+                    issues.append(
+                        "WHATSAPP_WEBHOOK_VERIFY_TOKEN must be configured when WhatsApp webhooks are configured."
+                    )
+
+        # 7. Resend production email and webhook configuration
+        # ProductionEmailProvider is unconditionally active in production for password resets & order emails.
+        resend_key = (self.RESEND_API_KEY or "").strip()
+        resend_from = (self.RESEND_FROM_EMAIL or "").strip()
+        resend_wh = (self.RESEND_WEBHOOK_SECRET or "").strip()
+        if not resend_key or resend_key == "your_resend_api_key_placeholder":
+            issues.append("RESEND_API_KEY must be configured in production.")
+        if (
+            not resend_from
+            or "@" not in resend_from
+            or "digiverse.internal" in resend_from.lower()
+            or "your-domain.example.com" in resend_from.lower()
+        ):
+            issues.append("RESEND_FROM_EMAIL must use a verified non-internal domain in production.")
+        if resend_wh == "whsec_your_resend_webhook_secret_placeholder":
+            issues.append("RESEND_WEBHOOK_SECRET cannot use a placeholder value in production.")
+        elif resend_wh and not resend_wh.startswith("whsec_"):
+            issues.append("RESEND_WEBHOOK_SECRET must be a valid Svix secret starting with 'whsec_'.")
+        elif resend_key and resend_key != "your_resend_api_key_placeholder" and not resend_wh:
+            issues.append("RESEND_WEBHOOK_SECRET must be configured when Resend email delivery is enabled in production.")
+
+        return issues
 
     def validate_staging_readiness(self) -> list[str]:
         """Return staging-specific configuration violations (TLS, test-mode gateways, private S3)."""
@@ -170,6 +322,17 @@ class Settings(BaseSettings):
                 issues.append(f"CORS_ORIGINS in staging must not reference localhost/127.0.0.1 ({origin}).")
             elif not origin.startswith("https://"):
                 issues.append(f"CORS_ORIGINS in staging must use HTTPS ({origin}).")
+        if self.ENABLE_DEV_OTP:
+            issues.append("ENABLE_DEV_OTP must be False outside development.")
+        if self.WHATSAPP_OTP_ENABLED:
+            token = (self.WHATSAPP_ACCESS_TOKEN or "").strip()
+            if not token or token == "your_whatsapp_cloud_api_token_placeholder":
+                issues.append("WHATSAPP_ACCESS_TOKEN must be configured when WhatsApp OTP is enabled.")
+            phone_id = (self.WHATSAPP_PHONE_NUMBER_ID or "").strip()
+            if not phone_id or phone_id == "your_whatsapp_phone_number_id_placeholder":
+                issues.append("WHATSAPP_PHONE_NUMBER_ID must be configured when WhatsApp OTP is enabled.")
+            if not (self.WHATSAPP_TEMPLATE_NAME or "").strip():
+                issues.append("WHATSAPP_TEMPLATE_NAME must be configured when WhatsApp OTP is enabled.")
         return issues
 
     model_config = SettingsConfigDict(

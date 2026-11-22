@@ -30,6 +30,7 @@ const SellerOrdersPage = lazy(() => import('../pages/seller/SellerOrdersPage'));
 const SellerProfilePage = lazy(() => import('../pages/seller/SellerProfilePage'));
 const SellerAnalyticsPage = lazy(() => import('../pages/seller/SellerAnalyticsPage'));
 const SellerFinancialPage = lazy(() => import('../pages/seller/SellerFinancialPage'));
+const SellerPayoutPage = lazy(() => import('../pages/seller/SellerPayoutPage'));
 
 const RegisterPage = lazy(() => import('../pages/auth/RegisterPage'));
 const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
@@ -55,6 +56,7 @@ const AdminVideosPage = lazy(() => import('../pages/admin/AdminVideosPage'));
 const AdminMarketingPage = lazy(() => import('../pages/admin/AdminMarketingPage'));
 const AdminSettingsPage = lazy(() => import('../pages/admin/AdminSettingsPage'));
 const AdminFinancialPage = lazy(() => import('../pages/admin/AdminFinancialPage'));
+const AdminPayoutPage = lazy(() => import('../pages/admin/AdminPayoutPage'));
 
 const AppRoutes = () => {
   return (
@@ -98,6 +100,7 @@ const AppRoutes = () => {
           <Route path="/seller/profile" element={<SellerProfilePage />} />
           <Route path="/seller/analytics" element={<SellerAnalyticsPage />} />
           <Route path="/seller/financial" element={<SellerFinancialPage />} />
+          <Route path="/seller/payouts" element={<SellerPayoutPage />} />
         </Route>
 
         {/* Administrator Authentication & Protected Routes */}
@@ -122,6 +125,7 @@ const AppRoutes = () => {
           <Route path="/admin/marketing" element={<AdminMarketingPage />} />
           <Route path="/admin/settings" element={<AdminSettingsPage />} />
           <Route path="/admin/financial" element={<AdminFinancialPage />} />
+          <Route path="/admin/payouts" element={<AdminPayoutPage />} />
         </Route>
 
         {/* 404 Not Found Route */}

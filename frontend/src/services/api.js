@@ -263,6 +263,70 @@ export const adminFinancialApi = {
     api.get('/admin/financial/commission/report', { params }).then((r) => r.data),
 };
 
+export const sellerPayoutApi = {
+  getBalance: () => api.get('/seller/payouts/balance').then((r) => r.data),
+  listAccounts: () => api.get('/seller/payouts/accounts').then((r) => r.data),
+  createAccount: (data) => api.post('/seller/payouts/accounts', data).then((r) => r.data),
+  updateAccount: (accountId, data) =>
+    api.patch(`/seller/payouts/accounts/${accountId}`, data).then((r) => r.data),
+  setDefaultAccount: (accountId) =>
+    api.post(`/seller/payouts/accounts/${accountId}/default`).then((r) => r.data),
+  deactivateAccount: (accountId) =>
+    api.delete(`/seller/payouts/accounts/${accountId}`).then((r) => r.data),
+  createRequest: (data) => api.post('/seller/payouts/requests', data).then((r) => r.data),
+  listRequests: (params) =>
+    api.get('/seller/payouts/requests', { params }).then((r) => r.data),
+  getRequest: (payoutId) =>
+    api.get(`/seller/payouts/requests/${payoutId}`).then((r) => r.data),
+  getAttempts: (payoutId) =>
+    api.get(`/seller/payouts/requests/${payoutId}/attempts`).then((r) => r.data),
+  cancelRequest: (payoutId, data) =>
+    api.post(`/seller/payouts/requests/${payoutId}/cancel`, data).then((r) => r.data),
+};
+
+export const adminPayoutApi = {
+  listRequests: (params) => api.get('/admin/payouts', { params }).then((r) => r.data),
+  getDetail: (payoutId) => api.get(`/admin/payouts/${payoutId}/detail`).then((r) => r.data),
+  getRequest: (payoutId) =>
+    api.get(`/admin/payouts/${payoutId}`).then((r) => r.data),
+  reviewRequest: (payoutId, data) =>
+    api.post(`/admin/payouts/${payoutId}/review`, data).then((r) => r.data),
+  approveRequest: (payoutId, data) =>
+    api.post(`/admin/payouts/${payoutId}/approve`, data).then((r) => r.data),
+  rejectRequest: (payoutId, data) =>
+    api.post(`/admin/payouts/${payoutId}/reject`, data).then((r) => r.data),
+  executeRequest: (payoutId, data) =>
+    api.post(`/admin/payouts/${payoutId}/execute`, data).then((r) => r.data),
+  retryRequest: (payoutId, data) =>
+    api.post(`/admin/payouts/${payoutId}/retry`, data).then((r) => r.data),
+  reconcileRequest: (payoutId, data) =>
+    api.post(`/admin/payouts/${payoutId}/reconcile`, data).then((r) => r.data),
+  listAttempts: (payoutId) =>
+    api.get(`/admin/payouts/${payoutId}/attempts`).then((r) => r.data),
+  listReconciliation: (params) =>
+    api.get('/admin/payouts/reconciliation', { params }).then((r) => r.data),
+  getReconciliationSummary: (params) =>
+    api.get('/admin/payouts/reconciliation/summary', { params }).then((r) => r.data),
+  getReconciliationDetail: (payoutId) =>
+    api.get(`/admin/payouts/${payoutId}/reconciliation`).then((r) => r.data),
+  resolveReconciliation: (payoutId, data) =>
+    api.post(`/admin/payouts/${payoutId}/reconciliation/resolve`, data).then((r) => r.data),
+  getReport: (params) => api.get('/admin/payouts/reports', { params }).then((r) => r.data),
+};
+
+export const adminPayoutAccountApi = {
+  listVerification: (params) =>
+    api.get('/admin/payout-accounts/verification', { params }).then((r) => r.data),
+  getAccount: (accountId) =>
+    api.get(`/admin/payout-accounts/${accountId}`).then((r) => r.data),
+  approveAccount: (accountId, data) =>
+    api.post(`/admin/payout-accounts/${accountId}/approve`, data).then((r) => r.data),
+  rejectAccount: (accountId, data) =>
+    api.post(`/admin/payout-accounts/${accountId}/reject`, data).then((r) => r.data),
+  getHistory: (accountId, params) =>
+    api.get(`/admin/payout-accounts/${accountId}/history`, { params }).then((r) => r.data),
+};
+
 // ---------------------------------------------------------------------------
 // Administrator Order Management API
 // ---------------------------------------------------------------------------

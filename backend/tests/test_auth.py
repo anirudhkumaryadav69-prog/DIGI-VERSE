@@ -190,6 +190,7 @@ def test_customer_otp_generation_rate_limiting(api_client):
 
     r2 = api_client.post("/api/auth/otp/send", headers=headers)
     assert r2.status_code == 200
+    assert r2.json()["delivery_status"] == "development_only"
     r3 = api_client.post("/api/auth/otp/send", headers=headers)
     assert r3.status_code == 200
 

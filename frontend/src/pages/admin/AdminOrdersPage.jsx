@@ -1,13 +1,24 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Search,
-  ChevronLeft,
-  ChevronRight,
   ArrowUpRight,
-  AlertCircle,
+  CheckCircle2,
+  Clock,
+  Download,
+  IndianRupee,
+  RotateCcw,
+  Search,
+  ShoppingCart,
 } from 'lucide-react';
 import AdminLayout from '../../layouts/AdminLayout';
+import {
+  EmptyState,
+  ErrorAlert,
+  LoadingState,
+  Pagination,
+  formatINR,
+} from '../../components/common/StorefrontDesignSystem';
+import { AdminKpiCard, AdminStatusBadge } from '../../components/admin/AdminPrimitives';
 import { adminOrdersApi } from '../../services/api';
 
 const AdminOrdersPage = () => {
@@ -49,76 +60,94 @@ const AdminOrdersPage = () => {
     fetchOrders();
   }, [fetchOrders]);
 
-  const formatINR = (v) =>
-    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(Number(v || 0));
+  const hasFilters = Boolean(search.trim() || statusFilter || paymentFilter);
 
   return (
     <AdminLayout
       title="Order Management"
       subtitle="Inspect customer orders, payment verification references, and digital delivery activity"
     >
-      {error && (
-        <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
-        </div>
-      )}
+      {error && <ErrorAlert message={error} onRetry={fetchOrders} className="mb-6" />}
 
       {/* Order Statistics Cards */}
       {stats && (
-        <section className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
-          <div className="dv-card p-4">
-            <p className="text-[10px] uppercase tracking-widest text-[#64748B]">Total Orders</p>
-            <p className="text-xl font-semibold text-[#1F2937] mt-1">{stats.total_orders}</p>
-          </div>
-          <div className="dv-card p-4">
-            <p className="text-[10px] uppercase tracking-widest text-[#64748B]">Paid Orders</p>
-            <p className="text-xl font-semibold text-emerald-700 mt-1">{stats.paid_orders}</p>
-          </div>
-          <div className="dv-card p-4">
-            <p className="text-[10px] uppercase tracking-widest text-[#64748B]">Pending Orders</p>
-            <p className="text-xl font-semibold text-[#D94300] mt-1">{stats.pending_orders}</p>
-          </div>
-          <div className="dv-card p-4">
-            <p className="text-[10px] uppercase tracking-widest text-[#64748B]">Verified Revenue</p>
-            <p className="text-xl font-semibold font-mono text-[#FF6B0A] mt-1">{formatINR(stats.total_revenue)}</p>
-          </div>
-          <div className="dv-card p-4">
-            <p className="text-[10px] uppercase tracking-widest text-[#64748B]">Refunded</p>
-            <p className="text-xl font-semibold font-mono text-[#1F2937] mt-1">
-              {formatINR(stats.total_refunded_amount)}
-            </p>
-          </div>
-          <div className="dv-card p-4">
-            <p className="text-[10px] uppercase tracking-widest text-[#64748B]">Total Downloads</p>
-            <p className="text-xl font-semibold text-[#1F2937] mt-1">{stats.total_downloads}</p>
-          </div>
+        <section className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3.5 mb-6">
+          <AdminKpiCard
+            compact
+            label="Total Orders"
+            value={stats.total_orders ?? 0}
+            icon={ShoppingCart}
+            tone="neutral"
+          />
+          <AdminKpiCard
+            compact
+            label="Paid Orders"
+            value={stats.paid_orders ?? 0}
+            icon={CheckCircle2}
+            tone="success"
+          />
+          <AdminKpiCard
+            compact
+            label="Pending Orders"
+            value={stats.pending_orders ?? 0}
+            icon={Clock}
+            tone={Number(stats.pending_orders || 0) > 0 ? 'warning' : 'neutral'}
+          />
+          <AdminKpiCard
+            compact
+            label="Verified Revenue"
+            value={formatINR(stats.total_revenue)}
+            icon={IndianRupee}
+            tone="blue"
+          />
+          <AdminKpiCard
+            compact
+            label="Refunded Amount"
+            value={formatINR(stats.total_refunded_amount)}
+            icon={RotateCcw}
+            tone="neutral"
+          />
+          <AdminKpiCard
+            compact
+            label="Total Downloads"
+            value={stats.total_downloads ?? 0}
+            icon={Download}
+            tone="blue"
+          />
         </section>
       )}
 
       {/* Search & Filters */}
-      <div className="dv-card p-4 mb-6 grid grid-cols-1 md:grid-cols-4 gap-3">
+      <div className="bg-white border border-[#D5DEE8] rounded-xl p-4 mb-5 grid grid-cols-1 md:grid-cols-4 gap-3 shadow-2xs">
         <div className="relative md:col-span-2">
-          <Search className="w-4 h-4 text-[#8490A0] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <label htmlFor="admin-orders-search" className="sr-only">
+            Search orders
+          </label>
+          <Search
+            className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2"
+            aria-hidden="true"
+          />
           <input
-            type="text"
+            id="admin-orders-search"
+            type="search"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
               setPage(1);
             }}
             placeholder="Search by order number, customer email, or name..."
-            className="dv-input pl-10 pr-4 py-2 text-xs"
+            className="dv-input pl-10 pr-4 py-2 text-[13px]"
           />
         </div>
 
         <select
+          aria-label="Filter by payment status"
           value={paymentFilter}
           onChange={(e) => {
             setPaymentFilter(e.target.value);
             setPage(1);
           }}
-          className="dv-input px-3.5 py-2 text-xs"
+          className="dv-input px-3.5 py-2 text-[13px]"
         >
           <option value="">All Payment Statuses</option>
           <option value="paid">Paid</option>
@@ -129,12 +158,13 @@ const AdminOrdersPage = () => {
         </select>
 
         <select
+          aria-label="Filter by order status"
           value={statusFilter}
           onChange={(e) => {
             setStatusFilter(e.target.value);
             setPage(1);
           }}
-          className="dv-input px-3.5 py-2 text-xs"
+          className="dv-input px-3.5 py-2 text-[13px]"
         >
           <option value="">All Order Statuses</option>
           <option value="pending">Pending</option>
@@ -147,61 +177,77 @@ const AdminOrdersPage = () => {
       </div>
 
       {/* Orders Table */}
-      <div className="dv-card overflow-hidden">
+      <div className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
         {loading ? (
-          <div className="p-10 text-center text-xs text-[#64748B] uppercase tracking-widest">
-            Loading Orders...
-          </div>
+          <LoadingState label="Loading orders..." />
         ) : data.items.length === 0 ? (
-          <div className="p-10 text-center text-xs text-[#64748B]">
-            No orders match your current filters.
+          <div className="p-6">
+            <EmptyState
+              icon={ShoppingCart}
+              title="No matching orders"
+              description={
+                hasFilters
+                  ? 'No orders matched your current search or status filters.'
+                  : 'Customer orders will appear here once checkout is initiated.'
+              }
+              action={
+                hasFilters && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearch('');
+                      setStatusFilter('');
+                      setPaymentFilter('');
+                      setPage(1);
+                    }}
+                    className="dv-btn-secondary px-4 py-2 text-[12px] font-semibold"
+                  >
+                    Clear Filters
+                  </button>
+                )
+              }
+            />
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-[#E5E7EB] bg-[#FFF6ED] text-[#64748B] uppercase">
-                  <th className="py-3 px-4 font-semibold">Order #</th>
-                  <th className="py-3 px-4 font-semibold">Customer</th>
-                  <th className="py-3 px-4 font-semibold">Total</th>
-                  <th className="py-3 px-4 font-semibold">Payment</th>
-                  <th className="py-3 px-4 font-semibold">Order Status</th>
-                  <th className="py-3 px-4 font-semibold">Downloads</th>
-                  <th className="py-3 px-4 text-right font-semibold">Details</th>
+                <tr className="bg-[#F8FAFC] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#475569]">
+                  <th className="py-3 px-4">Order</th>
+                  <th className="py-3 px-4">Customer</th>
+                  <th className="py-3 px-4">Total</th>
+                  <th className="py-3 px-4">Payment</th>
+                  <th className="py-3 px-4">Order Status</th>
+                  <th className="py-3 px-4">Downloads</th>
+                  <th className="py-3 px-4 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E5E7EB]">
+              <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                 {data.items.map((ord) => (
-                  <tr key={ord.id} className="hover:bg-[#FFF0E2]/45 transition">
-                    <td className="py-3.5 px-4 font-mono font-semibold text-[#1F2937]">{ord.order_number}</td>
+                  <tr key={ord.id} className="hover:bg-[#EDF5FC]/45 transition">
+                    <td className="py-3.5 px-4 font-mono font-semibold text-[#263445] whitespace-nowrap">
+                      {ord.order_number}
+                    </td>
                     <td className="py-3.5 px-4">
-                      <p className="font-semibold text-[#1F2937]">{ord.customer.full_name}</p>
-                      <p className="text-[11px] text-[#64748B]">{ord.customer.email}</p>
+                      <p className="font-semibold text-[#263445]">{ord.customer.full_name}</p>
+                      <p className="text-[12px] text-[#64748B]">{ord.customer.email}</p>
                     </td>
-                    <td className="py-3.5 px-4 font-mono font-medium text-[#1F2937]">{formatINR(ord.total_amount)}</td>
+                    <td className="py-3.5 px-4 font-mono font-semibold text-[#263445] tabular-nums whitespace-nowrap">
+                      {formatINR(ord.total_amount)}
+                    </td>
                     <td className="py-3.5 px-4">
-                      <span
-                        className={`text-[10px] uppercase tracking-wider font-medium px-2.5 py-0.5 rounded-full border ${
-                          ord.payment_status === 'paid'
-                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                            : ord.payment_status === 'refunded'
-                            ? 'bg-amber-50 text-amber-800 border-amber-200'
-                            : 'bg-slate-100 text-[#64748B] border-[#E5E7EB]'
-                        }`}
-                      >
-                        {ord.payment_status}
-                      </span>
+                      <AdminStatusBadge status={ord.payment_status} />
                     </td>
-                    <td className="py-3.5 px-4 uppercase text-[11px] font-medium text-[#243247]">
-                      {ord.status}
+                    <td className="py-3.5 px-4">
+                      <AdminStatusBadge status={ord.status} />
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-[#243247]">
+                    <td className="py-3.5 px-4 font-mono text-[#475569] tabular-nums">
                       {ord.downloads?.length || 0}
                     </td>
                     <td className="py-3.5 px-4 text-right">
                       <Link
                         to={`/admin/orders/${ord.id}`}
-                        className="px-3 py-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#FFD4AE] hover:text-[#FF6B0A] text-[#243247] inline-flex items-center gap-1 transition"
+                        className="px-3 py-1.5 rounded-lg border border-[#D5DEE8] bg-white hover:border-[#93C5FD] hover:bg-[#EDF5FC] hover:text-[#2563EB] text-[12px] font-medium text-[#263445] inline-flex items-center gap-1 transition"
                       >
                         <span>Inspect</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />
@@ -213,34 +259,15 @@ const AdminOrdersPage = () => {
             </table>
           </div>
         )}
-
-        <div className="p-4 border-t border-[#E5E7EB] bg-[#FFF6ED] flex items-center justify-between text-xs text-[#64748B]">
-          <span>
-            Total: <strong className="text-[#1F2937]">{data.total}</strong> orders
-          </span>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white text-[#243247] disabled:opacity-40 hover:border-[#FFD4AE] hover:text-[#FF6B0A] transition"
-            >
-              <ChevronLeft className="w-3.5 h-3.5" />
-            </button>
-            <span>
-              Page {data.page} of {data.total_pages}
-            </span>
-            <button
-              type="button"
-              disabled={page >= data.total_pages}
-              onClick={() => setPage((p) => p + 1)}
-              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white text-[#243247] disabled:opacity-40 hover:border-[#FFD4AE] hover:text-[#FF6B0A] transition"
-            >
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
       </div>
+
+      <Pagination
+        page={data.page}
+        totalPages={data.total_pages}
+        totalItems={data.total}
+        itemLabel="orders"
+        onPageChange={(nextPage) => setPage(nextPage)}
+      />
     </AdminLayout>
   );
 };

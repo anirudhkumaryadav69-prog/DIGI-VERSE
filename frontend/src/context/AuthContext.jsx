@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [adminLoading, setAdminLoading] = useState(isAdminPath);
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [otpDeliveryStatus, setOtpDeliveryStatus] = useState(null);
 
   const refreshCartAndWishlistCounts = useCallback(async () => {
     try {
@@ -86,6 +87,10 @@ export const AuthProvider = ({ children }) => {
   const registerCustomer = async (payload) => {
     const data = await customerAuthApi.register(payload);
     setCustomer(data.customer);
+    setOtpDeliveryStatus({
+      status: data.otp_delivery_status,
+      detail: data.otp_delivery_detail,
+    });
     await refreshCartAndWishlistCounts();
     return data;
   };
@@ -135,6 +140,8 @@ export const AuthProvider = ({ children }) => {
     user: customer,
     customer,
     setCustomer,
+    otpDeliveryStatus,
+    setOtpDeliveryStatus,
     loading: customerLoading,
     customerLoading,
     isAuthenticated: Boolean(customer),

@@ -148,7 +148,8 @@ class FinancialTransaction(Base):
         CheckConstraint("debit_total = credit_total", name="financial_transaction_balanced"),
         CheckConstraint("currency ~ '^[A-Z]{3}$'", name="financial_transaction_currency_iso4217"),
         CheckConstraint(
-            "transaction_type IN ('payment_capture', 'refund_reversal', 'payment_reversal', 'financial_correction')",
+            "transaction_type IN ('payment_capture', 'refund_reversal', 'payment_reversal', "
+            "'financial_correction', 'payout_settlement')",
             name="financial_transaction_type_valid",
         ),
         Index("ix_financial_transactions_order_posted", "order_id", "posted_at"),

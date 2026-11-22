@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { LoadingState } from '../components/common/StorefrontDesignSystem';
 
 const AdminRoute = ({ allowPasswordChangePending = false }) => {
   const { isAdminAuthenticated, isAdmin, adminMustChangePassword, adminLoading } = useAuth();
@@ -7,10 +8,8 @@ const AdminRoute = ({ allowPasswordChangePending = false }) => {
 
   if (adminLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FFFAF5] text-[#243247]">
-        <span className="text-xs tracking-[0.2em] uppercase text-[#64748B]">
-          Verifying Administrator Session...
-        </span>
+      <div className="min-h-screen flex items-center justify-center bg-[#EAF4FC] text-[#263445] p-6">
+        <LoadingState label="Verifying administrator session..." />
       </div>
     );
   }

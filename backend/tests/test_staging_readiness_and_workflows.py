@@ -97,6 +97,7 @@ def _sign_whatsapp_hub(app_secret: str, raw_body: bytes) -> str:
 
 def _configure_valid_staging(monkeypatch) -> None:
     monkeypatch.setattr(settings, "ENVIRONMENT", "staging")
+    monkeypatch.setattr(settings, "ENABLE_DEV_OTP", False)
     monkeypatch.setattr(settings, "DEBUG", False)
     monkeypatch.setattr(settings, "JWT_SECRET_KEY", "a" * 64)
     monkeypatch.setattr(settings, "ADMIN_JWT_SECRET_KEY", "b" * 64)

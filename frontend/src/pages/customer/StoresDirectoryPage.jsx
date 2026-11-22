@@ -11,6 +11,11 @@ import {
   SectionHeading,
   useDocumentMeta,
 } from '../../components/common/StorefrontDesignSystem';
+import {
+  StorefrontAvatarLogo,
+  StorefrontBannerVisual,
+} from '../../components/products/StorefrontVisual';
+import { resolveStorefrontTheme } from '../../utils/categoryTheme';
 import { publicCatalogApi } from '../../services/api';
 
 const StoresDirectoryPage = () => {
@@ -44,17 +49,21 @@ const StoresDirectoryPage = () => {
 
   return (
     <StorefrontLayout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <SectionHeading
-            eyebrow="Verified Sellers"
-            title="Creator Storefronts"
-            subtitle="Discover independent studios and verified digital creators publishing on DIGI-VERSE."
-          />
-
-          <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 text-[#8490A0] absolute left-3.5 top-1/2 -translate-y-1/2" />
+      <SectionHeading
+        eyebrow="Verified Sellers"
+        title="Creator Storefronts"
+        subtitle="Discover independent studios and verified digital creators publishing on DIGI-VERSE."
+        action={
+          <div className="relative w-full sm:w-80">
+            <label htmlFor="stores-search-input" className="sr-only">
+              Search creator stores
+            </label>
+            <Search
+              className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              aria-hidden="true"
+            />
             <input
+              id="stores-search-input"
               type="search"
               value={search}
               onChange={(e) => {
@@ -63,11 +72,13 @@ const StoresDirectoryPage = () => {
               }}
               placeholder="Search stores or creators..."
               aria-label="Search creator stores"
-              className="dv-input pl-10 text-sm"
+              className="dv-input pl-10 pr-3.5 py-2.5 text-[13px]"
             />
           </div>
-        </div>
+        }
+      />
 
+      <div className="space-y-8">
         {error && <ErrorAlert message={error} />}
 
         {loading ? (
@@ -78,74 +89,58 @@ const StoresDirectoryPage = () => {
             title="No creator storefronts match your search"
             description="Browse all digital products or become the first verified creator in this niche."
             action={
-              <Link to="/products" className="dv-btn-primary px-5 py-2.5 text-xs">
+              <Link to="/products" className="dv-btn-primary px-5 py-2.5 text-xs font-semibold inline-block">
                 Browse All Products
               </Link>
             }
           />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.items.map((store) => (
-              <Link
-                key={store.id}
-                to={`/store/${store.store_slug}`}
-                className="group dv-card-interactive overflow-hidden flex flex-col justify-between"
-              >
-                <div>
-                  <div className="h-28 bg-[#FFF6ED] border-b border-[#E5E7EB] relative overflow-hidden">
-                    {store.banner_url ? (
-                      <img
-                        src={store.banner_url}
-                        alt={`${store.store_name} banner`}
-                        loading="lazy"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-linear-to-r from-[#FFF2E6] via-[#FFE9D6] to-[#FFF6ED]" />
-                    )}
-                  </div>
-
-                  <div className="p-5 pt-0">
-                    <div className="flex items-end justify-between -mt-7 mb-3">
-                      <div className="w-14 h-14 rounded-2xl bg-white border-2 border-[#FFD4AE] shadow-xs overflow-hidden flex items-center justify-center">
-                        {store.logo_url ? (
-                          <img
-                            src={store.logo_url}
-                            alt={store.store_name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <Store className="w-6 h-6 text-[#FF6B0A]" />
-                        )}
-                      </div>
-                      <Badge variant="orange">{store.business_type}</Badge>
+            {data.items.map((store) => {
+              const theme = resolveStorefrontTheme(store);
+              return (
+                <Link
+                  key={store.id}
+                  to={`/store/${store.store_slug}`}
+                  className="group dv-card-interactive overflow-hidden flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="h-28 border-b border-[#E5E7EB] relative overflow-hidden">
+                      <StorefrontBannerVisual store={store} theme={theme} />
                     </div>
 
-                    <h2 className="text-lg font-bold text-[#1F2937] group-hover:text-[#FF6B0A] transition">
-                      {store.store_name}
-                    </h2>
-                    <p className="text-xs text-[#64748B] mt-0.5">by {store.seller_display_name}</p>
+                    <div className="p-5 pt-0 relative z-10">
+                      <div className="flex items-end justify-between gap-2 -mt-7 mb-3">
+                        <StorefrontAvatarLogo store={store} theme={theme} />
+                        <Badge variant="accent">{store.business_type}</Badge>
+                      </div>
 
-                    {store.store_description && (
-                      <p className="text-xs text-[#243247] line-clamp-2 mt-3 leading-relaxed">
-                        {store.store_description}
-                      </p>
-                    )}
+                      <h2 className="text-lg font-bold text-[#263445] group-hover:text-[#2563EB] transition">
+                        {store.store_name}
+                      </h2>
+                      <p className="text-xs text-[#64748B] mt-0.5">by {store.seller_display_name}</p>
+
+                      {store.store_description && (
+                        <p className="text-xs text-[#263445] line-clamp-2 mt-3 leading-relaxed">
+                          {store.store_description}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                <div className="px-5 py-3.5 border-t border-[#E5E7EB] bg-[#FFFAF5] flex items-center justify-between text-xs text-[#64748B]">
-                  <span className="inline-flex items-center gap-1.5">
-                    <Package className="w-3.5 h-3.5 text-[#FF6B0A]" />
-                    <strong className="text-[#1F2937]">{store.published_product_count}</strong> products
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-[#FF6B0A] font-semibold">
-                    <MapPin className="w-3 h-3" /> {store.country}
-                    <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                  </span>
-                </div>
-              </Link>
-            ))}
+                  <div className="px-5 py-3.5 border-t border-[#E5E7EB] bg-[#F8FAFC] flex items-center justify-between text-xs text-[#64748B]">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Package className="w-3.5 h-3.5 text-[#2563EB]" aria-hidden="true" />
+                      <strong className="text-[#263445]">{store.published_product_count}</strong> products
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-[#2563EB] font-semibold">
+                      <MapPin className="w-3 h-3" aria-hidden="true" /> {store.country}
+                      <ArrowRight className="w-3.5 h-3.5 ml-1" aria-hidden="true" />
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
 

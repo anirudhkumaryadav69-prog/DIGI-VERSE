@@ -41,10 +41,10 @@ const LoginPage = () => {
   return (
     <StorefrontLayout>
       <div className="w-full max-w-md mx-auto my-6 dv-card-warm p-6 sm:p-8">
-        <p className="text-xs uppercase tracking-[0.2em] text-[#FF6B0A] font-semibold mb-2">
+        <p className="text-xs text-[#2563EB] font-semibold mb-1.5">
           Customer Sign In
         </p>
-        <h1 className="text-2xl font-bold tracking-tight text-[#1F2937] mb-6">Welcome back</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-[#263445] mb-6">Welcome back</h1>
 
         {error && (
           <div
@@ -60,7 +60,7 @@ const LoginPage = () => {
           <div>
             <label
               htmlFor="login-email"
-              className="block text-xs font-medium text-[#243247] mb-1.5"
+              className="block text-xs font-medium text-[#263445] mb-1.5"
             >
               Email Address
             </label>
@@ -80,13 +80,13 @@ const LoginPage = () => {
             <div className="flex items-center justify-between mb-1.5">
               <label
                 htmlFor="login-password"
-                className="block text-xs font-medium text-[#243247]"
+                className="block text-xs font-medium text-[#263445]"
               >
                 Password
               </label>
               <Link
                 to="/forgot-password"
-                className="text-xs font-medium text-[#FF6B0A] hover:text-[#D94300] hover:underline"
+                className="text-xs font-medium text-[#2563EB] hover:text-[#1D4ED8] hover:underline"
               >
                 Forgot password?
               </Link>
@@ -106,7 +106,7 @@ const LoginPage = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="dv-btn-primary w-full mt-4 py-3 px-4 text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-50"
+            className="dv-btn-primary w-full mt-4 py-3 px-4 text-[13.5px] font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <span>{submitting ? 'Signing In...' : 'Sign In'}</span>
             <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -115,7 +115,7 @@ const LoginPage = () => {
 
         <p className="mt-6 text-xs text-[#64748B] text-center">
           New to DIGI-VERSE?{' '}
-          <Link to="/register" className="text-[#FF6B0A] font-semibold hover:text-[#D94300] hover:underline">
+          <Link to="/register" className="text-[#2563EB] font-semibold hover:text-[#1D4ED8] hover:underline">
             Create an account
           </Link>
         </p>

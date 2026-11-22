@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
   CheckCircle2,
+  ChevronRight,
   Download,
   FileCheck2,
   Heart,
@@ -26,6 +27,11 @@ import {
 } from '../../components/common/StorefrontDesignSystem';
 import { commerceApi, publicCatalogApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { getCategoryTheme } from '../../utils/categoryTheme';
+import {
+  resolveProductGalleryImages,
+  resolveProductThumbnailUrl,
+} from '../../utils/productThumbnails';
 
 const ProductDetailPage = () => {
   const { slug } = useParams();
@@ -56,7 +62,8 @@ const ProductDetailPage = () => {
       .getProductBySlug(slug)
       .then((p) => {
         setProduct(p);
-        setActiveImage(p.image_url || p.images?.[0]?.image_url || '');
+        const gallery = resolveProductGalleryImages(p);
+        setActiveImage(gallery[0]?.image_url || resolveProductThumbnailUrl(p, p.image_url, 0));
         if (p.category?.slug) {
           publicCatalogApi
             .listProducts({ category: p.category.slug, page: 1, page_size: 4 })
@@ -133,6 +140,10 @@ const ProductDetailPage = () => {
         )
       : [];
 
+  const categoryTheme = getCategoryTheme(product?.category?.slug || product?.category?.name);
+  const CategoryBadgeIcon = categoryTheme.badgeIcon || Tag;
+  const galleryImages = resolveProductGalleryImages(product);
+
   return (
     <StorefrontLayout>
       {/* Structured JSON-LD Product Metadata for Search Engines */}
@@ -163,15 +174,36 @@ const ProductDetailPage = () => {
         />
       )}
 
-      <div className="mb-6">
-        <Link
-          to="/products"
-          className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] hover:underline inline-flex items-center gap-1.5"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
-          <span>Back to Catalog</span>
+      <nav
+        aria-label="Breadcrumb"
+        className="mb-6 flex flex-wrap items-center gap-1.5 text-[13px] font-medium text-[#64748B]"
+      >
+        <Link to="/" className="hover:text-[#0F172A] transition-colors">
+          Home
         </Link>
-      </div>
+        <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" aria-hidden="true" />
+        {product?.category ? (
+          <>
+            <Link
+              to={`/categories/${product.category.slug}`}
+              className="hover:text-[#0F172A] transition-colors"
+            >
+              {product.category.name}
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" aria-hidden="true" />
+          </>
+        ) : (
+          <>
+            <Link to="/products" className="hover:text-[#0F172A] transition-colors">
+              Catalog
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" aria-hidden="true" />
+          </>
+        )}
+        <span className="text-[#0F172A] font-semibold truncate max-w-xs sm:max-w-md">
+          {product ? product.name : 'Product details'}
+        </span>
+      </nav>
 
       {toast.message && (
         <ToastBanner
@@ -182,11 +214,11 @@ const ProductDetailPage = () => {
       )}
 
       {loading ? (
-        <LoadingState label="Loading Digital Product..." />
+        <LoadingState label="Loading digital product..." />
       ) : error || !product ? (
         <EmptyState
           icon={PackageX}
-          title="Digital Product Unavailable"
+          title="Digital product unavailable"
           description={
             error ||
             'This digital product is currently inactive, unavailable, or no longer in our catalog.'
@@ -194,9 +226,10 @@ const ProductDetailPage = () => {
           action={
             <Link
               to="/products"
-              className="dv-btn-primary inline-block text-xs font-semibold uppercase tracking-wider px-5 py-2.5"
+              className="dv-btn-primary inline-flex items-center gap-1.5 text-[13px] font-semibold px-5 py-2.5"
             >
-              Browse Active Products
+              <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Browse active products</span>
             </Link>
           }
         />
@@ -205,37 +238,37 @@ const ProductDetailPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             {/* Gallery Column */}
             <div className="lg:col-span-7 space-y-4">
-              <div className="aspect-16/11 bg-[#FFF6ED] border border-[#E5E7EB] rounded-2xl overflow-hidden flex items-center justify-center shadow-xs">
+              <div className="aspect-16/10 bg-[#F8FAFC] border border-[#E5E7EB] rounded-2xl overflow-hidden flex items-center justify-center shadow-xs">
                 {activeImage ? (
                   <img
                     src={activeImage}
                     alt={product.name}
                     width="960"
-                    height="660"
+                    height="600"
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-xs uppercase tracking-widest text-[#8490A0] font-medium">
-                    {product.product_type || 'Digital Product Preview'}
+                  <span className="text-xs font-medium text-[#94A3B8]">
+                    {product.product_type || 'Digital product preview'}
                   </span>
                 )}
               </div>
 
-              {product.images?.length > 1 && (
+              {galleryImages.length > 1 && (
                 <div
                   role="list"
                   aria-label="Product image thumbnails"
                   className="flex items-center gap-3 overflow-x-auto pb-2"
                 >
-                  {product.images.map((img, index) => (
+                  {galleryImages.map((img, index) => (
                     <button
                       key={img.id}
                       type="button"
                       onClick={() => setActiveImage(img.image_url)}
                       aria-label={`View image ${index + 1}`}
-                      className={`w-20 h-16 rounded-xl border overflow-hidden shrink-0 transition ${
+                      className={`w-24 h-16 rounded-xl border overflow-hidden shrink-0 transition ${
                         activeImage === img.image_url
-                          ? 'border-[#FF6B0A] ring-2 ring-[#FFE9D6]'
+                          ? 'border-[#2563EB] ring-2 ring-[#EAF4FC]'
                           : 'border-[#E5E7EB] opacity-75 hover:opacity-100'
                       }`}
                     >
@@ -252,17 +285,17 @@ const ProductDetailPage = () => {
 
               {/* What the Customer Receives After Purchase */}
               <section className="dv-card p-6 space-y-4">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-[#1F2937]">
-                  What You Receive After Verified Purchase
+                <h2 className="text-[13px] font-semibold text-[#0F172A]">
+                  What you receive after verified purchase
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-[#64748B]">
                   <div className="flex items-start gap-2.5">
                     <Download
-                      className="w-4 h-4 text-[#FF6B0A] shrink-0 mt-0.5"
+                      className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5"
                       aria-hidden="true"
                     />
                     <div>
-                      <p className="font-semibold text-[#1F2937]">Instant Digital Access</p>
+                      <p className="font-semibold text-[#263445]">Instant Digital Access</p>
                       <p className="mt-0.5 leading-relaxed">
                         Unlocked immediately in your Downloads Library as soon as payment is
                         verified.
@@ -271,11 +304,11 @@ const ProductDetailPage = () => {
                   </div>
                   <div className="flex items-start gap-2.5">
                     <ShieldCheck
-                      className="w-4 h-4 text-[#FF6B0A] shrink-0 mt-0.5"
+                      className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5"
                       aria-hidden="true"
                     />
                     <div>
-                      <p className="font-semibold text-[#1F2937]">Signed Delivery Links</p>
+                      <p className="font-semibold text-[#263445]">Signed Delivery Links</p>
                       <p className="mt-0.5 leading-relaxed">
                         Generate fresh, authenticated short-lived download tokens from your account.
                       </p>
@@ -283,11 +316,11 @@ const ProductDetailPage = () => {
                   </div>
                   <div className="flex items-start gap-2.5">
                     <FileCheck2
-                      className="w-4 h-4 text-[#FF6B0A] shrink-0 mt-0.5"
+                      className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5"
                       aria-hidden="true"
                     />
                     <div>
-                      <p className="font-semibold text-[#1F2937]">Official Tax/Purchase Invoice</p>
+                      <p className="font-semibold text-[#263445]">Official Tax/Purchase Invoice</p>
                       <p className="mt-0.5 leading-relaxed">
                         Permanent order snapshot and printable purchase invoice stored in your
                         profile.
@@ -304,9 +337,9 @@ const ProductDetailPage = () => {
                 {product.category && (
                   <Link
                     to={`/categories/${product.category.slug}`}
-                    className="text-xs font-semibold px-3 py-1 rounded-full bg-[#FFF2E6] border border-[#FFD4AE] text-[#D94300] hover:bg-[#FFE9D6] inline-flex items-center gap-1.5 transition"
+                    className={`text-[12px] font-semibold px-3 py-1 rounded-full border inline-flex items-center gap-1.5 transition hover:opacity-90 ${categoryTheme.badgeClass}`}
                   >
-                    <Tag className="w-3 h-3" aria-hidden="true" />
+                    <CategoryBadgeIcon className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>{product.category.name}</span>
                   </Link>
                 )}
@@ -315,14 +348,14 @@ const ProductDetailPage = () => {
                 )}
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#1F2937]">
+              <h1 className="text-[28px] sm:text-[34px] leading-[1.2] font-bold tracking-tight text-[#0F172A]">
                 {product.name}
               </h1>
 
               {/* Seller Storefront Attribution */}
               <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-white border border-[#E5E7EB]">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 rounded-xl bg-[#FFF2E6] border border-[#FFD4AE] text-[#FF6B0A] flex items-center justify-center shrink-0 overflow-hidden">
+                  <div className="w-9 h-9 rounded-xl bg-[#F8FAFC] border border-[#E5E7EB] text-[#2563EB] flex items-center justify-center shrink-0 overflow-hidden">
                     {product.seller?.logo_url ? (
                       <img
                         src={product.seller.logo_url}
@@ -334,71 +367,71 @@ const ProductDetailPage = () => {
                     )}
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[10px] uppercase tracking-wider text-[#64748B]">
-                      {product.seller?.store_slug ? 'Verified Creator Store' : 'Platform Catalog'}
+                    <p className="text-[11px] font-medium text-[#64748B]">
+                      {product.seller?.store_slug ? 'Verified creator storefront' : 'Platform catalog'}
                     </p>
                     {product.seller?.store_slug ? (
                       <Link
                         to={`/store/${product.seller.store_slug}`}
-                        className="text-xs font-bold text-[#1F2937] hover:text-[#FF6B0A] hover:underline truncate block"
+                        className="text-[14px] font-semibold text-[#0F172A] hover:text-[#1D4ED8] hover:underline truncate block"
                       >
                         {product.seller.store_name}
                       </Link>
                     ) : (
-                      <p className="text-xs font-bold text-[#1F2937]">DIGI-VERSE Official</p>
+                      <p className="text-[14px] font-semibold text-[#0F172A]">DIGI-VERSE Official</p>
                     )}
                   </div>
                 </div>
                 {product.seller?.store_slug && (
                   <Link
                     to={`/store/${product.seller.store_slug}`}
-                    className="text-xs font-semibold text-[#FF6B0A] hover:underline shrink-0"
+                    className="text-[13px] font-semibold text-[#2563EB] hover:text-[#1D4ED8] hover:underline shrink-0"
                   >
-                    Visit Storefront
+                    Visit store
                   </Link>
                 )}
               </div>
 
               {/* Pricing & Purchase Actions Card */}
-              <div className="dv-card-warm p-6 space-y-4">
-                <div className="flex items-baseline gap-3 font-mono">
-                  <span className="text-3xl font-bold text-[#F4510B]">
+              <div className="dv-card p-6 space-y-4">
+                <div className="flex items-baseline gap-3 tabular-nums">
+                  <span className="text-[32px] leading-none font-bold text-[#0F172A]">
                     {formatINR(product.effective_price)}
                   </span>
                   {product.is_on_sale && (
-                    <span className="text-base text-[#8490A0] line-through">
+                    <span className="text-[16px] font-medium text-[#94A3B8] line-through">
                       {formatINR(product.original_price)}
                     </span>
                   )}
                 </div>
 
                 {product.is_on_sale && product.active_discount && (
-                  <div className="flex items-center gap-2 text-xs text-[#D94300] bg-[#FFF2E6] border border-[#FFD4AE] rounded-xl px-3.5 py-2.5">
-                    <Sparkles className="w-4 h-4 shrink-0 text-[#FF6B0A]" aria-hidden="true" />
+                  <div className="flex items-center gap-2 text-[13px] text-[#1D4ED8] bg-[#F8FAFC] border border-[#BFDBFE] rounded-xl px-3.5 py-2.5">
+                    <Sparkles className="w-4 h-4 shrink-0 text-[#2563EB]" aria-hidden="true" />
                     <span>
-                      Active Promotional Offer: Save{' '}
+                      Limited-time deal: Save{' '}
                       <strong>{formatINR(product.active_discount.discount_amount)}</strong> (
-                      {product.active_discount.discount_percentage}% OFF)
+                      {Math.round(Number(product.active_discount.discount_percentage))}% off)
                     </span>
                   </div>
                 )}
 
-                <div className="flex items-center gap-2 text-xs text-emerald-700 font-medium">
+                <div className="flex items-center gap-2 text-[13px] text-emerald-700 font-medium">
                   <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
                   <span>
                     {product.is_available
-                      ? 'Available for Instant Digital Delivery'
-                      : 'Currently Unavailable'}
+                      ? 'Instant verified digital download included'
+                      : 'Currently unavailable'}
                   </span>
                 </div>
 
                 <div className="pt-2 flex flex-wrap sm:flex-nowrap items-center gap-3">
-                  <div className="flex items-center gap-2 text-xs">
+                  <div className="flex items-center gap-2 text-[13px]">
                     <label
                       htmlFor="product-quantity"
                       className="font-medium text-[#64748B]"
                     >
-                      Qty:
+                      Qty
                     </label>
                     <input
                       id="product-quantity"
@@ -409,7 +442,7 @@ const ProductDetailPage = () => {
                       onChange={(e) =>
                         setQuantity(Math.max(1, Math.min(100, Number(e.target.value) || 1)))
                       }
-                      className="dv-input w-16 px-2.5 py-2.5 text-center font-mono text-sm"
+                      className="dv-input w-16 px-2.5 py-2.5 text-center tabular-nums text-sm font-medium"
                     />
                   </div>
 
@@ -417,18 +450,18 @@ const ProductDetailPage = () => {
                     type="button"
                     disabled={!product.is_available}
                     onClick={() => handleAddToCart(product, quantity)}
-                    className="dv-btn-primary flex-1 py-3 px-4 text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-40"
+                    className="dv-btn-primary flex-1 h-11 px-5 text-[14px] font-semibold flex items-center justify-center gap-2 disabled:opacity-40"
                   >
                     <ShoppingBag className="w-4 h-4" aria-hidden="true" />
-                    <span>Add to Cart</span>
+                    <span>Add to cart</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => handleAddToWishlist(product)}
                     aria-label="Save to Wishlist"
-                    title="Save to Wishlist"
-                    className="p-3 rounded-xl border border-[#FFD4AE] bg-white text-[#D94300] hover:bg-[#FFF0E2] hover:border-[#FF6B0A] transition"
+                    title="Save to wishlist"
+                    className="h-11 w-11 inline-flex items-center justify-center rounded-xl border border-[#E5E7EB] bg-white text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#1D4ED8] hover:border-[#CBD5E1] transition"
                   >
                     <Heart className="w-4 h-4" aria-hidden="true" />
                   </button>
@@ -436,17 +469,17 @@ const ProductDetailPage = () => {
               </div>
 
               {product.short_description && (
-                <p className="text-sm text-[#1F2937] font-medium leading-relaxed">
+                <p className="text-[15px] text-[#334155] font-medium leading-relaxed">
                   {product.short_description}
                 </p>
               )}
 
               {product.main_description && (
                 <div className="space-y-2">
-                  <h2 className="text-xs uppercase tracking-wider text-[#64748B] font-semibold">
+                  <h2 className="text-[13px] font-semibold text-[#0F172A]">
                     Overview
                   </h2>
-                  <p className="text-sm text-[#243247] leading-relaxed whitespace-pre-line">
+                  <p className="text-[14px] text-[#475569] leading-relaxed whitespace-pre-line">
                     {product.main_description}
                   </p>
                 </div>
@@ -454,18 +487,22 @@ const ProductDetailPage = () => {
 
               {/* Product Metadata Attributes (Sanitized on Backend) */}
               {metadataEntries.length > 0 && (
-                <div className="space-y-2 pt-4 border-t border-[#E5E7EB]">
-                  <h2 className="text-xs uppercase tracking-wider text-[#64748B] font-semibold">
-                    Product Attributes
+                <div className="space-y-2.5 pt-4 border-t border-[#E5E7EB]">
+                  <h2 className="text-[13px] font-semibold text-[#0F172A]">
+                    Specifications
                   </h2>
-                  <dl className="dv-card divide-y divide-[#E5E7EB] text-xs overflow-hidden">
+                  <dl className="dv-card divide-y divide-[#F1F5F9] text-[13px] overflow-hidden">
                     {metadataEntries.map(([key, value]) => (
                       <div key={key} className="px-4 py-2.5 flex justify-between gap-4">
-                        <dt className="uppercase tracking-wider text-[#64748B]">
+                        <dt className="capitalize font-medium text-[#64748B]">
                           {key.replace(/_/g, ' ')}
                         </dt>
-                        <dd className="font-medium text-[#1F2937] text-right">
-                          {typeof value === 'object' ? JSON.stringify(value) : String(value)}
+                        <dd className="font-medium text-[#0F172A] text-right">
+                          {Array.isArray(value)
+                            ? value.join(', ')
+                            : typeof value === 'object'
+                              ? JSON.stringify(value)
+                              : String(value)}
                         </dd>
                       </div>
                     ))}
@@ -475,10 +512,10 @@ const ProductDetailPage = () => {
 
               {product.detailed_description && (
                 <div className="space-y-2 pt-4 border-t border-[#E5E7EB]">
-                  <h2 className="text-xs uppercase tracking-wider text-[#64748B] font-semibold">
-                    Specifications &amp; Deliverables
+                  <h2 className="text-[13px] font-semibold text-[#0F172A]">
+                    What&apos;s included &amp; details
                   </h2>
-                  <p className="text-xs text-[#243247] leading-relaxed whitespace-pre-line">
+                  <p className="text-[13px] text-[#475569] leading-relaxed whitespace-pre-line">
                     {product.detailed_description}
                   </p>
                 </div>

@@ -167,27 +167,26 @@ const SellerOnboardingPage = () => {
 
   return (
     <StorefrontLayout>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#FF6B0A]">
+            <p className="text-xs font-semibold text-[#2563EB]">
               Creator Marketplace
             </p>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#1F2937] mt-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#263445] mt-1">
               DIGI-VERSE Seller Onboarding
             </h1>
             <p className="text-sm text-[#64748B] mt-1">
               Open your digital storefront, upload products securely, and reach verified marketplace buyers.
             </p>
           </div>
-          <Link to="/profile" className="text-xs font-semibold text-[#FF6B0A] hover:underline">
+          <Link to="/profile" className="text-xs font-semibold text-[#2563EB] hover:underline">
             Back to Profile
           </Link>
         </div>
 
         <ToastBanner
-          type={toast.type}
-          message={toast.message}
+          toast={toast}
           onDismiss={() => setToast({ type: '', message: '' })}
         />
 
@@ -197,7 +196,7 @@ const SellerOnboardingPage = () => {
               <CheckCircle2 className="w-6 h-6 text-emerald-700 shrink-0 mt-0.5" />
               <div>
                 <h2 className="text-base font-bold text-emerald-900">
-                  Your seller store "{application.store_name}" is Approved!
+                  Your seller store &ldquo;{application.store_name}&rdquo; is Approved!
                 </h2>
                 <p className="text-xs text-emerald-800 mt-1">
                   You have full access to Seller Studio while keeping all of your customer purchasing privileges.
@@ -219,13 +218,13 @@ const SellerOnboardingPage = () => {
         )}
 
         {status === 'pending' && (
-          <div className="bg-[#FFF2E6] border border-[#FFD4AE] rounded-2xl p-6 flex items-start gap-3.5">
-            <Clock className="w-6 h-6 text-[#FF6B0A] shrink-0 mt-0.5" />
+          <div className="bg-[#EAF4FC] border border-[#BFDBFE] rounded-2xl p-6 flex items-start gap-3.5">
+            <Clock className="w-6 h-6 text-[#2563EB] shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <h2 className="text-base font-bold text-[#1F2937]">
+              <h2 className="text-base font-bold text-[#263445]">
                 Application Pending Administrator Review
               </h2>
-              <p className="text-xs text-[#243247] leading-relaxed">
+              <p className="text-xs text-[#263445] leading-relaxed">
                 Storefront <strong>{application.store_name}</strong> (<code>/store/{application.store_slug}</code>) was submitted and is awaiting administrator review. You cannot publish products until approval is granted.
               </p>
             </div>
@@ -269,15 +268,15 @@ const SellerOnboardingPage = () => {
             className="bg-white border border-[#E5E7EB] rounded-2xl p-6 sm:p-8 shadow-xs space-y-5"
           >
             <div className="flex items-center gap-2.5 border-b border-[#E5E7EB] pb-4">
-              <Store className="w-5 h-5 text-[#FF6B0A]" />
-              <h2 className="text-base font-bold text-[#1F2937]">
+              <Store className="w-5 h-5 text-[#2563EB]" />
+              <h2 className="text-base font-bold text-[#263445]">
                 {status === 'rejected' ? 'Update & Resubmit Seller Application' : 'Seller Store Application'}
               </h2>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Store Name *
                 </label>
                 <input
@@ -298,7 +297,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Storefront URL Slug *
                 </label>
                 <input
@@ -318,7 +317,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Seller Display Name *
                 </label>
                 <input
@@ -331,7 +330,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Contact Email *
                 </label>
                 <input
@@ -344,7 +343,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Contact Phone / Handle
                 </label>
                 <input
@@ -357,7 +356,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Country *
                 </label>
                 <input
@@ -370,7 +369,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Business / Creator Type *
                 </label>
                 <select
@@ -387,7 +386,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Intended Product Categories (comma separated)
                 </label>
                 <input
@@ -404,7 +403,7 @@ const SellerOnboardingPage = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Store Logo URL (or Upload)
                 </label>
                 <div className="flex gap-2">
@@ -429,7 +428,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Store Banner URL (or Upload)
                 </label>
                 <div className="flex gap-2">
@@ -455,7 +454,7 @@ const SellerOnboardingPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                 Public Store Description
               </label>
               <textarea
@@ -468,7 +467,7 @@ const SellerOnboardingPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                 Application Review Notes (For Marketplace Admins) *
               </label>
               <textarea

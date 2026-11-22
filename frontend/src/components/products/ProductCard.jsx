@@ -1,102 +1,164 @@
 import { Link } from 'react-router-dom';
-import { Heart, ShoppingBag, Store, Tag } from 'lucide-react';
-import { Badge, formatINR } from '../common/StorefrontDesignSystem';
+import { Heart, ShoppingBag, Star, Store } from 'lucide-react';
+import { formatINR } from '../common/StorefrontDesignSystem';
+import { getCategoryTheme } from '../../utils/categoryTheme';
+import { resolveProductThumbnailUrl } from '../../utils/productThumbnails';
 
 const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
   if (!product) return null;
 
+  const theme = getCategoryTheme(product.category?.slug || product.category?.name);
+  const BadgeIcon = theme.badgeIcon || theme.icon;
+  const thumbnailUrl = resolveProductThumbnailUrl(product, product.image_url, 0);
+
+  const ratingValue = Number(product.average_rating ?? product.rating ?? 0);
+  const reviewCount = Number(product.review_count ?? 0);
+  const hasGenuineRating = ratingValue > 0 && reviewCount > 0;
+
+  const formatLabel = product.product_metadata?.format
+    ? String(product.product_metadata.format).toUpperCase()
+    : null;
+  const discountPercentage = product.active_discount
+    ? Math.round(Number(product.active_discount.discount_percentage))
+    : 0;
+  const discountSavings =
+    product.is_on_sale && Number(product.original_price) > Number(product.effective_price)
+      ? Number(product.original_price) - Number(product.effective_price)
+      : 0;
+
   return (
-    <article className="group dv-card-interactive flex flex-col justify-between overflow-hidden">
-      <div>
+    <article className="group dv-card-interactive h-full flex flex-col justify-between overflow-hidden rounded-2xl bg-white border border-[#D5DEE8]">
+      <div className="flex-1 flex flex-col">
+        {/* Consistent 16:10 Product Cover Thumbnail */}
         <Link
           to={`/products/${product.slug}`}
-          className="block aspect-16/10 bg-[#FFF6ED] relative overflow-hidden border-b border-[#E5E7EB]"
+          className="block aspect-16/10 bg-[#F8FAFC] relative overflow-hidden border-b border-[#E5E7EB]"
         >
-          {product.image_url ? (
-            <img
-              src={product.image_url}
-              alt={product.name}
-              loading="lazy"
-              width="640"
-              height="400"
-              className="w-full h-full object-cover group-hover:scale-103 transition duration-300"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-xs uppercase tracking-widest text-[#8490A0] font-medium">
-              {product.product_type || 'Digital Asset'}
-            </div>
+          <img
+            src={thumbnailUrl}
+            alt={product.name}
+            loading="lazy"
+            width="640"
+            height="400"
+            className="w-full h-full object-cover group-hover:scale-[1.025] transition-transform duration-300 ease-out"
+          />
+
+          {formatLabel && (
+            <span className="absolute bottom-2.5 left-3 rounded-md bg-white/95 backdrop-blur-xs border border-[#D5DEE8] text-[#263445] text-[10px] font-mono font-semibold px-2 py-0.5 shadow-2xs">
+              {formatLabel}
+            </span>
           )}
 
-          {product.is_on_sale && product.active_discount && (
-            <span className="absolute top-3 right-3 rounded-full bg-[#FF6B0A] text-white text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 shadow-xs">
-              -{product.active_discount.discount_percentage}% OFF
+          {product.is_on_sale && discountPercentage > 0 && (
+            <span className="absolute top-2.5 right-3 rounded-full bg-[#16A34A] text-white text-[11px] font-semibold px-2.5 py-0.5 shadow-xs">
+              -{discountPercentage}% OFF
             </span>
           )}
         </Link>
 
-        <div className="p-5">
-          <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] uppercase tracking-wider text-[#FF6B0A] mb-2">
+        {/* Card Metadata, Title, Seller & Description */}
+        <div className="p-5 flex-1 flex flex-col">
+          <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5 mb-2.5">
             {product.category?.name && (
-              <span className="inline-flex items-center gap-1 font-semibold">
-                <Tag className="w-3 h-3" aria-hidden="true" />
-                <span>{product.category.name}</span>
-              </span>
+              <Link
+                to={`/categories/${product.category.slug}`}
+                title={product.category.name}
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold border transition hover:opacity-90 max-w-full ${theme.badgeClass}`}
+              >
+                {BadgeIcon && <BadgeIcon className="w-3 h-3 shrink-0" aria-hidden="true" />}
+                <span className="truncate">{product.category.name}</span>
+              </Link>
             )}
             {product.product_type && (
-              <Badge variant="neutral">{product.product_type}</Badge>
+              <span className="text-[11px] font-medium text-[#64748B] whitespace-nowrap shrink-0">
+                {product.product_type}
+              </span>
             )}
           </div>
 
-          <h3 className="text-base md:text-lg font-semibold text-[#1F2937] group-hover:text-[#FF6B0A] transition mb-1.5">
-            <Link to={`/products/${product.slug}`} className="focus:outline-none">
+          <h3 className="text-[16.5px] leading-[1.35] font-semibold tracking-[-0.01em] text-[#263445] group-hover:text-[#2563EB] transition-colors line-clamp-2 min-h-[2.7em] mb-2">
+            <Link
+              to={`/products/${product.slug}`}
+              className="rounded-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB]"
+            >
               {product.name}
             </Link>
           </h3>
 
-          <div className="mb-2 flex items-center gap-1.5 text-[11px] text-[#64748B]">
-            <Store className="w-3 h-3 text-[#FF6B0A] shrink-0" aria-hidden="true" />
-            {product.seller?.store_slug ? (
-              <Link
-                to={`/store/${product.seller.store_slug}`}
-                className="font-medium text-[#243247] hover:text-[#FF6B0A] hover:underline truncate"
+          <div className="mb-2.5 flex items-center justify-between gap-2 text-[12.5px] font-medium text-[#64748B]">
+            <div className="flex items-center gap-1.5 min-w-0">
+              {product.seller?.logo_url ? (
+                <img
+                  src={product.seller.logo_url}
+                  alt=""
+                  loading="lazy"
+                  className="w-4 h-4 rounded-full object-cover border border-[#D5DEE8] shrink-0"
+                />
+              ) : (
+                <Store className="w-3.5 h-3.5 text-[#0EA5E9] shrink-0" aria-hidden="true" />
+              )}
+              {product.seller?.store_slug ? (
+                <Link
+                  to={`/store/${product.seller.store_slug}`}
+                  className="text-[#263445] hover:text-[#2563EB] hover:underline truncate"
+                >
+                  {product.seller.store_name}
+                </Link>
+              ) : (
+                <span className="text-[#263445] truncate">DIGI-VERSE Official</span>
+              )}
+            </div>
+
+            {hasGenuineRating && (
+              <span
+                className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#263445] shrink-0 tabular-nums"
+                title={`${ratingValue.toFixed(1)} out of 5 (${reviewCount} reviews)`}
               >
-                {product.seller.store_name}
-              </Link>
-            ) : (
-              <span className="font-medium text-[#243247]">DIGI-VERSE Official</span>
+                <Star className="w-3.5 h-3.5 fill-[#D97706] text-[#D97706]" aria-hidden="true" />
+                <span>{ratingValue.toFixed(1)}</span>
+                <span className="text-[#64748B] font-normal">({reviewCount})</span>
+              </span>
             )}
           </div>
 
           {product.short_description && (
-            <p className="text-xs text-[#64748B] line-clamp-2 leading-relaxed">
+            <p className="text-[13px] leading-[1.5] text-[#64748B] line-clamp-2 mt-auto">
               {product.short_description}
             </p>
           )}
         </div>
       </div>
 
-      <div className="px-5 py-4 border-t border-[#E5E7EB] bg-[#FFFAF5]/50 flex items-center justify-between gap-2">
-        <div className="font-mono">
-          <span className="text-base font-bold text-[#F4510B]">
+      {/* Pricing & Primary Actions Footer */}
+      <div className="px-5 py-3.5 border-t border-[#E5E7EB] bg-[#F8FAFC] flex items-center justify-between gap-3">
+        <div className="flex flex-col gap-0.5 min-w-0 tabular-nums">
+          <span className="text-[19px] leading-none font-bold text-[#263445]">
             {formatINR(product.effective_price)}
           </span>
           {product.is_on_sale && (
-            <span className="text-xs text-[#8490A0] line-through ml-2">
-              {formatINR(product.original_price)}
-            </span>
+            <div className="flex items-center gap-1.5 text-[11px] leading-none mt-1">
+              <span className="font-medium text-[#64748B] line-through">
+                {formatINR(product.original_price)}
+              </span>
+              {discountSavings > 0 && (
+                <span className="font-semibold text-[#16A34A]">
+                  Save {formatINR(discountSavings)}
+                </span>
+              )}
+            </div>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {onAddToWishlist && (
             <button
               type="button"
               onClick={(e) => onAddToWishlist(e, product)}
               aria-label={`Save ${product.name} to wishlist`}
-              title="Save to Wishlist"
-              className="p-2 rounded-xl border border-[#FFD4AE] bg-white hover:bg-[#FFF0E2] hover:border-[#FF6B0A] text-[#D94300] transition focus-visible:outline-2 focus-visible:outline-[#FF6B0A]"
+              title="Save to wishlist"
+              className="h-9 w-9 inline-flex items-center justify-center rounded-xl border border-[#D5DEE8] bg-white hover:bg-[#EDF5FC] hover:border-[#93C5FD] text-[#64748B] hover:text-[#2563EB] transition focus-visible:outline-2 focus-visible:outline-[#2563EB]"
             >
-              <Heart className="w-3.5 h-3.5" aria-hidden="true" />
+              <Heart className="w-4 h-4" aria-hidden="true" />
             </button>
           )}
           {onAddToCart && (
@@ -105,7 +167,7 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
               disabled={product.is_available === false}
               onClick={(e) => onAddToCart(e, product)}
               aria-label={`Add ${product.name} to cart`}
-              className="px-3.5 py-2 rounded-xl bg-[#FF6B0A] text-white text-xs font-semibold hover:bg-[#D94300] shadow-[0_3px_10px_-2px_rgba(255,107,10,0.28)] transition inline-flex items-center gap-1.5 disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[#FF6B0A]"
+              className="h-9 px-3.5 rounded-xl bg-[#2563EB] text-white text-[13px] font-semibold hover:bg-[#1D4ED8] shadow-xs transition inline-flex items-center gap-1.5 disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[#2563EB]"
             >
               <ShoppingBag className="w-3.5 h-3.5" aria-hidden="true" />
               <span>{product.is_available === false ? 'Unavailable' : 'Add'}</span>
