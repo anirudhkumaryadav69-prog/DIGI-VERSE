@@ -1,0 +1,200 @@
+import { useCallback, useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight, Download, Search, ShoppingBag } from 'lucide-react';
+import SellerLayout from '../../layouts/SellerLayout';
+import {
+  Badge,
+  LoadingState,
+  ToastBanner,
+  formatINR,
+} from '../../components/common/StorefrontDesignSystem';
+import { sellerApi } from '../../services/api';
+
+const FULFILMENT_BADGE = {
+  ready: { label: 'Download Ready', variant: 'success' },
+  downloaded: { label: 'Downloaded', variant: 'orange' },
+  pending_payment: { label: 'Pending Payment', variant: 'neutral' },
+  revoked: { label: 'Refunded / Revoked', variant: 'danger' },
+};
+
+const SellerOrdersPage = () => {
+  const [data, setData] = useState({ items: [], total: 0, page: 1, total_pages: 1 });
+  const [search, setSearch] = useState('');
+  const [paymentStatus, setPaymentStatus] = useState('');
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState({ type: '', message: '' });
+
+  const loadOrders = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = { page, page_size: 10 };
+      if (search.trim()) params.search = search.trim();
+      if (paymentStatus) params.payment_status = paymentStatus;
+      const res = await sellerApi.listOrders(params);
+      setData(res);
+    } catch (err) {
+      const detail = err.response?.data?.detail;
+      setToast({
+        type: 'error',
+        message: typeof detail === 'string' ? detail : 'Failed to load seller orders.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [page, search, paymentStatus]);
+
+  useEffect(() => {
+    loadOrders();
+  }, [loadOrders]);
+
+  return (
+    <SellerLayout
+      title="Seller Orders"
+      subtitle="Orders containing your products (isolated to your items; customer PII and other sellers' items are excluded)"
+    >
+      <div className="space-y-5">
+        <ToastBanner
+          type={toast.type}
+          message={toast.message}
+          onDismiss={() => setToast({ type: '', message: '' })}
+        />
+
+        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 flex flex-col sm:flex-row gap-3 justify-between">
+          <div className="relative flex-1 max-w-md">
+            <Search className="w-4 h-4 text-[#8490A0] absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="search"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              placeholder="Search by order reference (DV-...)..."
+              className="dv-input pl-10 text-sm"
+            />
+          </div>
+
+          <select
+            value={paymentStatus}
+            onChange={(e) => {
+              setPaymentStatus(e.target.value);
+              setPage(1);
+            }}
+            aria-label="Filter orders by payment status"
+            className="dv-input text-xs sm:w-48"
+          >
+            <option value="">All Payment States</option>
+            <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
+            <option value="refunded">Refunded</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+
+        <div className="space-y-4">
+          {loading ? (
+            <LoadingState label="Loading seller order attributions..." />
+          ) : !data.items.length ? (
+            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-10 text-center">
+              <ShoppingBag className="w-8 h-8 text-[#FF6B0A] mx-auto mb-2" />
+              <p className="text-sm font-semibold text-[#1F2937]">No matching orders found</p>
+              <p className="text-xs text-[#64748B] mt-1">
+                Only orders containing at least one item you own appear here.
+              </p>
+            </div>
+          ) : (
+            data.items.map((ord) => {
+              const dlBadge = FULFILMENT_BADGE[ord.download_fulfilment_status] || {
+                label: ord.download_fulfilment_status,
+                variant: 'neutral',
+              };
+              return (
+                <div
+                  key={ord.order_id}
+                  className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs"
+                >
+                  <div className="px-5 py-3.5 bg-[#FFF6ED] border-b border-[#E5E7EB] flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="font-mono text-xs font-bold text-[#1F2937]">
+                        {ord.order_number}
+                      </span>
+                      <span className="text-[11px] text-[#64748B]">
+                        {new Date(ord.created_at).toLocaleString()}
+                      </span>
+                      <Badge variant={ord.payment_status === 'paid' ? 'success' : ord.payment_status === 'refunded' ? 'danger' : 'neutral'}>
+                        Payment: {ord.payment_status}
+                      </Badge>
+                      <Badge variant={dlBadge.variant}>{dlBadge.label}</Badge>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[11px] text-[#64748B] mr-2">
+                        Your Items Total ({ord.seller_units_count} qty):
+                      </span>
+                      <span className="font-mono text-sm font-bold text-[#F4510B]">
+                        {formatINR(ord.seller_items_subtotal)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="divide-y divide-[#E5E7EB]">
+                    {ord.items.map((item) => (
+                      <div
+                        key={item.id}
+                        className="px-5 py-3 flex flex-wrap items-center justify-between gap-3 text-xs"
+                      >
+                        <div>
+                          <p className="font-semibold text-[#1F2937]">{item.product_name_snapshot}</p>
+                          <p className="text-[11px] text-[#64748B]">
+                            Qty: {item.quantity} × {formatINR(item.purchase_price)} · Snapshot: {item.seller_store_name_snapshot}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <span className="inline-flex items-center gap-1 text-[11px] text-[#64748B]">
+                            <Download className="w-3.5 h-3.5 text-[#FF6B0A]" />
+                            {item.downloads_used}/{item.max_downloads} downloads
+                          </span>
+                          <span className="font-mono font-bold text-[#1F2937]">
+                            {formatINR(item.line_total)}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 flex items-center justify-between text-xs text-[#64748B]">
+          <span>
+            Total: <strong className="text-[#1F2937]">{data.total}</strong> seller orders
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={page <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white disabled:opacity-40"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+            </button>
+            <span>
+              Page {data.page} of {data.total_pages}
+            </span>
+            <button
+              type="button"
+              disabled={page >= data.total_pages}
+              onClick={() => setPage((p) => p + 1)}
+              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white disabled:opacity-40"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </SellerLayout>
+  );
+};
+
+export default SellerOrdersPage;

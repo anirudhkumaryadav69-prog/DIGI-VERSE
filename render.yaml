@@ -1,0 +1,116 @@
+# Render Blueprint Template for DIGI-VERSE Staging (Requires user approval & secrets before deployment)
+databases:
+  - name: digiverse-staging-db
+    databaseName: digiverse_staging
+    user: digiverse_staging_app
+    plan: basic-256mb
+    postgresMajorVersion: "17"
+
+services:
+  - type: web
+    name: digiverse-staging-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: starter
+    healthCheckPath: /api/ready
+    preDeployCommand: alembic upgrade head
+    envVars:
+      - key: ENVIRONMENT
+        value: staging
+      - key: DEBUG
+        value: "False"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: digiverse-staging-db
+          property: connectionString
+      - key: COOKIE_SECURE
+        value: "True"
+      - key: TRUST_PROXY_HEADERS
+        value: "True"
+      - key: RATE_LIMIT_USE_DB
+        value: "True"
+      - key: PAYMENT_PROVIDER
+        value: razorpay
+      - key: ASSET_STORAGE_BACKEND
+        value: s3
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: ADMIN_JWT_SECRET_KEY
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false
+      - key: RESEND_WEBHOOK_SECRET
+        sync: false
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_APP_SECRET
+        sync: false
+      - key: WHATSAPP_WEBHOOK_VERIFY_TOKEN
+        sync: false
+      - key: ASSET_STORAGE_BUCKET
+        sync: false
+      - key: ASSET_STORAGE_ENDPOINT_URL
+        sync: false
+      - key: ASSET_STORAGE_ACCESS_KEY
+        sync: false
+      - key: ASSET_STORAGE_SECRET_KEY
+        sync: false
+
+  - type: worker
+    name: digiverse-staging-worker
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: python -m app.worker --poll-interval 30 --batch-size 50
+    plan: starter
+    envVars:
+      - key: ENVIRONMENT
+        value: staging
+      - key: DEBUG
+        value: "False"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: digiverse-staging-db
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: ADMIN_JWT_SECRET_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+
+  - type: web
+    name: digiverse-staging-frontend
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: /api
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://digiverse-staging-api.onrender.com/api/*
+      - type: rewrite
+        source: /uploads/*
+        destination: https://digiverse-staging-api.onrender.com/uploads/*
+      - type: rewrite
+        source: /*
+        destination: /index.html

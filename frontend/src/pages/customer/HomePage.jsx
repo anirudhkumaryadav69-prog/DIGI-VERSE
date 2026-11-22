@@ -1,0 +1,447 @@
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  Activity,
+  ArrowRight,
+  ArrowUpRight,
+  Lock,
+  PlayCircle,
+  ShieldCheck,
+  Sparkles,
+  Zap,
+} from 'lucide-react';
+import StorefrontHeader from '../../components/common/StorefrontHeader';
+import StorefrontFooter from '../../components/common/StorefrontFooter';
+import ProductCard from '../../components/products/ProductCard';
+import CategoryCard from '../../components/products/CategoryCard';
+import {
+  SectionHeading,
+  ToastBanner,
+  useDocumentMeta,
+} from '../../components/common/StorefrontDesignSystem';
+import { checkBackendHealth, commerceApi, publicCatalogApi } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
+
+const HomePage = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, refreshCartAndWishlistCounts } = useAuth();
+
+  const [healthStatus, setHealthStatus] = useState('checking');
+  const [banners, setBanners] = useState([]);
+  const [videos, setVideos] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [bestSellers, setBestSellers] = useState([]);
+  const [recentProducts, setRecentProducts] = useState([]);
+  const [discountedProducts, setDiscountedProducts] = useState([]);
+  const [storeSettings, setStoreSettings] = useState({});
+  const [toast, setToast] = useState({ type: '', message: '' });
+
+  useDocumentMeta({
+    title: 'Curated Digital Marketplace',
+    description:
+      'Discover curated digital products, UI systems, code templates, and creator toolkits with cryptographic payment verification and instant signed digital downloads.',
+    canonicalPath: '/',
+  });
+
+  useEffect(() => {
+    checkBackendHealth()
+      .then((data) => setHealthStatus(data?.status === 'healthy' ? 'online' : 'degraded'))
+      .catch(() => setHealthStatus('offline'));
+
+    publicCatalogApi
+      .listBanners()
+      .then((data) => setBanners(data || []))
+      .catch(() => {});
+
+    publicCatalogApi
+      .listVideos()
+      .then((data) => setVideos(data || []))
+      .catch(() => {});
+
+    publicCatalogApi
+      .getPublicSettings()
+      .then((data) => setStoreSettings(data || {}))
+      .catch(() => {});
+
+    publicCatalogApi
+      .listCategories({ page: 1, page_size: 6 })
+      .then((res) => setCategories(res.items || []))
+      .catch(() => {});
+
+    publicCatalogApi
+      .listProducts({ page: 1, page_size: 3, sort_by: 'popularity' })
+      .then((res) => setBestSellers(res.items || []))
+      .catch(() => {});
+
+    publicCatalogApi
+      .listProducts({ page: 1, page_size: 6, sort_by: 'newest' })
+      .then((res) => setRecentProducts(res.items || []))
+      .catch(() => {});
+
+    publicCatalogApi
+      .listProducts({ page: 1, page_size: 3, on_sale: true })
+      .then((res) => setDiscountedProducts(res.items || []))
+      .catch(() => {});
+  }, []);
+
+  const handleAddToCart = async (e, prod) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    try {
+      await commerceApi.addToCart(prod.id, 1);
+      await refreshCartAndWishlistCounts();
+      setToast({ type: 'success', message: `"${prod.name}" added to shopping cart.` });
+    } catch (err) {
+      const detail = err.response?.data?.detail;
+      setToast({
+        type: 'error',
+        message: typeof detail === 'string' ? detail : 'Could not add product to cart.',
+      });
+    }
+  };
+
+  const handleAddToWishlist = async (e, prod) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    try {
+      await commerceApi.addToWishlist(prod.id);
+      await refreshCartAndWishlistCounts();
+      setToast({ type: 'success', message: `"${prod.name}" saved to wishlist.` });
+    } catch (err) {
+      const detail = err.response?.data?.detail;
+      setToast({
+        type: 'error',
+        message: typeof detail === 'string' ? detail : 'Could not save product to wishlist.',
+      });
+    }
+  };
+
+  const storeName = storeSettings['store.name'] || 'DIGI-VERSE';
+
+  return (
+    <div className="min-h-screen bg-[#FFFAF5] text-[#243247] flex flex-col justify-between px-4 py-6 sm:px-6 md:px-10 overflow-x-hidden">
+      <StorefrontHeader
+        announcementText={storeSettings['store.announcement_text']}
+        storeName={storeName}
+      />
+
+      <main className="max-w-7xl w-full mx-auto py-8 md:py-12 flex-1 space-y-16">
+        {toast.message && (
+          <ToastBanner toast={toast} onDismiss={() => setToast({ type: '', message: '' })} />
+        )}
+
+        {/* 1. Hero Section */}
+        <section className="relative overflow-hidden rounded-3xl bg-[#FFF6ED] border border-[#FFD4AE] p-6 sm:p-10 md:p-12 shadow-[0_4px_20px_-4px_rgba(255,107,10,0.08)]">
+          {/* Subtle decorative warm orange accents */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full bg-[#FFE9D6]/80 blur-2xl"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-[#FFD4AE]/40 blur-2xl"
+          />
+
+          <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-2 text-xs font-medium px-3.5 py-1.5 rounded-full border border-[#FFD4AE] bg-white shadow-2xs">
+                <Activity className="w-3.5 h-3.5 text-[#FF6B0A]" aria-hidden="true" />
+                <span className="text-[#64748B]">System Status:</span>
+                <span
+                  className={
+                    healthStatus === 'online'
+                      ? 'text-emerald-700 font-semibold'
+                      : healthStatus === 'checking'
+                      ? 'text-[#64748B]'
+                      : 'text-red-600 font-semibold'
+                  }
+                >
+                  {healthStatus}
+                </span>
+              </div>
+
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-[#FF6B0A] font-semibold mb-3">
+                  {storeName} — Digital Commerce Platform
+                </p>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#1F2937] leading-[1.15]">
+                  Curated digital products for{' '}
+                  <span className="text-[#FF6B0A]">modern creators</span>.
+                </h1>
+              </div>
+
+              <p className="text-[#64748B] text-sm md:text-base leading-relaxed max-w-2xl">
+                Discover professional UI kits, code architectures, and design systems. Save assets
+                to your wishlist, build your cart, checkout with server-verified cryptographic
+                payment signatures, and unlock instant signed digital downloads.
+              </p>
+
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Link
+                  to="/products"
+                  className="dv-btn-primary px-6 py-3.5 text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2"
+                >
+                  <span>Browse Products</span>
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </Link>
+                <Link
+                  to="/categories"
+                  className="dv-btn-secondary px-6 py-3.5 text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2"
+                >
+                  <span>Explore Categories</span>
+                </Link>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5 bg-white border border-[#FFD4AE] rounded-2xl p-6 md:p-8 space-y-5 shadow-[0_8px_24px_-6px_rgba(31,41,55,0.07)]">
+              <p className="text-xs uppercase tracking-wider text-[#FF6B0A] font-semibold">
+                Verified Digital Delivery Standard
+              </p>
+              <div className="space-y-4 text-xs text-[#64748B]">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-[#FFF2E6] border border-[#FFD4AE] flex items-center justify-center text-[#FF6B0A] shrink-0">
+                    <Lock className="w-4 h-4" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[#1F2937]">Authoritative Backend Pricing</p>
+                    <p className="mt-0.5 leading-relaxed">
+                      Every price, active discount, and line total is computed and snapshotted on
+                      the server at checkout.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-[#FFF2E6] border border-[#FFD4AE] flex items-center justify-center text-[#FF6B0A] shrink-0">
+                    <Zap className="w-4 h-4" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[#1F2937]">Short-Lived Signed Download Grants</p>
+                    <p className="mt-0.5 leading-relaxed">
+                      Private storage paths are never exposed. Downloads use authenticated,
+                      time-limited cryptographic tokens.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-[#FFF2E6] border border-[#FFD4AE] flex items-center justify-center text-[#FF6B0A] shrink-0">
+                    <ShieldCheck className="w-4 h-4" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[#1F2937]">Complete Order &amp; Invoice History</p>
+                    <p className="mt-0.5 leading-relaxed">
+                      Download official purchase receipts and manage your digital library from your
+                      account dashboard.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 2. Active Promotional Banners (Shown only when active & scheduled) */}
+        {banners.length > 0 && (
+          <section aria-label="Promotional Banners" className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {banners.map((b) => (
+              <div
+                key={b.id}
+                className="bg-white border border-[#FFD4AE] rounded-2xl p-6 md:p-8 flex flex-col justify-between gap-4 shadow-[0_2px_10px_-2px_rgba(31,41,55,0.05)]"
+              >
+                <div>
+                  <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#FFF2E6] border border-[#FFD4AE] text-[#D94300] font-semibold">
+                    <Sparkles className="w-3.5 h-3.5 text-[#FF6B0A]" aria-hidden="true" />
+                    <span>Featured Promotion</span>
+                  </span>
+                  <h2 className="text-xl md:text-2xl font-bold text-[#1F2937] mt-3">
+                    {b.heading}
+                  </h2>
+                  {b.subtitle && <p className="text-xs text-[#64748B] mt-1.5">{b.subtitle}</p>}
+                  {b.promotional_text && (
+                    <p className="text-xs text-[#64748B] mt-2 leading-relaxed">
+                      {b.promotional_text}
+                    </p>
+                  )}
+                </div>
+                {b.cta_destination && (
+                  <Link
+                    to={b.cta_destination}
+                    className="text-xs font-semibold text-[#FF6B0A] inline-flex items-center gap-1.5 hover:text-[#D94300] transition"
+                  >
+                    <span>{b.cta_text || 'Explore Promotion'}</span>
+                    <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                  </Link>
+                )}
+              </div>
+            ))}
+          </section>
+        )}
+
+        {/* 3. Featured Categories (Shown only when active categories exist) */}
+        {categories.length > 0 && (
+          <section>
+            <SectionHeading
+              eyebrow="Taxonomy"
+              title="Featured Categories"
+              subtitle="Browse curated collections organized by discipline and format."
+              action={
+                <Link
+                  to="/categories"
+                  className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] inline-flex items-center gap-1 transition"
+                >
+                  <span>View All Categories</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
+                </Link>
+              }
+            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {categories.map((cat) => (
+                <CategoryCard key={cat.id} category={cat} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 4. Promotional Offers & Active Discounts (Shown only when discounted products exist) */}
+        {discountedProducts.length > 0 && (
+          <section className="rounded-3xl bg-[#FFF6ED] border border-[#FFD4AE]/70 p-6 sm:p-8">
+            <SectionHeading
+              eyebrow="Limited-Time Savings"
+              title="Promotional Offers & Discounts"
+              subtitle="Verified active discounts calculated directly from the live catalog."
+              action={
+                <Link
+                  to="/products?on_sale=true"
+                  className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] inline-flex items-center gap-1 transition"
+                >
+                  <span>All Discounted Products</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
+                </Link>
+              }
+            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {discountedProducts.map((prod) => (
+                <ProductCard
+                  key={prod.id}
+                  product={prod}
+                  onAddToCart={handleAddToCart}
+                  onAddToWishlist={handleAddToWishlist}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 5. Best-Selling & Featured Products (Shown only when products exist) */}
+        {bestSellers.length > 0 && (
+          <section>
+            <SectionHeading
+              eyebrow="Popular Selection"
+              title="Featured & Best-Selling Products"
+              subtitle="Digital products ordered by verified customer purchases."
+              action={
+                <Link
+                  to="/products?sort_by=popularity"
+                  className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] inline-flex items-center gap-1 transition"
+                >
+                  <span>Explore Popular</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
+                </Link>
+              }
+            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {bestSellers.map((prod) => (
+                <ProductCard
+                  key={prod.id}
+                  product={prod}
+                  onAddToCart={handleAddToCart}
+                  onAddToWishlist={handleAddToWishlist}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 6. Recently Added Products (Shown only when products exist) */}
+        {recentProducts.length > 0 && (
+          <section>
+            <SectionHeading
+              eyebrow="Latest Releases"
+              title="Recently Added Products"
+              subtitle="Fresh additions to the DIGI-VERSE digital product catalog."
+              action={
+                <Link
+                  to="/products?sort_by=newest"
+                  className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] inline-flex items-center gap-1 transition"
+                >
+                  <span>Browse Full Catalog</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
+                </Link>
+              }
+            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {recentProducts.map((prod) => (
+                <ProductCard
+                  key={prod.id}
+                  product={prod}
+                  onAddToCart={handleAddToCart}
+                  onAddToWishlist={handleAddToWishlist}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 7. Advertisement Video Section (Shown only when active videos exist) */}
+        {videos.length > 0 && (
+          <section>
+            <SectionHeading
+              eyebrow="Creator Showcases"
+              title="Featured Product Spotlights"
+              subtitle="Tour featured digital toolkits and creator workflows."
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {videos.slice(0, 4).map((v) => (
+                <div
+                  key={v.id}
+                  className="bg-white border border-[#FFD4AE] rounded-2xl p-6 md:p-8 flex flex-col justify-between gap-4 shadow-[0_2px_10px_-2px_rgba(31,41,55,0.05)]"
+                >
+                  <div>
+                    <div className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full bg-[#FFF2E6] border border-[#FFD4AE] text-[#D94300] font-semibold mb-3">
+                      <PlayCircle className="w-3.5 h-3.5 text-[#FF6B0A]" aria-hidden="true" />
+                      <span>Video Spotlight</span>
+                    </div>
+                    <h3 className="text-lg font-bold text-[#1F2937]">{v.title}</h3>
+                    {v.description && (
+                      <p className="text-xs text-[#64748B] mt-2 leading-relaxed">{v.description}</p>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3 pt-2">
+                    {v.destination_url && (
+                      <Link
+                        to={v.destination_url}
+                        className="dv-btn-primary text-xs font-semibold px-4 py-2.5 inline-flex items-center gap-1.5"
+                      >
+                        <span>Explore Featured Collection</span>
+                        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </main>
+
+      <StorefrontFooter storeSettings={storeSettings} />
+    </div>
+  );
+};
+
+export default HomePage;
