@@ -65,9 +65,21 @@ DIGI-VERSE issues `ADMIN_ACCESS_COOKIE` and `ADMIN_REFRESH_COOKIE` with `SameSit
 To ensure browser cookies are accepted and sent on every authenticated API call:
 
 - **Approach 1 (Recommended — Same-Origin Proxy)**:
-  Serve the frontend on `https://staging.your-domain.example` with `VITE_API_BASE_URL=/api`, and configure your edge proxy (`frontend/nginx.staging.conf`, `frontend/vercel.json`, or `render.yaml` rewrite rule) to proxy `/api/*` and `/uploads/*` to the FastAPI backend. The browser communicates solely with one HTTPS origin, so `SameSite=Strict` and `SameSite=Lax` cookies work without cross-origin restrictions.
-- **Approach 2 (Subdomain Split)**:
-  If hosting `https://app-staging.your-domain.example` and `https://api-staging.your-domain.example` on separate hosts, set `COOKIE_DOMAIN=.your-domain.example` in backend staging secrets and `VITE_API_BASE_URL=https://api-staging.your-domain.example/api` at frontend build time. Note that `SameSite=Strict` admin cookies still treat distinct domains (for example `vercel.app` -> `onrender.com`) as cross-site, so avoid cross-domain deployments without custom subdomains or same-origin proxy rewrites.
+  Serve the frontend on `https://staging.your-domain.example` with `VITE_API_BASE_URL=/api`, and configure your edge proxy (`frontend/nginx.staging.conf`, `render.yaml` rewrite rule, or environment-specific Vercel rewrites) to proxy `/api/*` to the FastAPI backend. The browser communicates solely with one HTTPS origin, so `SameSite=Strict` and `SameSite=Lax` cookies work without cross-origin restrictions.
+  - **Vercel Environment-Specific Configuration Strategy**: [frontend/vercel.json](file:///d:/PROJECTS/DIGI%20VERSE/frontend/vercel.json) intentionally stores only the SPA fallback (`/(.*) -> /index.html`) with no hardcoded backend hostnames. For Vercel deployments paired with a separate backend host, either:
+    1. Route `/api/*` at your custom domain's edge proxy / Cloudflare Worker directly to your environment's backend origin while routing all other paths to Vercel; **or**
+    2. In your CI/deploy step per environment (`Preview` / `Staging` / `Production`), prepend the environment-specific `/api/(.*)` rewrite rule into `vercel.json` before `vercel deploy` (never committing placeholder destinations):
+       ```json
+       {
+         "rewrites": [
+           { "source": "/api/(.*)", "destination": "<BACKEND_HTTPS_ORIGIN>/api/$1" },
+           { "source": "/(.*)", "destination": "/index.html" }
+         ]
+       }
+       ```
+       (Note: uploaded images are served under `/api/uploads/images/{filename}`, so the `/api/(.*)` rule covers both API calls and uploaded images.)
+- **Approach 2 (Subdomain Split on Custom Domain)**:
+  If hosting `https://app-staging.your-domain.example` and `https://api-staging.your-domain.example` on separate subdomains under the same registrable domain, set `COOKIE_DOMAIN=.your-domain.example` in backend secrets and `VITE_API_BASE_URL=https://api-staging.your-domain.example/api` at frontend build time. Note that `SameSite=Strict` admin cookies treat distinct public suffixes (for example `*.vercel.app` -> `*.onrender.com`) as cross-site, so avoid cross-site deployments without a same-origin proxy or shared custom domain.
 
 ---
 
@@ -82,7 +94,7 @@ Private digital product downloads use `S3PrivateAssetStorageProvider` (`ASSET_ST
 1. Provision a **Cloudflare R2** (or AWS S3) **private** bucket (`digiverse-staging-private-assets`) with Public Access disabled.
 2. Push this repository to your Git provider and connect `render.yaml` on Render.
 3. Populate the secret environment variables in Render (`JWT_SECRET_KEY`, `ADMIN_JWT_SECRET_KEY`, `ASSET_STORAGE_*`, `RAZORPAY_*`, `RESEND_*`, `WHATSAPP_*`, `INITIAL_ADMIN_PASSWORD`, `CORS_ORIGINS`, `ALLOWED_HOSTS`).
-4. Replace `staging.your-domain.example` and `digiverse-staging-api.onrender.com` placeholders in `render.yaml` / `frontend/vercel.json` / `frontend/nginx.staging.conf`.
+4. Replace `staging.your-domain.example` and `digiverse-staging-api.onrender.com` placeholders in `render.yaml` / `frontend/nginx.staging.conf`, and configure environment-specific `/api/(.*)` routing for Vercel (via CI-injected `vercel.json` or edge proxy).
 5. Run the pre-flight verification script from the backend environment:
    ```bash
    python scripts/verify_staging_readiness.py --check-storage

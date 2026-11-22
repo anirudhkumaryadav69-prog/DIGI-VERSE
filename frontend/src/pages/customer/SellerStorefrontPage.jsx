@@ -11,6 +11,11 @@ import {
   ToastBanner,
   useDocumentMeta,
 } from '../../components/common/StorefrontDesignSystem';
+import {
+  StorefrontAvatarLogo,
+  StorefrontBannerVisual,
+} from '../../components/products/StorefrontVisual';
+import { resolveStorefrontTheme } from '../../utils/categoryTheme';
 import { commerceApi, publicCatalogApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
@@ -132,65 +137,53 @@ const SellerStorefrontPage = () => {
 
   const seller = storefront.seller;
   const products = storefront.products;
+  const storeTheme = resolveStorefrontTheme(seller);
 
   return (
     <StorefrontLayout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <div className="space-y-8">
         {/* Storefront Banner & Header */}
         <section className="bg-white border border-[#E5E7EB] rounded-3xl overflow-hidden shadow-xs">
-          <div className="h-40 sm:h-52 bg-[#FFF6ED] relative border-b border-[#E5E7EB]">
-            {seller.banner_url ? (
-              <img
-                src={seller.banner_url}
-                alt={`${seller.store_name} storefront banner`}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-linear-to-r from-[#FFF2E6] via-[#FFE9D6] to-[#FFF6ED]" />
-            )}
+          <div className="h-40 sm:h-52 border-b border-[#E5E7EB] relative overflow-hidden">
+            <StorefrontBannerVisual store={seller} theme={storeTheme} showDomainPill={true} />
           </div>
 
-          <div className="p-6 sm:p-8 pt-0">
+          <div className="p-6 sm:p-8 pt-0 relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-10 mb-5">
               <div className="flex items-end gap-4">
-                <div className="w-20 h-20 rounded-2xl bg-white border-2 border-[#FFD4AE] shadow-md overflow-hidden flex items-center justify-center shrink-0">
-                  {seller.logo_url ? (
-                    <img
-                      src={seller.logo_url}
-                      alt={seller.store_name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <Store className="w-8 h-8 text-[#FF6B0A]" />
-                  )}
-                </div>
+                <StorefrontAvatarLogo
+                  store={seller}
+                  theme={storeTheme}
+                  sizeClass="w-20 h-20 rounded-2xl shadow-md"
+                  iconSizeClass="w-8 h-8"
+                />
                 <div className="pb-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-[#1F2937]">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-[#263445]">
                       {seller.store_name}
                     </h1>
-                    <Badge variant="orange">{seller.business_type}</Badge>
+                    <Badge variant="accent">{seller.business_type}</Badge>
                   </div>
                   <p className="text-xs text-[#64748B] mt-1">
-                    Curated by <strong className="text-[#243247]">{seller.seller_display_name}</strong>
+                    Curated by <strong className="text-[#263445]">{seller.seller_display_name}</strong>
                   </p>
                 </div>
               </div>
 
               <div className="flex flex-wrap items-center gap-3 text-xs text-[#64748B]">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFF6ED] border border-[#FFD4AE] text-[#D94300] font-semibold">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F8FAFC] border border-[#BFDBFE] text-[#1D4ED8] font-semibold">
                   <Package className="w-3.5 h-3.5" />
                   {seller.published_product_count} Published Products
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#E5E7EB]">
-                  <MapPin className="w-3.5 h-3.5 text-[#FF6B0A]" />
+                  <MapPin className="w-3.5 h-3.5 text-[#2563EB]" />
                   {seller.country}
                 </span>
               </div>
             </div>
 
             {seller.store_description && (
-              <p className="text-sm text-[#243247] leading-relaxed max-w-3xl">
+              <p className="text-sm text-[#263445] leading-relaxed max-w-3xl">
                 {seller.store_description}
               </p>
             )}
@@ -205,8 +198,8 @@ const SellerStorefrontPage = () => {
                   }}
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${
                     !selectedCategory
-                      ? 'bg-[#FF6B0A] text-white border-[#FF6B0A]'
-                      : 'bg-white text-[#243247] border-[#E5E7EB] hover:border-[#FFD4AE]'
+                      ? 'bg-[#2563EB] text-white border-[#2563EB]'
+                      : 'bg-white text-[#263445] border-[#E5E7EB] hover:border-[#93C5FD]'
                   }`}
                 >
                   All Store Categories
@@ -221,8 +214,8 @@ const SellerStorefrontPage = () => {
                     }}
                     className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${
                       selectedCategory === c.slug
-                        ? 'bg-[#FF6B0A] text-white border-[#FF6B0A]'
-                        : 'bg-white text-[#243247] border-[#E5E7EB] hover:border-[#FFD4AE]'
+                        ? 'bg-[#2563EB] text-white border-[#2563EB]'
+                        : 'bg-white text-[#263445] border-[#E5E7EB] hover:border-[#93C5FD]'
                     }`}
                   >
                     {c.name} ({c.product_count})
@@ -234,16 +227,22 @@ const SellerStorefrontPage = () => {
         </section>
 
         <ToastBanner
-          type={toast.type}
-          message={toast.message}
+          toast={toast}
           onDismiss={() => setToast({ type: '', message: '' })}
         />
 
         {/* Store Catalog Filter Bar */}
         <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-white border border-[#E5E7EB] rounded-2xl p-4">
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-[#8490A0] absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <label htmlFor="store-catalog-search" className="sr-only">
+              Search products in {seller.store_name}
+            </label>
+            <Search
+              className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              aria-hidden="true"
+            />
             <input
+              id="store-catalog-search"
               type="search"
               value={search}
               onChange={(e) => {
@@ -251,7 +250,7 @@ const SellerStorefrontPage = () => {
                 setPage(1);
               }}
               placeholder={`Search products in ${seller.store_name}...`}
-              className="dv-input pl-10 text-sm"
+              className="dv-input pl-10 pr-3.5 py-2 text-[13px]"
             />
           </div>
           <div className="flex items-center gap-3">
@@ -262,15 +261,15 @@ const SellerStorefrontPage = () => {
                 setPage(1);
               }}
               aria-label="Sort store products"
-              className="dv-input text-xs w-44"
+              className="dv-input px-3 py-2 text-[13px] sm:w-44"
             >
               <option value="newest">Newest Releases</option>
               <option value="popularity">Most Popular</option>
               <option value="price_asc">Price: Low to High</option>
               <option value="price_desc">Price: High to Low</option>
             </select>
-            <Link to="/products" className="text-xs font-semibold text-[#FF6B0A] hover:underline whitespace-nowrap inline-flex items-center gap-1">
-              <Globe className="w-3.5 h-3.5" /> Full Catalog
+            <Link to="/products" className="text-xs font-semibold text-[#2563EB] hover:underline whitespace-nowrap inline-flex items-center gap-1">
+              <Globe className="w-3.5 h-3.5" aria-hidden="true" /> Full Catalog
             </Link>
           </div>
         </div>
@@ -283,7 +282,7 @@ const SellerStorefrontPage = () => {
             description="Try clearing your search or category filter, or explore other verified storefronts."
           />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
             {products.items.map((p) => (
               <ProductCard
                 key={p.id}

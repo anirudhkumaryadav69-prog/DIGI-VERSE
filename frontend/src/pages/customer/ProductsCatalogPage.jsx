@@ -15,6 +15,7 @@ import {
 } from '../../components/common/StorefrontDesignSystem';
 import { commerceApi, publicCatalogApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { getCategoryTheme } from '../../utils/categoryTheme';
 
 const ProductsCatalogPage = () => {
   const navigate = useNavigate();
@@ -221,12 +222,65 @@ const ProductsCatalogPage = () => {
         subtitle="Explore verified digital assets with instant download delivery."
         action={
           !loading && (
-            <span className="text-xs font-mono font-medium px-3 py-1 rounded-full bg-[#FFF2E6] border border-[#FFD4AE] text-[#D94300]">
+            <span className="text-xs font-mono font-medium px-3 py-1 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8]">
               {data.total} {data.total === 1 ? 'product' : 'products'} found
             </span>
           )
         }
       />
+
+      {/* Quick Category Browse Strip */}
+      {categories.length > 0 && (
+        <div
+          aria-label="Category quick filters"
+          className="flex flex-wrap items-center gap-2 mb-5"
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedCategory('');
+              setPage(1);
+            }}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap transition shrink-0 ${
+              !selectedCategory
+                ? 'bg-[#2563EB] text-white border-[#2563EB] shadow-xs'
+                : 'bg-white text-[#263445] border-[#D5DEE8] hover:border-[#93C5FD] hover:bg-[#EDF5FC]'
+            }`}
+          >
+            All Categories
+          </button>
+          {categories.map((c) => {
+            const catTheme = getCategoryTheme(c.slug || c.name);
+            const CatIcon = catTheme.badgeIcon || catTheme.icon;
+            const active = selectedCategory === c.slug;
+            return (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => {
+                  setSelectedCategory(active ? '' : c.slug);
+                  setPage(1);
+                }}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap transition shrink-0 ${
+                  active
+                    ? 'bg-[#2563EB] text-white border-[#2563EB] shadow-xs'
+                    : 'bg-white text-[#263445] border-[#D5DEE8] hover:border-[#93C5FD] hover:bg-[#EDF5FC]'
+                }`}
+              >
+                {CatIcon && <CatIcon className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />}
+                <span>{c.name}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full tabular-nums ${
+                    active ? 'bg-white/20 text-white' : 'bg-[#EAF4FC] text-[#1D4ED8]'
+                  }`}
+                >
+                  {c.product_count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* Filter & Search Bar */}
       <section
@@ -239,7 +293,7 @@ const ProductsCatalogPage = () => {
               Search digital products
             </label>
             <Search
-              className="w-4 h-4 text-[#8490A0] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
               aria-hidden="true"
             />
             <input
@@ -336,7 +390,7 @@ const ProductsCatalogPage = () => {
 
         <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#E5E7EB]">
           <div className="flex flex-wrap items-center gap-3">
-            <label className="inline-flex items-center gap-2 text-xs font-medium text-[#243247] cursor-pointer select-none">
+            <label className="inline-flex items-center gap-2 text-xs font-medium text-[#263445] cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={onSaleOnly}
@@ -344,7 +398,7 @@ const ProductsCatalogPage = () => {
                   setOnSaleOnly(e.target.checked);
                   setPage(1);
                 }}
-                className="accent-[#FF6B0A]"
+                className="accent-[#2563EB]"
               />
               <span>Promotional Deals &amp; Active Discounts Only</span>
             </label>
@@ -385,7 +439,7 @@ const ProductsCatalogPage = () => {
             <button
               type="button"
               onClick={handleClearFilters}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300]"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8]"
             >
               <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Clear All Filters</span>
@@ -406,7 +460,10 @@ const ProductsCatalogPage = () => {
 
       {/* Product Grid */}
       {loading ? (
-        <ProductCardSkeleton count={6} />
+        <ProductCardSkeleton
+          count={8}
+          gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch"
+        />
       ) : data.items.length === 0 ? (
         <EmptyState
           icon={PackageSearch}
@@ -421,7 +478,7 @@ const ProductsCatalogPage = () => {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
           {data.items.map((prod) => (
             <ProductCard
               key={prod.id}

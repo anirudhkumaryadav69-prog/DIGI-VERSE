@@ -15,6 +15,7 @@ import {
 } from '../../components/common/StorefrontDesignSystem';
 import { commerceApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { resolveProductThumbnailUrl } from '../../utils/productThumbnails';
 
 const WishlistPage = () => {
   const { refreshCartAndWishlistCounts } = useAuth();
@@ -142,7 +143,7 @@ const WishlistPage = () => {
           action={
             <Link
               to="/products"
-              className="dv-btn-primary inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider px-6 py-3"
+              className="dv-btn-primary inline-flex items-center gap-2 text-[13px] font-semibold px-6 py-3"
             >
               <span>Browse Digital Catalog</span>
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -159,22 +160,24 @@ const WishlistPage = () => {
               <div>
                 <Link
                   to={`/products/${item.product_slug}`}
-                  className="block aspect-16/10 bg-[#FFF6ED] relative border-b border-[#E5E7EB]"
+                  className="block aspect-16/10 bg-[#F8FAFC] relative border-b border-[#E5E7EB]"
                 >
-                  {item.image_url ? (
-                    <img
-                      src={item.image_url}
-                      alt={item.product_name}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-xs uppercase tracking-widest text-[#8490A0]">
-                      Digital Asset
-                    </div>
-                  )}
+                  <img
+                    src={resolveProductThumbnailUrl(
+                      {
+                        slug: item.product_slug,
+                        name: item.product_name,
+                        category: { name: item.category_name },
+                      },
+                      item.image_url,
+                      0
+                    )}
+                    alt={item.product_name}
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                  />
                   {item.is_on_sale && item.active_discount && (
-                    <span className="absolute top-3 right-3 rounded-full bg-[#FF6B0A] text-white text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1">
+                    <span className="absolute top-2.5 right-3 rounded-full bg-[#16A34A] text-white text-[11px] font-semibold px-2.5 py-0.5 shadow-xs">
                       -{item.active_discount.discount_percentage}% OFF
                     </span>
                   )}
@@ -182,11 +185,11 @@ const WishlistPage = () => {
 
                 <div className="p-5 space-y-2">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-[11px] uppercase tracking-wider text-[#FF6B0A] font-semibold">
+                    <p className="text-[11px] text-[#2563EB] font-semibold">
                       {item.category_name}
                     </p>
                     <span
-                      className={`inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-medium ${
+                      className={`inline-flex items-center gap-1 text-[11px] font-medium ${
                         item.is_available ? 'text-emerald-700' : 'text-red-700'
                       }`}
                     >
@@ -206,17 +209,17 @@ const WishlistPage = () => {
 
                   <Link
                     to={`/products/${item.product_slug}`}
-                    className="text-lg font-semibold text-[#1F2937] hover:text-[#FF6B0A] transition block"
+                    className="text-lg font-semibold text-[#263445] hover:text-[#2563EB] transition block"
                   >
                     {item.product_name}
                   </Link>
 
                   <div className="font-mono pt-1">
-                    <span className="text-base font-bold text-[#F4510B]">
+                    <span className="text-base font-bold text-[#1D4ED8]">
                       {formatINR(item.effective_price)}
                     </span>
                     {item.is_on_sale && (
-                      <span className="text-xs text-[#8490A0] line-through ml-2">
+                      <span className="text-xs text-[#64748B] line-through ml-2">
                         {formatINR(item.original_price)}
                       </span>
                     )}
@@ -224,12 +227,12 @@ const WishlistPage = () => {
                 </div>
               </div>
 
-              <div className="p-4 border-t border-[#E5E7EB] bg-[#FFFAF5]/50 flex items-center justify-between gap-2">
+              <div className="p-4 border-t border-[#E5E7EB] bg-[#F8FAFC] flex items-center justify-between gap-2">
                 <button
                   type="button"
                   disabled={!item.is_available}
                   onClick={() => handleMoveToCart(item)}
-                  className="dv-btn-primary flex-1 py-2.5 px-4 text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 disabled:opacity-40"
+                  className="dv-btn-primary flex-1 py-2.5 px-4 text-[13px] font-semibold flex items-center justify-center gap-1.5 disabled:opacity-40"
                 >
                   <ShoppingBag className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>{item.is_available ? 'Move to Cart' : 'Unavailable'}</span>

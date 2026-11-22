@@ -90,6 +90,8 @@ class CustomerAuthResponse(BaseModel):
     customer: CustomerProfileResponse
     requires_phone_verification: bool
     csrf_token: str
+    otp_delivery_status: Optional[str] = None
+    otp_delivery_detail: Optional[str] = None
 
 
 class CustomerProfileUpdateRequest(StrictRequestModel):
@@ -186,3 +188,5 @@ class AdminAuthResponse(BaseModel):
 
 class GenericMessageResponse(BaseModel):
     message: str
+    delivery_status: Optional[str] = None
+    delivery_detail: Optional[str] = None

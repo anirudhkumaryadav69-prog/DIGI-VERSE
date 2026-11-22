@@ -46,7 +46,7 @@ export const useDocumentMeta = ({ title, description, canonicalPath }) => {
 };
 
 /**
- * Reusable Button component following the DIGI-VERSE warm orange & white design system.
+ * Reusable Button component following the DIGI-VERSE Light Blue & Slate design system.
  */
 export const Button = ({
   children,
@@ -59,19 +59,19 @@ export const Button = ({
   ...rest
 }) => {
   const base =
-    'inline-flex items-center justify-center gap-2 rounded-xl font-semibold tracking-wide transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6B0A] disabled:opacity-45 disabled:cursor-not-allowed';
+    'inline-flex items-center justify-center gap-2 rounded-xl font-semibold tracking-wide transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] disabled:opacity-45 disabled:cursor-not-allowed';
 
   const variants = {
     primary: 'dv-btn-primary',
     accent:
-      'bg-[#F4510B] text-white hover:bg-[#D94300] border border-[#F4510B] rounded-xl shadow-[0_4px_14px_-2px_rgba(244,81,11,0.28)]',
+      'bg-[#0EA5E9] text-white hover:bg-[#0284C7] border border-[#0EA5E9] rounded-xl shadow-xs',
     secondary: 'dv-btn-secondary',
     outline:
-      'bg-white text-[#243247] border border-[#E5E7EB] hover:border-[#FFD4AE] hover:bg-[#FFF0E2] hover:text-[#D94300] rounded-xl',
+      'bg-white text-[#263445] border border-[#D5DEE8] hover:border-[#93C5FD] hover:bg-[#EDF5FC] hover:text-[#1D4ED8] rounded-xl',
     danger:
-      'bg-white text-red-700 border border-red-200 hover:border-red-500 hover:bg-red-50 rounded-xl',
+      'bg-white text-[#DC2626] border border-red-200 hover:border-[#DC2626] hover:bg-red-50 rounded-xl',
     ghost:
-      'bg-transparent text-[#FF6B0A] hover:text-[#D94300] underline-offset-4 hover:underline rounded-xl',
+      'bg-transparent text-[#2563EB] hover:text-[#1D4ED8] underline-offset-4 hover:underline rounded-xl',
   };
 
   const sizes = {
@@ -111,7 +111,7 @@ export const Input = ({
       {label && (
         <label
           htmlFor={id}
-          className="block text-xs font-medium text-[#243247] mb-1.5"
+          className="block text-xs font-medium text-[#263445] mb-1.5"
         >
           {label}
         </label>
@@ -119,23 +119,23 @@ export const Input = ({
       <div className="relative">
         {Icon && (
           <Icon
-            className="w-4 h-4 text-[#8490A0] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+            className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
             aria-hidden="true"
           />
         )}
         <input
           id={id}
           className={`dv-input ${
-            error ? 'border-red-500 focus:border-red-500' : ''
+            error ? 'border-[#DC2626] focus:border-[#DC2626]' : ''
           } ${
             Icon ? 'pl-10' : 'pl-3.5'
-          } pr-3.5 py-2.5 text-sm text-[#243247] placeholder:text-[#8490A0] disabled:bg-[#FFF6ED] disabled:text-[#8490A0] ${className}`}
+          } pr-3.5 py-2.5 text-sm text-[#263445] placeholder:text-[#94A3B8] disabled:bg-[#F8FAFC] disabled:text-[#94A3B8] ${className}`}
           {...props}
         />
       </div>
       {helperText && !error && <p className="mt-1 text-[11px] text-[#64748B]">{helperText}</p>}
       {error && (
-        <p role="alert" className="mt-1 text-[11px] text-red-700">
+        <p role="alert" className="mt-1 text-[11px] text-[#DC2626]">
           {error}
         </p>
       )}
@@ -148,12 +148,12 @@ export const Input = ({
  */
 export const Badge = ({ children, variant = 'neutral', className = '' }) => {
   const styles = {
-    neutral: 'bg-[#FFF6ED] text-[#243247] border-[#E5E7EB]',
-    accent: 'bg-[#FFE9D6] text-[#D94300] border-[#FFD4AE]',
-    dark: 'bg-[#FF6B0A] text-white border-[#FF6B0A]',
-    success: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    warning: 'bg-[#FFF2E6] text-[#D94300] border-[#FFD4AE]',
-    danger: 'bg-red-50 text-red-700 border-red-200',
+    neutral: 'bg-[#F8FAFC] text-[#263445] border-[#D5DEE8]',
+    accent: 'bg-[#EAF4FC] text-[#1D4ED8] border-[#BFDBFE]',
+    dark: 'bg-[#2563EB] text-white border-[#2563EB]',
+    success: 'bg-emerald-50 text-[#16A34A] border-emerald-200',
+    warning: 'bg-amber-50 text-[#D97706] border-amber-200',
+    danger: 'bg-red-50 text-[#DC2626] border-red-200',
   };
 
   return (
@@ -176,12 +176,16 @@ export const SectionHeading = ({ eyebrow, title, subtitle, action, className = '
   >
     <div>
       {eyebrow && (
-        <p className="text-xs uppercase tracking-[0.2em] text-[#FF6B0A] font-semibold mb-2">
+        <p className="text-[12px] tracking-[0.02em] text-[#2563EB] font-semibold mb-1.5">
           {eyebrow}
         </p>
       )}
-      <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1F2937]">{title}</h2>
-      {subtitle && <p className="text-sm text-[#64748B] mt-1.5 max-w-2xl">{subtitle}</p>}
+      <h2 className="text-[26px] sm:text-[32px] leading-[1.2] font-bold tracking-tight text-[#263445]">
+        {title}
+      </h2>
+      {subtitle && (
+        <p className="text-[15px] leading-relaxed text-[#64748B] mt-2 max-w-2xl">{subtitle}</p>
+      )}
     </div>
     {action && <div className="shrink-0">{action}</div>}
   </div>
@@ -196,31 +200,34 @@ export const LoadingState = ({ label = 'Loading...' }) => (
     aria-live="polite"
     className="py-16 text-center flex flex-col items-center justify-center gap-3"
   >
-    <div className="w-7 h-7 border-2 border-[#FFD4AE] border-t-[#FF6B0A] rounded-full animate-spin" />
-    <span className="text-xs font-medium tracking-wider uppercase text-[#64748B]">{label}</span>
+    <div className="w-7 h-7 border-2 border-[#DCE6EF] border-t-[#2563EB] rounded-full animate-spin" />
+    <span className="text-xs font-medium text-[#64748B]">{label}</span>
   </div>
 );
 
-export const ProductCardSkeleton = ({ count = 6 }) => (
+export const ProductCardSkeleton = ({
+  count = 6,
+  gridClassName = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6',
+}) => (
   <div
     role="status"
     aria-label="Loading products"
-    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+    className={gridClassName}
   >
     {Array.from({ length: count }).map((_, i) => (
       <div
         key={i}
         className="dv-card overflow-hidden animate-pulse"
       >
-        <div className="aspect-16/10 bg-[#FFF6ED] border-b border-[#E5E7EB]" />
+        <div className="aspect-16/10 bg-[#DCE6EF] border-b border-[#E5E7EB]" />
         <div className="p-5 space-y-3">
-          <div className="h-3 bg-[#FFE9D6] rounded w-1/3" />
-          <div className="h-5 bg-[#FFF2E6] rounded w-3/4" />
-          <div className="h-3 bg-[#FFF6ED] rounded w-full" />
+          <div className="h-3 bg-[#DCE6EF] rounded w-1/3" />
+          <div className="h-5 bg-[#EDF5FC] rounded w-3/4" />
+          <div className="h-3 bg-[#F8FAFC] rounded w-full" />
         </div>
         <div className="px-5 py-4 border-t border-[#E5E7EB] flex justify-between items-center">
-          <div className="h-4 bg-[#FFE9D6] rounded w-20" />
-          <div className="h-8 bg-[#FFF2E6] rounded-xl w-24" />
+          <div className="h-5 bg-[#DCE6EF] rounded w-20" />
+          <div className="h-9 bg-[#EDF5FC] rounded-xl w-24" />
         </div>
       </div>
     ))}
@@ -231,13 +238,13 @@ export const ProductCardSkeleton = ({ count = 6 }) => (
  * Reusable EmptyState component.
  */
 export const EmptyState = ({ icon: Icon, title, description, action }) => (
-  <div className="dv-card-warm p-10 md:p-14 text-center max-w-2xl mx-auto space-y-4">
+  <div className="dv-card p-10 md:p-14 text-center max-w-2xl mx-auto space-y-4">
     {Icon && (
-      <div className="w-12 h-12 mx-auto rounded-2xl bg-[#FFF2E6] border border-[#FFD4AE] flex items-center justify-center text-[#FF6B0A]">
+      <div className="w-12 h-12 mx-auto rounded-2xl bg-[#EAF4FC] border border-[#D5DEE8] flex items-center justify-center text-[#2563EB]">
         <Icon className="w-5 h-5" aria-hidden="true" />
       </div>
     )}
-    <h3 className="text-lg font-semibold text-[#1F2937]">{title}</h3>
+    <h3 className="text-lg font-semibold text-[#263445]">{title}</h3>
     {description && <p className="text-sm text-[#64748B] leading-relaxed max-w-md mx-auto">{description}</p>}
     {action && <div className="pt-2">{action}</div>}
   </div>
@@ -251,17 +258,17 @@ export const ErrorAlert = ({ message, onRetry, className = '' }) => {
   return (
     <div
       role="alert"
-      className={`p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex flex-wrap items-center justify-between gap-3 ${className}`}
+      className={`p-4 rounded-xl bg-red-50 border border-red-200 text-[#DC2626] text-xs flex flex-wrap items-center justify-between gap-3 ${className}`}
     >
       <div className="flex items-start gap-2.5">
-        <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-600" aria-hidden="true" />
+        <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#DC2626]" aria-hidden="true" />
         <span>{message}</span>
       </div>
       {onRetry && (
         <button
           type="button"
           onClick={onRetry}
-          className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white border border-red-200 text-red-700 hover:bg-red-100 transition"
+          className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white border border-red-200 text-[#DC2626] hover:bg-red-100 transition"
         >
           <RefreshCw className="w-3 h-3" />
           <span>Retry</span>
@@ -274,10 +281,11 @@ export const ErrorAlert = ({ message, onRetry, className = '' }) => {
 /**
  * Reusable ToastBanner notification component.
  */
-export const ToastBanner = ({ toast, onDismiss, className = '' }) => {
-  if (!toast || !toast.message) return null;
-  const isError = toast.type === 'error';
-  const isInfo = toast.type === 'info';
+export const ToastBanner = ({ toast, type, message, onDismiss, className = '' }) => {
+  const resolved = toast?.message ? toast : message ? { type: type || 'info', message } : null;
+  if (!resolved) return null;
+  const isError = resolved.type === 'error';
+  const isInfo = resolved.type === 'info';
 
   return (
     <div
@@ -285,10 +293,10 @@ export const ToastBanner = ({ toast, onDismiss, className = '' }) => {
       aria-live="polite"
       className={`p-3.5 rounded-xl border text-xs flex items-center justify-between gap-3 shadow-xs ${
         isError
-          ? 'bg-red-50 border-red-200 text-red-800'
+          ? 'bg-red-50 border-red-200 text-[#DC2626]'
           : isInfo
-          ? 'bg-[#FFF2E6] border-[#FFD4AE] text-[#D94300]'
-          : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+          ? 'bg-[#EAF4FC] border-[#BFDBFE] text-[#1D4ED8]'
+          : 'bg-emerald-50 border-emerald-200 text-[#16A34A]'
       } ${className}`}
     >
       <div className="flex items-center gap-2.5">
@@ -299,7 +307,7 @@ export const ToastBanner = ({ toast, onDismiss, className = '' }) => {
         ) : (
           <CheckCircle2 className="w-4 h-4 shrink-0" aria-hidden="true" />
         )}
-        <span>{toast.message}</span>
+        <span>{resolved.message}</span>
       </div>
       {onDismiss && (
         <button
@@ -308,7 +316,7 @@ export const ToastBanner = ({ toast, onDismiss, className = '' }) => {
           aria-label="Dismiss notification"
           className="p-1 rounded-lg opacity-70 hover:opacity-100"
         >
-          <X className="w-3.5 h-3.5" />
+          <X className="w-3.5 h-3.5" aria-hidden="true" />
         </button>
       )}
     </div>
@@ -334,10 +342,10 @@ export const ConfirmDialog = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirm-dialog-title"
-      className="fixed inset-0 z-50 bg-[#1F2937]/30 backdrop-blur-[2px] flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-[#263445]/35 backdrop-blur-[2px] flex items-center justify-center p-4"
     >
-      <div className="bg-white border border-[#FFD4AE] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-lg">
-        <h3 id="confirm-dialog-title" className="text-base font-semibold text-[#1F2937]">
+      <div className="bg-white border border-[#D5DEE8] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-lg">
+        <h3 id="confirm-dialog-title" className="text-base font-semibold text-[#263445]">
           {title}
         </h3>
         {description && <p className="text-xs text-[#64748B] leading-relaxed">{description}</p>}
@@ -363,11 +371,11 @@ export const Pagination = ({ page, totalPages, totalItems, itemLabel = 'items', 
   return (
     <nav
       aria-label="Pagination"
-      className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-[#E5E7EB] pt-6 text-xs text-[#64748B]"
+      className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-[#D5DEE8] pt-6 text-xs text-[#64748B]"
     >
       <span>
-        Showing page <strong className="text-[#1F2937]">{page}</strong> of{' '}
-        <strong className="text-[#1F2937]">{totalPages}</strong>
+        Showing page <strong className="text-[#263445]">{page}</strong> of{' '}
+        <strong className="text-[#263445]">{totalPages}</strong>
         {typeof totalItems === 'number' ? ` (${totalItems} ${itemLabel})` : ''}
       </span>
       <div className="flex items-center gap-2">
@@ -376,7 +384,7 @@ export const Pagination = ({ page, totalPages, totalItems, itemLabel = 'items', 
           disabled={page <= 1}
           onClick={() => onPageChange(Math.max(1, page - 1))}
           aria-label="Previous page"
-          className="px-3.5 py-2 rounded-xl border border-[#E5E7EB] bg-white text-[#243247] hover:border-[#FFD4AE] hover:bg-[#FFF0E2] hover:text-[#D94300] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1 transition"
+          className="px-3.5 py-2 rounded-xl border border-[#D5DEE8] bg-white text-[#263445] hover:border-[#93C5FD] hover:bg-[#EDF5FC] hover:text-[#1D4ED8] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1 transition"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
           <span>Previous</span>
@@ -386,7 +394,7 @@ export const Pagination = ({ page, totalPages, totalItems, itemLabel = 'items', 
           disabled={page >= totalPages}
           onClick={() => onPageChange(Math.min(totalPages, page + 1))}
           aria-label="Next page"
-          className="px-3.5 py-2 rounded-xl border border-[#E5E7EB] bg-white text-[#243247] hover:border-[#FFD4AE] hover:bg-[#FFF0E2] hover:text-[#D94300] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1 transition"
+          className="px-3.5 py-2 rounded-xl border border-[#D5DEE8] bg-white text-[#263445] hover:border-[#93C5FD] hover:bg-[#EDF5FC] hover:text-[#1D4ED8] disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1 transition"
         >
           <span>Next</span>
           <ChevronRight className="w-3.5 h-3.5" />

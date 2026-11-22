@@ -20,14 +20,14 @@ const NotFoundPage = () => {
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link
                 to="/products"
-                className="dv-btn-primary px-5 py-2.5 text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2"
+                className="dv-btn-primary px-5 py-2.5 text-[13px] font-semibold inline-flex items-center gap-2"
               >
                 <span>Browse Digital Catalog</span>
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
               <Link
                 to="/"
-                className="dv-btn-secondary px-5 py-2.5 text-xs font-semibold uppercase tracking-wider"
+                className="dv-btn-secondary px-5 py-2.5 text-[13px] font-semibold"
               >
                 Return Home
               </Link>

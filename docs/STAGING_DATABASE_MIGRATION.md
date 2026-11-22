@@ -14,22 +14,28 @@ Verified repository Alembic chain (`alembic history`):
 
 ```text
 <base>
-  └─> 3b9aa73cb927  (initial core schema)
-        └─> a67e85f7cce0  (phase 7 security/audit/rate-limit extensions)
-              └─> 4257bac0fc28  (phase 7 indexes & constraints)
-                    └─> bcf03aa639b3  (phase 7.1 head / current local production DB baseline)
-                          └─> e1a7f3c9d201  (phase 8.1 private digital asset columns on products & audit support)
-                                └─> f4b9c2d8a102  (phase 8.2 persistent campaigns, recipients, webhook events & suppressions)
-                                      └─> b8c9d0e1f234  (head: phase 8.2 audit constraints, idempotency keys & indexes)
+  └─> 3b9aa73cb927  (initial_schema)
+        └─> a67e85f7cce0  (add_authentication_sessions_otp_and_reset_tokens)
+              └─> 4257bac0fc28  (add_catalog_metadata_and_indexes)
+                    └─> bcf03aa639b3  (add_checkout_idempotency_payment_webhooks_and_download_tracking)
+                          └─> e1a7f3c9d201  (add_rate_limit_buckets_and_perf_indexes)
+                                └─> f4b9c2d8a102  (add_product_private_asset_metadata)
+                                      └─> b8c9d0e1f234  (phase8_2_campaign_worker_and_webhooks)
+                                            └─> c9d0e1f2a345  (phase9_multivendor_sellers)
+                                                  └─> d2e3f4a5b601  (phase10_financial_foundation)
+                                                        └─> e4b5c6d7e802  (phase10_2_payout_foundation)
+                                                              └─> f5a6b7c8d903  (phase10_2_payout_execution)
+                                                                    └─> g6b7c8d9e104  (phase10_2_account_verification)
+                                                                          └─> h7c8d9e0f205  (head: phase10_2_payout_reconciliation)
 ```
 
-Expected staging head revision: **`b8c9d0e1f234`**.
+Expected staging head revision: **`h7c8d9e0f205`**.
 
 ---
 
 ## 2. Pre-Migration Backup Checklist
 
-Before upgrading any existing staging or production database from `bcf03aa639b3` to `b8c9d0e1f234`:
+Before upgrading any existing staging or production database to `h7c8d9e0f205`:
 
 1. Ensure no long-running write transactions or active campaign workers are holding table locks (`worker` scaled to 0 during major schema upgrades).
 2. Create a verified custom-format PostgreSQL backup:
@@ -39,7 +45,7 @@ Before upgrading any existing staging or production database from `bcf03aa639b3`
      --backup-file "./backups/pre_migration_$(date -u +%Y%m%dT%H%M%SZ).dump" \
      --verify-restore-db digiverse_restore_verify
    ```
-3. Confirm `alembic current` matches the expected prior baseline (`bcf03aa639b3` for upgrades, or empty on fresh staging DB).
+3. Confirm `alembic current` matches the expected prior baseline before upgrading, or empty on a fresh staging DB.
 
 ---
 
@@ -55,10 +61,10 @@ alembic current
 
 Expected output after completion:
 ```text
-b8c9d0e1f234 (head)
+h7c8d9e0f205 (head)
 ```
 
-For fresh staging PostgreSQL provisioning, `alembic upgrade head` executes the entire chain `<base> -> b8c9d0e1f234` deterministically in sequence, creating all marketplace, Phase 8.1 digital-asset, and Phase 8.2 campaign/webhook tables, constraints, and indexes.
+For fresh staging PostgreSQL provisioning, `alembic upgrade head` executes the entire chain `<base> -> h7c8d9e0f205` deterministically in sequence, creating all marketplace, Phase 8.1 digital-asset, Phase 8.2 campaign/webhook, Phase 9 multi-vendor seller, Phase 10.1 financial ledger, and Phase 10.2 payout & reconciliation tables, constraints, and indexes.
 
 ---
 

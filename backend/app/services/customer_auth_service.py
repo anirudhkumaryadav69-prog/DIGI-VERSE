@@ -33,7 +33,7 @@ from app.schemas.auth import (
     CustomerRegisterRequest,
 )
 from app.services.email_service import get_email_provider
-from app.services.sms_service import get_sms_provider
+from app.services.sms_service import SMSDeliveryResult, get_sms_provider
 
 
 def _create_customer_session(
@@ -67,7 +67,7 @@ def issue_phone_otp_challenge(
     customer: Customer,
     target_phone: str,
     purpose: OTPPurpose,
-) -> PhoneOTPChallenge:
+) -> tuple[PhoneOTPChallenge, SMSDeliveryResult]:
     now = datetime.now(timezone.utc)
     window_start = now - timedelta(minutes=settings.OTP_RATE_WINDOW_MINUTES)
 
@@ -112,8 +112,12 @@ def issue_phone_otp_challenge(
     db.add(challenge)
     db.flush()
 
-    get_sms_provider().send_otp(target_phone, otp_code, settings.OTP_EXPIRE_MINUTES)
-    return challenge
+    delivery = get_sms_provider().send_otp(
+        target_phone,
+        otp_code,
+        settings.OTP_EXPIRE_MINUTES,
+    )
+    return challenge, delivery
 
 
 def register_customer(
@@ -122,7 +126,7 @@ def register_customer(
     ip_address: Optional[str],
     valid_inet: Optional[str],
     user_agent: Optional[str],
-) -> tuple[Customer, str, str]:
+) -> tuple[Customer, str, str, SMSDeliveryResult]:
     existing_email = db.scalar(
         select(Customer).where(func.lower(Customer.email) == payload.email.lower())
     )
@@ -158,7 +162,12 @@ def register_customer(
     db.flush()
 
     # Automatically issue initial phone verification OTP
-    issue_phone_otp_challenge(db, customer, customer.phone_number, OTPPurpose.PHONE_VERIFY)
+    _, otp_delivery = issue_phone_otp_challenge(
+        db,
+        customer,
+        customer.phone_number,
+        OTPPurpose.PHONE_VERIFY,
+    )
 
     _, access_token, refresh_token = _create_customer_session(db, customer, ip_address, user_agent)
 
@@ -171,7 +180,7 @@ def register_customer(
         )
     )
     db.flush()
-    return customer, access_token, refresh_token
+    return customer, access_token, refresh_token, otp_delivery
 
 
 def login_customer(
@@ -268,7 +277,10 @@ def login_customer(
     return customer, access_token, refresh_token
 
 
-def request_customer_phone_otp(db: Session, customer: Customer) -> PhoneOTPChallenge:
+def request_customer_phone_otp(
+    db: Session,
+    customer: Customer,
+) -> tuple[PhoneOTPChallenge, SMSDeliveryResult]:
     if customer.pending_phone_number:
         return issue_phone_otp_challenge(
             db, customer, customer.pending_phone_number, OTPPurpose.PHONE_CHANGE

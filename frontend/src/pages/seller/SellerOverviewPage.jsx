@@ -22,7 +22,7 @@ import { sellerApi } from '../../services/api';
 
 const STATUS_BADGE = {
   published: { label: 'Published', variant: 'success' },
-  pending_review: { label: 'Pending Review', variant: 'orange' },
+  pending_review: { label: 'Pending Review', variant: 'warning' },
   draft: { label: 'Draft', variant: 'neutral' },
   rejected: { label: 'Rejected', variant: 'danger' },
   archived: { label: 'Archived', variant: 'neutral' },
@@ -68,7 +68,7 @@ const SellerOverviewPage = () => {
       {overview && (
         <div className="space-y-6">
           {/* Gross Product Sales Disclaimer */}
-          <div className="bg-[#FFF2E6] border border-[#FFD4AE] rounded-2xl px-5 py-3.5 text-xs text-[#D94300] flex flex-wrap items-center justify-between gap-2">
+          <div className="bg-[#EAF4FC] border border-[#BFDBFE] rounded-2xl px-5 py-3.5 text-xs text-[#1D4ED8] flex flex-wrap items-center justify-between gap-2">
             <span>
               Revenue figures below reflect <strong>Gross Product Sales</strong> from your seller-owned items only. Commission splits and payouts will be introduced in Phase 10.
             </span>
@@ -82,9 +82,9 @@ const SellerOverviewPage = () => {
             <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between text-xs text-[#64748B]">
                 <span>Total Products</span>
-                <Package className="w-4 h-4 text-[#FF6B0A]" />
+                <Package className="w-4 h-4 text-[#2563EB]" />
               </div>
-              <p className="text-2xl font-bold text-[#1F2937] mt-2">{overview.total_products}</p>
+              <p className="text-2xl font-bold text-[#263445] mt-2">{overview.total_products}</p>
               <p className="text-[11px] text-[#64748B] mt-1">
                 {overview.published_products} published · {overview.draft_products} drafts
               </p>
@@ -93,9 +93,9 @@ const SellerOverviewPage = () => {
             <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between text-xs text-[#64748B]">
                 <span>Review Pipeline</span>
-                <Clock className="w-4 h-4 text-[#FF6B0A]" />
+                <Clock className="w-4 h-4 text-[#2563EB]" />
               </div>
-              <p className="text-2xl font-bold text-[#1F2937] mt-2">
+              <p className="text-2xl font-bold text-[#263445] mt-2">
                 {overview.pending_review_products}
               </p>
               <p className="text-[11px] text-[#64748B] mt-1">
@@ -106,20 +106,20 @@ const SellerOverviewPage = () => {
             <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between text-xs text-[#64748B]">
                 <span>Orders & Units Sold</span>
-                <ShoppingBag className="w-4 h-4 text-[#FF6B0A]" />
+                <ShoppingBag className="w-4 h-4 text-[#2563EB]" />
               </div>
-              <p className="text-2xl font-bold text-[#1F2937] mt-2">{overview.total_orders}</p>
+              <p className="text-2xl font-bold text-[#263445] mt-2">{overview.total_orders}</p>
               <p className="text-[11px] text-[#64748B] mt-1">
                 {overview.paid_orders} paid orders · {overview.total_units_sold} units sold
               </p>
             </div>
 
-            <div className="bg-white border border-[#FFD4AE] rounded-2xl p-5 shadow-xs bg-linear-to-br from-white to-[#FFF6ED]">
-              <div className="flex items-center justify-between text-xs font-semibold text-[#D94300]">
+            <div className="bg-white border border-[#BFDBFE] rounded-2xl p-5 shadow-xs bg-linear-to-br from-white to-[#F8FAFC]">
+              <div className="flex items-center justify-between text-xs font-semibold text-[#1D4ED8]">
                 <span>Gross Product Sales</span>
-                <IndianRupee className="w-4 h-4 text-[#FF6B0A]" />
+                <IndianRupee className="w-4 h-4 text-[#2563EB]" />
               </div>
-              <p className="text-2xl font-bold text-[#F4510B] font-mono mt-2">
+              <p className="text-2xl font-bold text-[#1D4ED8] font-mono mt-2">
                 {formatINR(overview.gross_product_sales)}
               </p>
               <p className="text-[11px] text-[#64748B] mt-1">
@@ -132,11 +132,11 @@ const SellerOverviewPage = () => {
             {/* Top Products */}
             <section className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-bold text-[#1F2937] flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-[#FF6B0A]" />
+                <h2 className="text-sm font-bold text-[#263445] flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-[#2563EB]" />
                   Best-Performing Products
                 </h2>
-                <Link to="/seller/analytics" className="text-xs font-semibold text-[#FF6B0A] hover:underline">
+                <Link to="/seller/analytics" className="text-xs font-semibold text-[#2563EB] hover:underline">
                   Full Analytics
                 </Link>
               </div>
@@ -151,12 +151,12 @@ const SellerOverviewPage = () => {
                     return (
                       <div
                         key={item.product_id}
-                        className="flex items-center justify-between gap-3 p-3 rounded-xl border border-[#E5E7EB] bg-[#FFFAF5]"
+                        className="flex items-center justify-between gap-3 p-3 rounded-xl border border-[#E5E7EB] bg-[#EAF4FC]"
                       >
                         <div className="min-w-0">
                           <Link
                             to={`/seller/products/${item.product_id}/edit`}
-                            className="text-xs font-semibold text-[#1F2937] hover:text-[#FF6B0A] truncate block"
+                            className="text-xs font-semibold text-[#263445] hover:text-[#2563EB] truncate block"
                           >
                             {item.name}
                           </Link>
@@ -167,7 +167,7 @@ const SellerOverviewPage = () => {
                             </span>
                           </div>
                         </div>
-                        <span className="text-xs font-bold font-mono text-[#F4510B] shrink-0">
+                        <span className="text-xs font-bold font-mono text-[#1D4ED8] shrink-0">
                           {formatINR(item.gross_sales)}
                         </span>
                       </div>
@@ -180,11 +180,11 @@ const SellerOverviewPage = () => {
             {/* Recent Seller Orders */}
             <section className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-bold text-[#1F2937] flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#FF6B0A]" />
+                <h2 className="text-sm font-bold text-[#263445] flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#2563EB]" />
                   Recent Order Activity
                 </h2>
-                <Link to="/seller/orders" className="text-xs font-semibold text-[#FF6B0A] hover:underline inline-flex items-center gap-1">
+                <Link to="/seller/orders" className="text-xs font-semibold text-[#2563EB] hover:underline inline-flex items-center gap-1">
                   All Orders <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
@@ -197,10 +197,10 @@ const SellerOverviewPage = () => {
                   {overview.recent_orders.map((ord) => (
                     <div
                       key={ord.order_id}
-                      className="flex items-center justify-between gap-3 p-3 rounded-xl border border-[#E5E7EB] bg-[#FFFAF5]"
+                      className="flex items-center justify-between gap-3 p-3 rounded-xl border border-[#E5E7EB] bg-[#EAF4FC]"
                     >
                       <div className="min-w-0">
-                        <p className="text-xs font-mono font-bold text-[#1F2937]">
+                        <p className="text-xs font-mono font-bold text-[#263445]">
                           {ord.order_number}
                         </p>
                         <p className="text-[11px] text-[#64748B] mt-0.5">
@@ -208,10 +208,10 @@ const SellerOverviewPage = () => {
                         </p>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-xs font-bold font-mono text-[#1F2937]">
+                        <p className="text-xs font-bold font-mono text-[#263445]">
                           {formatINR(ord.seller_items_subtotal)}
                         </p>
-                        <p className="text-[10px] text-[#64748B]">
+                        <p className="text-[11px] text-[#64748B]">
                           {new Date(ord.created_at).toLocaleDateString()}
                         </p>
                       </div>
@@ -225,9 +225,9 @@ const SellerOverviewPage = () => {
           {/* Quick Actions Footer */}
           <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <FileEdit className="w-5 h-5 text-[#FF6B0A]" />
+              <FileEdit className="w-5 h-5 text-[#2563EB]" />
               <div>
-                <p className="text-xs font-semibold text-[#1F2937]">Ready to launch a new digital release?</p>
+                <p className="text-xs font-semibold text-[#263445]">Ready to launch a new digital release?</p>
                 <p className="text-[11px] text-[#64748B]">
                   Upload your binary archive privately, add storefront images, and submit for marketplace review.
                 </p>

@@ -402,7 +402,7 @@ const AdminProductFormPage = () => {
       actions={
         <Link
           to="/admin/products"
-          className="dv-btn-secondary text-xs uppercase tracking-wider px-4 py-2 flex items-center gap-1.5"
+          className="dv-btn-secondary text-xs font-medium px-4 py-2 flex items-center gap-1.5"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Products</span>
@@ -435,13 +435,13 @@ const AdminProductFormPage = () => {
             onSubmit={handleSubmit}
             className="xl:col-span-2 dv-card p-6 md:p-8 space-y-5"
           >
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-[#FF6B0A] border-b border-[#E5E7EB] pb-3">
+            <h2 className="text-[14.5px] font-semibold text-[#263445] border-b border-[#E5E7EB] pb-3">
               1. Core Product Information
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-[#64748B] mb-1.5">
+                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                   Product Name *
                 </label>
                 <input
@@ -449,21 +449,22 @@ const AdminProductFormPage = () => {
                   required
                   value={formData.name}
                   onChange={(e) => handleNameChange(e.target.value)}
-                  className="dv-input px-3.5 py-2.5 text-sm"
+                  className="dv-input px-3.5 py-2.5 text-[13.5px]"
                   placeholder="e.g. Minimal SaaS UI Kit"
                 />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-xs font-medium uppercase tracking-wider text-[#64748B]">
+                  <label className="block text-[12px] font-medium text-[#263445]">
                     URL Slug
                   </label>
-                  <label className="text-[11px] text-[#64748B] flex items-center gap-1 cursor-pointer">
+                  <label className="text-[12px] text-[#64748B] flex items-center gap-1.5 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={autoSlug}
                       onChange={(e) => setAutoSlug(e.target.checked)}
+                      className="accent-[#2563EB]"
                     />
                     <span>Auto</span>
                   </label>
@@ -475,7 +476,7 @@ const AdminProductFormPage = () => {
                     setAutoSlug(false);
                     setFormData({ ...formData, slug: e.target.value });
                   }}
-                  className="dv-input px-3.5 py-2.5 text-sm font-mono"
+                  className="dv-input px-3.5 py-2.5 text-[13.5px] font-mono"
                   placeholder="minimal-saas-ui-kit"
                 />
               </div>
@@ -483,14 +484,14 @@ const AdminProductFormPage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-[#64748B] mb-1.5">
+                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                   Category *
                 </label>
                 <select
                   required
                   value={formData.category_id}
                   onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                  className="dv-input px-3.5 py-2.5 text-sm"
+                  className="dv-input px-3.5 py-2.5 text-[13.5px]"
                 >
                   <option value="">Select Category</option>
                   {categories.map((c) => (
@@ -502,7 +503,7 @@ const AdminProductFormPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-[#64748B] mb-1.5">
+                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                   Original Price (INR) *
                 </label>
                 <input
@@ -512,27 +513,27 @@ const AdminProductFormPage = () => {
                   required
                   value={formData.original_price}
                   onChange={(e) => setFormData({ ...formData, original_price: e.target.value })}
-                  className="dv-input px-3.5 py-2.5 text-sm font-mono"
+                  className="dv-input px-3.5 py-2.5 text-[13.5px] font-mono"
                   placeholder="1499.00"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-[#64748B] mb-1.5">
+                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                   Product Type
                 </label>
                 <input
                   type="text"
                   value={formData.product_type}
                   onChange={(e) => setFormData({ ...formData, product_type: e.target.value })}
-                  className="dv-input px-3.5 py-2.5 text-sm"
+                  className="dv-input px-3.5 py-2.5 text-[13.5px]"
                   placeholder="e.g. Figma Kit / Notion / Code"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-[#64748B] mb-1.5">
+              <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                 Short Summary Description
               </label>
               <input
@@ -540,27 +541,27 @@ const AdminProductFormPage = () => {
                 maxLength={500}
                 value={formData.short_description}
                 onChange={(e) => setFormData({ ...formData, short_description: e.target.value })}
-                className="dv-input px-3.5 py-2.5 text-sm"
+                className="dv-input px-3.5 py-2.5 text-[13.5px]"
                 placeholder="Concise one-line value proposition for product cards..."
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-[#64748B] mb-1.5">
+              <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                 Main Description
               </label>
               <textarea
                 rows={3}
                 value={formData.main_description}
                 onChange={(e) => setFormData({ ...formData, main_description: e.target.value })}
-                className="dv-input px-3.5 py-2.5 text-sm"
+                className="dv-input px-3.5 py-2.5 text-[13.5px]"
                 placeholder="Core overview of the digital product..."
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-[#64748B] mb-1.5">
-                Detailed Technical Specifications & Included Contents
+              <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
+                Detailed Technical Specifications &amp; Included Contents
               </label>
               <textarea
                 rows={4}
@@ -568,58 +569,58 @@ const AdminProductFormPage = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, detailed_description: e.target.value })
                 }
-                className="dv-input px-3.5 py-2.5 text-sm"
+                className="dv-input px-3.5 py-2.5 text-[13.5px]"
                 placeholder="Detailed breakdown of deliverables, licenses, and requirements..."
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-[#64748B] mb-1.5">
+                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                   Deliverable Format (Metadata)
                 </label>
                 <input
                   type="text"
                   value={formData.metadata_format}
                   onChange={(e) => setFormData({ ...formData, metadata_format: e.target.value })}
-                  className="dv-input px-3.5 py-2 text-xs"
+                  className="dv-input px-3.5 py-2 text-[13px]"
                   placeholder="e.g. ZIP Archive (.fig, .pdf)"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-[#64748B] mb-1.5">
+                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
                   Version (Metadata)
                 </label>
                 <input
                   type="text"
                   value={formData.metadata_version}
                   onChange={(e) => setFormData({ ...formData, metadata_version: e.target.value })}
-                  className="dv-input px-3.5 py-2 text-xs"
+                  className="dv-input px-3.5 py-2 text-[13px]"
                   placeholder="e.g. v1.4.0"
                 />
               </div>
             </div>
 
             {/* Private Asset Delivery Info */}
-            <div className="p-4 rounded-xl bg-[#FFF6ED] border border-[#FFD4AE] space-y-2">
+            <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#BFDBFE] space-y-2">
               <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 text-xs text-[#D94300] uppercase tracking-wider font-semibold">
+                <div className="flex items-center gap-2 text-[12.5px] text-[#1D4ED8] font-semibold">
                   <Lock className="w-3.5 h-3.5" />
                   <span>Private Digital Delivery Asset</span>
                 </div>
                 {product?.asset?.has_asset && (
-                  <span className="text-[10px] uppercase tracking-wider font-medium px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#15803D] border border-emerald-200">
                     Managed Private File Active
                   </span>
                 )}
               </div>
-              <p className="text-[11px] text-[#64748B]">
+              <p className="text-[12px] text-[#64748B]">
                 Upload the actual downloadable digital product in the Private Digital Asset panel.
                 Never exposed in public catalog responses or audit logs; streamed only via single-use
                 signed tokens after payment verification.
               </p>
               {!product?.asset?.has_asset && (
-                <p className="text-[11px] font-mono text-[#243247]">
+                <p className="text-[12px] font-mono text-[#263445]">
                   {pendingAssetFile
                     ? `Staged file: ${pendingAssetFile.name} (${formatFileBytes(pendingAssetFile.size)})`
                     : 'No private binary asset attached yet. Upload one in the Digital Asset panel on the right.'}
@@ -628,29 +629,30 @@ const AdminProductFormPage = () => {
             </div>
 
             <div className="pt-2">
-              <label className="flex items-center gap-2.5 cursor-pointer text-xs">
+              <label className="flex items-center gap-2.5 cursor-pointer text-[13px]">
                 <input
                   type="checkbox"
                   checked={formData.is_active}
                   onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                  className="accent-[#2563EB]"
                 />
-                <span className="text-[#243247]">
+                <span className="text-[#263445]">
                   Product is active and available in the public catalog
                 </span>
               </label>
             </div>
 
-            <div className="pt-4 border-t border-[#E5E7EB] flex justify-end gap-3">
+            <div className="pt-4 border-t border-[#E5E7EB] flex justify-end gap-2.5">
               <Link
                 to="/admin/products"
-                className="dv-btn-secondary px-5 py-2.5 text-xs uppercase tracking-wider"
+                className="dv-btn-secondary px-5 py-2 text-[12px] font-semibold"
               >
                 Cancel
               </Link>
               <button
                 type="submit"
                 disabled={saving}
-                className="dv-btn-primary px-6 py-2.5 text-xs uppercase tracking-widest disabled:opacity-50"
+                className="dv-btn-primary px-6 py-2 text-[12px] font-semibold disabled:opacity-50"
               >
                 {saving ? 'Saving...' : isEditing ? 'Save Product Changes' : 'Create Product'}
               </button>
@@ -658,17 +660,17 @@ const AdminProductFormPage = () => {
           </form>
 
           {/* Right Column: Private Digital Asset, Product Images & Discounts */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             {/* Private Digital Product Asset Upload & Management */}
             <section className="dv-card p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
                 <div className="flex items-center gap-2">
-                  <FileArchive className="w-4 h-4 text-[#FF6B0A]" />
-                  <h2 className="text-xs font-semibold uppercase tracking-widest text-[#FF6B0A]">
+                  <FileArchive className="w-4 h-4 text-[#2563EB]" />
+                  <h2 className="text-[14px] font-semibold text-[#263445]">
                     2. Digital Asset File
                   </h2>
                 </div>
-                <label className="dv-btn-primary cursor-pointer px-3 py-1.5 text-[11px] uppercase tracking-wider inline-flex items-center gap-1.5">
+                <label className="dv-btn-primary cursor-pointer px-3 py-1.5 text-[12px] font-semibold inline-flex items-center gap-1.5">
                   <Upload className="w-3 h-3" />
                   <span>
                     {uploadingAsset
@@ -695,13 +697,13 @@ const AdminProductFormPage = () => {
 
               {uploadingAsset && (
                 <div className="space-y-1">
-                  <div className="flex justify-between text-[11px] font-mono text-[#243247]">
+                  <div className="flex justify-between text-[11px] font-mono text-[#263445]">
                     <span>Uploading &amp; verifying signature...</span>
                     <span>{assetProgress}%</span>
                   </div>
-                  <div className="w-full h-1.5 rounded-full bg-[#FFE9D6] border border-[#FFD4AE] overflow-hidden">
+                  <div className="w-full h-1.5 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] overflow-hidden">
                     <div
-                      className="h-full bg-[#FF6B0A] transition-all"
+                      className="h-full bg-[#2563EB] transition-all"
                       style={{ width: `${assetProgress}%` }}
                     />
                   </div>
@@ -727,9 +729,9 @@ const AdminProductFormPage = () => {
 
               {!isEditing ? (
                 pendingAssetFile ? (
-                  <div className="p-3 rounded-xl bg-[#FFF6ED] border border-[#FFD4AE] flex items-center justify-between gap-2 text-xs">
+                  <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#BFDBFE] flex items-center justify-between gap-2 text-xs">
                     <div className="min-w-0">
-                      <p className="font-mono text-[#1F2937] truncate">{pendingAssetFile.name}</p>
+                      <p className="font-mono text-[#263445] truncate">{pendingAssetFile.name}</p>
                       <p className="text-[11px] text-[#64748B]">
                         {formatFileBytes(pendingAssetFile.size)} · Will upload on Create Product
                       </p>
@@ -751,10 +753,10 @@ const AdminProductFormPage = () => {
                   </p>
                 )
               ) : product?.asset?.has_asset ? (
-                <div className="p-3.5 rounded-xl bg-[#FFF6ED] border border-[#FFD4AE] space-y-2 text-xs">
+                <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#BFDBFE] space-y-2 text-xs">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 space-y-0.5">
-                      <p className="font-mono font-medium text-[#1F2937] truncate" title={product.asset.filename}>
+                      <p className="font-mono font-medium text-[#263445] truncate" title={product.asset.filename}>
                         {product.asset.filename}
                       </p>
                       <p className="text-[11px] text-[#64748B]">
@@ -771,7 +773,7 @@ const AdminProductFormPage = () => {
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
-                  <div className="pt-2 border-t border-[#FFD4AE]/70 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-[#64748B]">
+                  <div className="pt-2 border-t border-[#BFDBFE]/70 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-[#64748B]">
                     <span className="inline-flex items-center gap-1 text-emerald-700 font-medium">
                       <ShieldCheck className="w-3 h-3" />
                       Backend: {(product.asset.storage_backend || 'local').toUpperCase()}
@@ -794,10 +796,10 @@ const AdminProductFormPage = () => {
             {/* Multi-Image Gallery Management */}
             <section className="dv-card p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
-                <h2 className="text-xs font-semibold uppercase tracking-widest text-[#FF6B0A]">
+                <h2 className="text-[14px] font-semibold text-[#263445]">
                   3. Product Images
                 </h2>
-                <label className="dv-btn-primary cursor-pointer px-3 py-1.5 text-[11px] uppercase tracking-wider inline-flex items-center gap-1.5">
+                <label className="dv-btn-primary cursor-pointer px-3 py-1.5 text-[12px] font-semibold inline-flex items-center gap-1.5">
                   <Upload className="w-3 h-3" />
                   <span>{uploadingImg ? 'Uploading...' : 'Add Images'}</span>
                   <input
@@ -824,9 +826,9 @@ const AdminProductFormPage = () => {
                     pendingFiles.map((f, idx) => (
                       <div
                         key={`${f.name}-${idx}`}
-                        className="flex items-center justify-between p-2.5 rounded-xl bg-[#FFF6ED] border border-[#E5E7EB]"
+                        className="flex items-center justify-between p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E5E7EB]"
                       >
-                        <span className="truncate max-w-[180px] text-[#1F2937]">{f.name}</span>
+                        <span className="truncate max-w-[180px] text-[#263445]">{f.name}</span>
                         <button
                           type="button"
                           onClick={() =>
@@ -847,7 +849,7 @@ const AdminProductFormPage = () => {
                   {product.images.map((img) => (
                     <div
                       key={img.id}
-                      className="p-3 rounded-xl bg-[#FFF6ED] border border-[#E5E7EB] flex items-center justify-between gap-3"
+                      className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E5E7EB] flex items-center justify-between gap-3"
                     >
                       <div className="flex items-center gap-3">
                         <img
@@ -858,14 +860,14 @@ const AdminProductFormPage = () => {
                         <div className="space-y-1 text-xs">
                           <div className="flex items-center gap-2">
                             {img.is_primary ? (
-                              <span className="text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                                 Primary
                               </span>
                             ) : (
                               <button
                                 type="button"
                                 onClick={() => handleSetPrimaryImage(img)}
-                                className="text-[11px] font-medium text-[#FF6B0A] hover:text-[#D94300] hover:underline flex items-center gap-1"
+                                className="text-[11px] font-medium text-[#2563EB] hover:text-[#1D4ED8] hover:underline flex items-center gap-1"
                               >
                                 <Star className="w-3 h-3" />
                                 <span>Set Primary</span>
@@ -879,7 +881,7 @@ const AdminProductFormPage = () => {
                               min="0"
                               value={img.display_order}
                               onChange={(e) => handleReorderImage(img, e.target.value)}
-                              className="w-12 rounded-md bg-white border border-[#E5E7EB] px-1.5 py-0.5 text-center text-[#1F2937]"
+                              className="w-12 rounded-md bg-white border border-[#E5E7EB] px-1.5 py-0.5 text-center text-[#263445]"
                             />
                           </div>
                         </div>
@@ -887,7 +889,7 @@ const AdminProductFormPage = () => {
 
                       <div className="flex items-center gap-1.5">
                         <label
-                          className="cursor-pointer p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#FFD4AE] hover:text-[#FF6B0A] text-[#243247] transition"
+                          className="cursor-pointer p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#93C5FD] hover:text-[#2563EB] text-[#263445] transition"
                           title="Replace Image File"
                         >
                           <RefreshCw className="w-3.5 h-3.5" />
@@ -918,20 +920,20 @@ const AdminProductFormPage = () => {
               <section className="dv-card p-6 space-y-4">
                 <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
                   <div className="flex items-center gap-2">
-                    <Percent className="w-4 h-4 text-[#FF6B0A]" />
-                    <h2 className="text-xs font-semibold uppercase tracking-widest text-[#FF6B0A]">
+                    <Percent className="w-4 h-4 text-[#2563EB]" />
+                    <h2 className="text-[14px] font-semibold text-[#263445]">
                       4. Sales &amp; Discounts
                     </h2>
                   </div>
-                  <span className="text-xs font-semibold font-mono text-[#D94300]">
+                  <span className="text-[12px] font-semibold font-mono text-[#1D4ED8]">
                     Effective: {formatINR(product?.effective_price)}
                   </span>
                 </div>
 
                 {/* Create New Discount Form */}
-                <form onSubmit={handleCreateSale} className="space-y-3 text-xs">
+                <form onSubmit={handleCreateSale} className="space-y-3 text-[13px]">
                   <div>
-                    <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+                    <label className="block text-[12px] font-medium text-[#263445] mb-1">
                       Discounted Price (must be &lt; {formatINR(product?.original_price)})
                     </label>
                     <input
@@ -943,14 +945,14 @@ const AdminProductFormPage = () => {
                       onChange={(e) =>
                         setSaleForm({ ...saleForm, discounted_price: e.target.value })
                       }
-                      className="dv-input px-3 py-2 font-mono"
+                      className="dv-input px-3 py-2 font-mono text-[13px]"
                       placeholder="999.00"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 gap-2">
                     <div>
-                      <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+                      <label className="block text-[12px] font-medium text-[#263445] mb-1">
                         Starts At (UTC/Local)
                       </label>
                       <input
@@ -958,11 +960,11 @@ const AdminProductFormPage = () => {
                         required
                         value={saleForm.starts_at}
                         onChange={(e) => setSaleForm({ ...saleForm, starts_at: e.target.value })}
-                        className="dv-input px-3 py-1.5"
+                        className="dv-input px-3 py-1.5 text-[13px]"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
+                      <label className="block text-[12px] font-medium text-[#263445] mb-1">
                         Expires At
                       </label>
                       <input
@@ -970,7 +972,7 @@ const AdminProductFormPage = () => {
                         required
                         value={saleForm.expires_at}
                         onChange={(e) => setSaleForm({ ...saleForm, expires_at: e.target.value })}
-                        className="dv-input px-3 py-1.5"
+                        className="dv-input px-3 py-1.5 text-[13px]"
                       />
                     </div>
                   </div>
@@ -978,7 +980,7 @@ const AdminProductFormPage = () => {
                   <button
                     type="submit"
                     disabled={savingSale}
-                    className="dv-btn-primary w-full py-2 uppercase tracking-widest text-[11px] disabled:opacity-50"
+                    className="dv-btn-primary w-full py-2 text-[12px] font-semibold disabled:opacity-50"
                   >
                     {savingSale ? 'Scheduling...' : 'Create / Schedule Discount'}
                   </button>
@@ -987,20 +989,20 @@ const AdminProductFormPage = () => {
                 {/* Existing Sales History */}
                 {product?.sales?.length > 0 && (
                   <div className="pt-3 border-t border-[#E5E7EB] space-y-2">
-                    <p className="text-[11px] font-medium uppercase tracking-wider text-[#64748B]">
+                    <p className="text-[12px] font-medium text-[#64748B]">
                       Discount History
                     </p>
                     {product.sales.map((s) => (
                       <div
                         key={s.id}
-                        className="p-3 rounded-xl bg-[#FFF6ED] border border-[#E5E7EB] text-xs flex items-center justify-between gap-2"
+                        className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E5E7EB] text-[12px] flex items-center justify-between gap-2"
                       >
                         <div>
-                          <p className="font-mono font-semibold text-[#1F2937]">
+                          <p className="font-mono font-semibold text-[#263445]">
                             {formatINR(s.discounted_price)}{' '}
-                            <span className="text-emerald-700">(-{s.discount_percentage}%)</span>
+                            <span className="text-[#15803D]">(-{s.discount_percentage}%)</span>
                           </p>
-                          <p className="text-[10px] text-[#64748B]">
+                          <p className="text-[11px] text-[#64748B]">
                             {new Date(s.starts_at).toLocaleDateString()} →{' '}
                             {new Date(s.expires_at).toLocaleDateString()}
                           </p>
@@ -1008,9 +1010,9 @@ const AdminProductFormPage = () => {
                         <button
                           type="button"
                           onClick={() => handleToggleSaleActive(s)}
-                          className={`text-[10px] uppercase tracking-wider font-medium px-2.5 py-1 rounded-full border ${
+                          className={`text-[11px] font-medium px-2.5 py-1 rounded-full border ${
                             s.is_active
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                              ? 'bg-emerald-50 text-[#15803D] border-emerald-200'
                               : 'bg-slate-100 text-[#64748B] border-[#E5E7EB]'
                           }`}
                         >

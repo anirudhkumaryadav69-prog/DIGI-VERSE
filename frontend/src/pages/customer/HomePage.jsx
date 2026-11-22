@@ -64,22 +64,22 @@ const HomePage = () => {
       .catch(() => {});
 
     publicCatalogApi
-      .listCategories({ page: 1, page_size: 6 })
+      .listCategories({ page: 1, page_size: 8 })
       .then((res) => setCategories(res.items || []))
       .catch(() => {});
 
     publicCatalogApi
-      .listProducts({ page: 1, page_size: 3, sort_by: 'popularity' })
+      .listProducts({ page: 1, page_size: 4, sort_by: 'popularity' })
       .then((res) => setBestSellers(res.items || []))
       .catch(() => {});
 
     publicCatalogApi
-      .listProducts({ page: 1, page_size: 6, sort_by: 'newest' })
+      .listProducts({ page: 1, page_size: 8, sort_by: 'newest' })
       .then((res) => setRecentProducts(res.items || []))
       .catch(() => {});
 
     publicCatalogApi
-      .listProducts({ page: 1, page_size: 3, on_sale: true })
+      .listProducts({ page: 1, page_size: 4, on_sale: true })
       .then((res) => setDiscountedProducts(res.items || []))
       .catch(() => {});
   }, []);
@@ -125,7 +125,7 @@ const HomePage = () => {
   const storeName = storeSettings['store.name'] || 'DIGI-VERSE';
 
   return (
-    <div className="min-h-screen bg-[#FFFAF5] text-[#243247] flex flex-col justify-between px-4 py-6 sm:px-6 md:px-10 overflow-x-hidden">
+    <div className="min-h-screen bg-[#EAF4FC] text-[#263445] flex flex-col justify-between px-4 py-6 sm:px-6 md:px-10 overflow-x-hidden">
       <StorefrontHeader
         announcementText={storeSettings['store.announcement_text']}
         storeName={storeName}
@@ -136,30 +136,29 @@ const HomePage = () => {
           <ToastBanner toast={toast} onDismiss={() => setToast({ type: '', message: '' })} />
         )}
 
-        {/* 1. Hero Section */}
-        <section className="relative overflow-hidden rounded-3xl bg-[#FFF6ED] border border-[#FFD4AE] p-6 sm:p-10 md:p-12 shadow-[0_4px_20px_-4px_rgba(255,107,10,0.08)]">
-          {/* Subtle decorative warm orange accents */}
+        {/* 1. Hero Section (Soft White Elevated Surface) */}
+        <section className="relative overflow-hidden rounded-3xl bg-[#F8FAFC] border border-[#D5DEE8] p-6 sm:p-10 md:p-12 shadow-[0_8px_28px_-8px_rgba(38,52,69,0.08)]">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full bg-[#FFE9D6]/80 blur-2xl"
+            className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[#DCE6EF]/70 blur-2xl"
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-[#FFD4AE]/40 blur-2xl"
+            className="pointer-events-none absolute -bottom-20 -left-20 w-56 h-56 rounded-full bg-[#EAF4FC] blur-2xl"
           />
 
           <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs font-medium px-3.5 py-1.5 rounded-full border border-[#FFD4AE] bg-white shadow-2xs">
-                <Activity className="w-3.5 h-3.5 text-[#FF6B0A]" aria-hidden="true" />
+              <div className="inline-flex items-center gap-2 text-xs font-medium px-3.5 py-1.5 rounded-full border border-[#D5DEE8] bg-white shadow-2xs">
+                <Activity className="w-3.5 h-3.5 text-[#0EA5E9]" aria-hidden="true" />
                 <span className="text-[#64748B]">System Status:</span>
                 <span
                   className={
                     healthStatus === 'online'
-                      ? 'text-emerald-700 font-semibold'
+                      ? 'text-[#16A34A] font-semibold'
                       : healthStatus === 'checking'
                       ? 'text-[#64748B]'
-                      : 'text-red-600 font-semibold'
+                      : 'text-[#DC2626] font-semibold'
                   }
                 >
                   {healthStatus}
@@ -167,12 +166,12 @@ const HomePage = () => {
               </div>
 
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-[#FF6B0A] font-semibold mb-3">
+                <p className="text-xs tracking-[0.02em] text-[#2563EB] font-semibold mb-2.5">
                   {storeName} — Digital Commerce Platform
                 </p>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#1F2937] leading-[1.15]">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#263445] leading-[1.15]">
                   Curated digital products for{' '}
-                  <span className="text-[#FF6B0A]">modern creators</span>.
+                  <span className="text-[#2563EB]">modern creators</span>.
                 </h1>
               </div>
 
@@ -185,31 +184,31 @@ const HomePage = () => {
               <div className="flex flex-wrap gap-3 pt-2">
                 <Link
                   to="/products"
-                  className="dv-btn-primary px-6 py-3.5 text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2"
+                  className="dv-btn-primary px-6 py-3 text-[13px] font-semibold inline-flex items-center gap-2"
                 >
                   <span>Browse Products</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </Link>
                 <Link
                   to="/categories"
-                  className="dv-btn-secondary px-6 py-3.5 text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2"
+                  className="dv-btn-secondary px-6 py-3 text-[13px] font-semibold inline-flex items-center gap-2"
                 >
                   <span>Explore Categories</span>
                 </Link>
               </div>
             </div>
 
-            <div className="lg:col-span-5 bg-white border border-[#FFD4AE] rounded-2xl p-6 md:p-8 space-y-5 shadow-[0_8px_24px_-6px_rgba(31,41,55,0.07)]">
-              <p className="text-xs uppercase tracking-wider text-[#FF6B0A] font-semibold">
+            <div className="lg:col-span-5 bg-white border border-[#D5DEE8] rounded-2xl p-6 md:p-8 space-y-5 shadow-[0_8px_24px_-6px_rgba(38,52,69,0.07)]">
+              <p className="text-xs text-[#2563EB] font-semibold">
                 Verified Digital Delivery Standard
               </p>
               <div className="space-y-4 text-xs text-[#64748B]">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-[#FFF2E6] border border-[#FFD4AE] flex items-center justify-center text-[#FF6B0A] shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-[#EAF4FC] border border-[#D5DEE8] flex items-center justify-center text-[#2563EB] shrink-0">
                     <Lock className="w-4 h-4" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#1F2937]">Authoritative Backend Pricing</p>
+                    <p className="font-semibold text-[#263445]">Authoritative Backend Pricing</p>
                     <p className="mt-0.5 leading-relaxed">
                       Every price, active discount, and line total is computed and snapshotted on
                       the server at checkout.
@@ -217,11 +216,11 @@ const HomePage = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-[#FFF2E6] border border-[#FFD4AE] flex items-center justify-center text-[#FF6B0A] shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-[#EAF4FC] border border-[#D5DEE8] flex items-center justify-center text-[#0EA5E9] shrink-0">
                     <Zap className="w-4 h-4" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#1F2937]">Short-Lived Signed Download Grants</p>
+                    <p className="font-semibold text-[#263445]">Short-Lived Signed Download Grants</p>
                     <p className="mt-0.5 leading-relaxed">
                       Private storage paths are never exposed. Downloads use authenticated,
                       time-limited cryptographic tokens.
@@ -229,11 +228,11 @@ const HomePage = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-[#FFF2E6] border border-[#FFD4AE] flex items-center justify-center text-[#FF6B0A] shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-[#EAF4FC] border border-[#D5DEE8] flex items-center justify-center text-[#16A34A] shrink-0">
                     <ShieldCheck className="w-4 h-4" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#1F2937]">Complete Order &amp; Invoice History</p>
+                    <p className="font-semibold text-[#263445]">Complete Order &amp; Invoice History</p>
                     <p className="mt-0.5 leading-relaxed">
                       Download official purchase receipts and manage your digital library from your
                       account dashboard.
@@ -251,14 +250,14 @@ const HomePage = () => {
             {banners.map((b) => (
               <div
                 key={b.id}
-                className="bg-white border border-[#FFD4AE] rounded-2xl p-6 md:p-8 flex flex-col justify-between gap-4 shadow-[0_2px_10px_-2px_rgba(31,41,55,0.05)]"
+                className="bg-white border border-[#D5DEE8] rounded-2xl p-6 md:p-8 flex flex-col justify-between gap-4 shadow-xs"
               >
                 <div>
-                  <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#FFF2E6] border border-[#FFD4AE] text-[#D94300] font-semibold">
-                    <Sparkles className="w-3.5 h-3.5 text-[#FF6B0A]" aria-hidden="true" />
+                  <span className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8] font-semibold">
+                    <Sparkles className="w-3.5 h-3.5 text-[#2563EB]" aria-hidden="true" />
                     <span>Featured Promotion</span>
                   </span>
-                  <h2 className="text-xl md:text-2xl font-bold text-[#1F2937] mt-3">
+                  <h2 className="text-xl md:text-2xl font-bold text-[#263445] mt-3">
                     {b.heading}
                   </h2>
                   {b.subtitle && <p className="text-xs text-[#64748B] mt-1.5">{b.subtitle}</p>}
@@ -271,7 +270,7 @@ const HomePage = () => {
                 {b.cta_destination && (
                   <Link
                     to={b.cta_destination}
-                    className="text-xs font-semibold text-[#FF6B0A] inline-flex items-center gap-1.5 hover:text-[#D94300] transition"
+                    className="text-xs font-semibold text-[#2563EB] inline-flex items-center gap-1.5 hover:text-[#1D4ED8] transition"
                   >
                     <span>{b.cta_text || 'Explore Promotion'}</span>
                     <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -282,7 +281,7 @@ const HomePage = () => {
           </section>
         )}
 
-        {/* 3. Featured Categories (Shown only when active categories exist) */}
+        {/* 3. Featured Categories */}
         {categories.length > 0 && (
           <section>
             <SectionHeading
@@ -292,14 +291,14 @@ const HomePage = () => {
               action={
                 <Link
                   to="/categories"
-                  className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] inline-flex items-center gap-1 transition"
+                  className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1 transition"
                 >
                   <span>View All Categories</span>
                   <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </Link>
               }
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
               {categories.map((cat) => (
                 <CategoryCard key={cat.id} category={cat} />
               ))}
@@ -307,9 +306,9 @@ const HomePage = () => {
           </section>
         )}
 
-        {/* 4. Promotional Offers & Active Discounts (Shown only when discounted products exist) */}
+        {/* 4. Promotional Offers & Active Discounts (Secondary Blue-Grey Band) */}
         {discountedProducts.length > 0 && (
-          <section className="rounded-3xl bg-[#FFF6ED] border border-[#FFD4AE]/70 p-6 sm:p-8">
+          <section className="rounded-3xl bg-[#DCE6EF]/75 border border-[#D5DEE8] p-6 sm:p-8">
             <SectionHeading
               eyebrow="Limited-Time Savings"
               title="Promotional Offers & Discounts"
@@ -317,14 +316,14 @@ const HomePage = () => {
               action={
                 <Link
                   to="/products?on_sale=true"
-                  className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] inline-flex items-center gap-1 transition"
+                  className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1 transition"
                 >
                   <span>All Discounted Products</span>
                   <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </Link>
               }
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
               {discountedProducts.map((prod) => (
                 <ProductCard
                   key={prod.id}
@@ -337,9 +336,9 @@ const HomePage = () => {
           </section>
         )}
 
-        {/* 5. Best-Selling & Featured Products (Shown only when products exist) */}
+        {/* 5. Best-Selling & Featured Products (Soft White Band) */}
         {bestSellers.length > 0 && (
-          <section>
+          <section className="rounded-3xl bg-[#F8FAFC] border border-[#D5DEE8] p-6 sm:p-8">
             <SectionHeading
               eyebrow="Popular Selection"
               title="Featured & Best-Selling Products"
@@ -347,14 +346,14 @@ const HomePage = () => {
               action={
                 <Link
                   to="/products?sort_by=popularity"
-                  className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] inline-flex items-center gap-1 transition"
+                  className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1 transition"
                 >
                   <span>Explore Popular</span>
                   <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </Link>
               }
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
               {bestSellers.map((prod) => (
                 <ProductCard
                   key={prod.id}
@@ -367,7 +366,7 @@ const HomePage = () => {
           </section>
         )}
 
-        {/* 6. Recently Added Products (Shown only when products exist) */}
+        {/* 6. Recently Added Products */}
         {recentProducts.length > 0 && (
           <section>
             <SectionHeading
@@ -377,14 +376,14 @@ const HomePage = () => {
               action={
                 <Link
                   to="/products?sort_by=newest"
-                  className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] inline-flex items-center gap-1 transition"
+                  className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1 transition"
                 >
                   <span>Browse Full Catalog</span>
                   <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </Link>
               }
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
               {recentProducts.map((prod) => (
                 <ProductCard
                   key={prod.id}
@@ -397,7 +396,7 @@ const HomePage = () => {
           </section>
         )}
 
-        {/* 7. Advertisement Video Section (Shown only when active videos exist) */}
+        {/* 7. Advertisement Video Section */}
         {videos.length > 0 && (
           <section>
             <SectionHeading
@@ -409,14 +408,14 @@ const HomePage = () => {
               {videos.slice(0, 4).map((v) => (
                 <div
                   key={v.id}
-                  className="bg-white border border-[#FFD4AE] rounded-2xl p-6 md:p-8 flex flex-col justify-between gap-4 shadow-[0_2px_10px_-2px_rgba(31,41,55,0.05)]"
+                  className="bg-white border border-[#D5DEE8] rounded-2xl p-6 md:p-8 flex flex-col justify-between gap-4 shadow-xs"
                 >
                   <div>
-                    <div className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full bg-[#FFF2E6] border border-[#FFD4AE] text-[#D94300] font-semibold mb-3">
-                      <PlayCircle className="w-3.5 h-3.5 text-[#FF6B0A]" aria-hidden="true" />
+                    <div className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8] font-semibold mb-3">
+                      <PlayCircle className="w-3.5 h-3.5 text-[#2563EB]" aria-hidden="true" />
                       <span>Video Spotlight</span>
                     </div>
-                    <h3 className="text-lg font-bold text-[#1F2937]">{v.title}</h3>
+                    <h3 className="text-lg font-bold text-[#263445]">{v.title}</h3>
                     {v.description && (
                       <p className="text-xs text-[#64748B] mt-2 leading-relaxed">{v.description}</p>
                     )}

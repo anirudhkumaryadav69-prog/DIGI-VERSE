@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertCircle, CheckCircle2, ShieldCheck } from 'lucide-react';
 import StorefrontLayout from '../../components/common/StorefrontLayout';
@@ -8,7 +8,7 @@ import { customerAuthApi } from '../../services/api';
 
 const VerifyPhonePage = () => {
   const navigate = useNavigate();
-  const { customer, setCustomer } = useAuth();
+  const { customer, setCustomer, otpDeliveryStatus, setOtpDeliveryStatus } = useAuth();
   const [otpCode, setOtpCode] = useState('');
   const [error, setError] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
@@ -22,6 +22,16 @@ const VerifyPhonePage = () => {
   });
 
   const targetPhone = customer?.pending_phone_number || customer?.phone_number || 'your phone';
+
+  useEffect(() => {
+    if (otpDeliveryStatus?.status === 'development_only') {
+      setStatusMessage('Development mode: check the backend terminal for the local OTP. No WhatsApp message was sent.');
+    } else if (otpDeliveryStatus?.status === 'accepted') {
+      setStatusMessage('WhatsApp accepted the authentication message request.');
+    } else if (otpDeliveryStatus?.status === 'failed' || otpDeliveryStatus?.status === 'disabled') {
+      setError(otpDeliveryStatus.detail || 'OTP delivery is unavailable.');
+    }
+  }, [otpDeliveryStatus]);
 
   const handleVerify = async (e) => {
     e.preventDefault();
@@ -52,7 +62,17 @@ const VerifyPhonePage = () => {
     setResending(true);
     try {
       const res = await customerAuthApi.sendOtp();
-      setStatusMessage(res.message || 'A new verification code has been sent.');
+      setOtpDeliveryStatus({
+        status: res.delivery_status,
+        detail: res.delivery_detail,
+      });
+      if (res.delivery_status === 'development_only') {
+        setStatusMessage('Development mode: check the backend terminal for the local OTP. No WhatsApp message was sent.');
+      } else if (res.delivery_status === 'accepted') {
+        setStatusMessage('WhatsApp accepted the new authentication message request.');
+      } else {
+        setStatusMessage(res.message || 'OTP delivery status unavailable.');
+      }
     } catch (err) {
       const detail = err.response?.data?.detail;
       setError(typeof detail === 'string' ? detail : 'Unable to send OTP right now.');
@@ -64,18 +84,18 @@ const VerifyPhonePage = () => {
   return (
     <StorefrontLayout>
       <div className="w-full max-w-md mx-auto my-6 dv-card-warm p-6 sm:p-8">
-        <div className="w-11 h-11 rounded-2xl bg-[#FFF2E6] border border-[#FFD4AE] text-[#FF6B0A] flex items-center justify-center mb-4">
+        <div className="w-11 h-11 rounded-2xl bg-[#EAF4FC] border border-[#BFDBFE] text-[#2563EB] flex items-center justify-center mb-4">
           <ShieldCheck className="w-5 h-5" aria-hidden="true" />
         </div>
-        <p className="text-xs uppercase tracking-[0.2em] text-[#FF6B0A] font-semibold mb-2">
+        <p className="text-xs text-[#2563EB] font-semibold mb-1.5">
           Security Verification
         </p>
-        <h1 className="text-2xl font-bold tracking-tight text-[#1F2937] mb-2">
+        <h1 className="text-2xl font-bold tracking-tight text-[#263445] mb-2">
           Verify your phone number
         </h1>
         <p className="text-xs text-[#64748B] mb-6 leading-relaxed">
           Enter the 6-digit one-time verification code sent to{' '}
-          <strong className="text-[#1F2937]">{targetPhone}</strong>. Codes expire after 5 minutes.
+          <strong className="text-[#263445]">{targetPhone}</strong>. Codes expire after 5 minutes.
         </p>
 
         {error && (
@@ -102,7 +122,7 @@ const VerifyPhonePage = () => {
           <div>
             <label
               htmlFor="otp-code-input"
-              className="block text-xs font-medium text-[#243247] mb-1.5"
+              className="block text-xs font-medium text-[#263445] mb-1.5"
             >
               6-Digit Verification Code
             </label>
@@ -122,7 +142,7 @@ const VerifyPhonePage = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="dv-btn-primary w-full py-3 px-4 text-xs font-semibold uppercase tracking-wider disabled:opacity-50"
+            className="dv-btn-primary w-full py-3 px-4 text-[13.5px] font-semibold disabled:opacity-50"
           >
             {submitting ? 'Verifying...' : 'Verify Phone Number'}
           </button>
@@ -134,7 +154,7 @@ const VerifyPhonePage = () => {
             type="button"
             disabled={resending}
             onClick={handleResend}
-            className="text-[#FF6B0A] font-semibold hover:text-[#D94300] hover:underline disabled:opacity-50"
+            className="text-[#2563EB] font-semibold hover:text-[#1D4ED8] hover:underline disabled:opacity-50"
           >
             {resending ? 'Sending...' : 'Resend Code'}
           </button>

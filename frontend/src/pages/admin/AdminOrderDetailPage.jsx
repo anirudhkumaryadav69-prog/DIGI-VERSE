@@ -2,12 +2,24 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
-  AlertCircle,
-  CheckCircle2,
-  ShieldCheck,
   Download,
+  IndianRupee,
+  Package,
+  ShieldCheck,
+  User,
 } from 'lucide-react';
 import AdminLayout from '../../layouts/AdminLayout';
+import {
+  ErrorAlert,
+  LoadingState,
+  ToastBanner,
+  formatINR,
+} from '../../components/common/StorefrontDesignSystem';
+import {
+  AdminSectionHeader,
+  AdminStatusBadge,
+  formatAdminDateTime,
+} from '../../components/admin/AdminPrimitives';
 import { adminOrdersApi } from '../../services/api';
 
 const AdminOrderDetailPage = () => {
@@ -15,21 +27,20 @@ const AdminOrderDetailPage = () => {
   const [order, setOrder] = useState(null);
   const [nextStatus, setNextStatus] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [updating, setUpdating] = useState(false);
-  const [toast, setToast] = useState({ type: '', message: '' });
+  const [toast, setToast] = useState(null);
 
   const loadOrder = useCallback(async () => {
     setLoading(true);
+    setError('');
     try {
       const res = await adminOrdersApi.getOrder(order_id);
       setOrder(res);
       setNextStatus(res.status);
     } catch (err) {
       const detail = err.response?.data?.detail;
-      setToast({
-        type: 'error',
-        message: typeof detail === 'string' ? detail : 'Order not found.',
-      });
+      setError(typeof detail === 'string' ? detail : 'Order not found.');
     } finally {
       setLoading(false);
     }
@@ -43,7 +54,7 @@ const AdminOrderDetailPage = () => {
     e.preventDefault();
     if (!nextStatus || nextStatus === order?.status) return;
     setUpdating(true);
-    setToast({ type: '', message: '' });
+    setToast(null);
     try {
       const updated = await adminOrdersApi.updateOrderStatus(order_id, nextStatus);
       setOrder(updated);
@@ -62,9 +73,6 @@ const AdminOrderDetailPage = () => {
     }
   };
 
-  const formatINR = (v) =>
-    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(Number(v || 0));
-
   return (
     <AdminLayout
       title={order ? `Order ${order.order_number}` : 'Order Details'}
@@ -72,90 +80,93 @@ const AdminOrderDetailPage = () => {
       actions={
         <Link
           to="/admin/orders"
-          className="dv-btn-secondary text-xs uppercase tracking-wider px-4 py-2 flex items-center gap-1.5"
+          className="dv-btn-secondary text-[12px] font-semibold px-4 py-2 inline-flex items-center gap-1.5"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Orders</span>
         </Link>
       }
     >
-      {toast.message && (
-        <div
-          className={`mb-6 p-4 rounded-xl border text-xs flex items-center gap-2.5 ${
-            toast.type === 'error'
-              ? 'bg-red-50 border-red-200 text-red-700'
-              : 'bg-emerald-50 border-emerald-200 text-emerald-800'
-          }`}
-        >
-          {toast.type === 'error' ? (
-            <AlertCircle className="w-4 h-4 shrink-0" />
-          ) : (
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
-          )}
-          <span>{toast.message}</span>
-        </div>
-      )}
+      {error && <ErrorAlert message={error} onRetry={loadOrder} className="mb-6" />}
+      <ToastBanner toast={toast} onDismiss={() => setToast(null)} className="mb-6" />
 
-      {loading || !order ? (
-        <p className="text-xs text-[#64748B]">Loading order information...</p>
-      ) : (
+      {loading ? (
+        <LoadingState label="Loading order information..." />
+      ) : !order ? null : (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {/* Customer Card */}
-            <section className="dv-card p-6 space-y-2 text-xs">
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-[#FF6B0A]">Customer</p>
-              <p className="text-base font-semibold text-[#1F2937]">{order.customer.full_name}</p>
-              <p className="text-[#243247]">{order.customer.email}</p>
-              {order.customer.phone_number && (
-                <p className="font-mono text-[#64748B]">{order.customer.phone_number}</p>
-              )}
+            <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 space-y-3 shadow-2xs">
+              <div className="flex items-center gap-2 text-[#2563EB]">
+                <User className="w-4 h-4" />
+                <h2 className="text-[13px] font-semibold text-[#263445]">Customer Account</h2>
+              </div>
+              <div className="space-y-1 text-[13px]">
+                <p className="text-[16px] font-semibold text-[#263445]">
+                  {order.customer.full_name}
+                </p>
+                <p className="text-[#475569]">{order.customer.email}</p>
+                {order.customer.phone_number && (
+                  <p className="font-mono text-[12px] text-[#64748B]">
+                    {order.customer.phone_number}
+                  </p>
+                )}
+              </div>
             </section>
 
             {/* Financial Summary */}
-            <section className="dv-card p-6 space-y-2 text-xs">
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-[#FF6B0A]">
-                Financial Breakdown
-              </p>
-              <div className="flex justify-between text-[#64748B]">
+            <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 space-y-2.5 shadow-2xs">
+              <div className="flex items-center gap-2 text-[#2563EB] mb-1">
+                <IndianRupee className="w-4 h-4" />
+                <h2 className="text-[13px] font-semibold text-[#263445]">Financial Breakdown</h2>
+              </div>
+              <div className="flex justify-between text-[13px] text-[#64748B]">
                 <span>Subtotal</span>
-                <span className="font-mono text-[#1F2937]">{formatINR(order.subtotal_amount)}</span>
+                <span className="font-mono text-[#263445] tabular-nums">
+                  {formatINR(order.subtotal_amount)}
+                </span>
               </div>
-              <div className="flex justify-between text-emerald-700">
+              <div className="flex justify-between text-[13px] text-[#15803D]">
                 <span>Discount</span>
-                <span className="font-mono">-{formatINR(order.discount_amount)}</span>
+                <span className="font-mono tabular-nums">
+                  -{formatINR(order.discount_amount)}
+                </span>
               </div>
-              <div className="flex justify-between text-sm font-semibold text-[#1F2937] pt-2 border-t border-[#E5E7EB]">
+              <div className="flex justify-between text-[15px] font-bold text-[#263445] pt-2.5 border-t border-[#E5E7EB]">
                 <span>Total Amount</span>
-                <span className="font-mono text-[#FF6B0A]">{formatINR(order.total_amount)}</span>
+                <span className="font-mono text-[#2563EB] tabular-nums">
+                  {formatINR(order.total_amount)}
+                </span>
               </div>
             </section>
 
             {/* Controlled State Transition */}
-            <section className="dv-card p-6 space-y-3 text-xs">
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-[#FF6B0A]">
-                State Management
+            <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 space-y-3 shadow-2xs">
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="text-[13px] font-semibold text-[#263445]">State Management</h2>
+                <AdminStatusBadge status={order.payment_status} />
+              </div>
+              <p className="text-[12px] text-[#64748B]">
+                Current Order State: <AdminStatusBadge status={order.status} className="ml-1" />
               </p>
-              <p className="text-[11px] text-[#64748B]">
-                Payment Status:{' '}
-                <strong className="uppercase text-[#1F2937]">{order.payment_status}</strong>
-              </p>
-              <form onSubmit={handleStatusUpdate} className="flex items-center gap-2">
+              <form onSubmit={handleStatusUpdate} className="flex items-center gap-2 pt-1">
                 <select
+                  aria-label="Order status"
                   value={nextStatus}
                   onChange={(e) => setNextStatus(e.target.value)}
-                  className="dv-input flex-1 px-3 py-2 text-xs"
+                  className="dv-input flex-1 px-3 py-2 text-[13px]"
                 >
-                  <option value="pending">pending</option>
-                  <option value="confirmed">confirmed</option>
-                  <option value="fulfilled">fulfilled</option>
-                  <option value="cancelled">cancelled</option>
-                  <option value="refunded">refunded</option>
-                  <option value="failed">failed</option>
+                  <option value="pending">Pending</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="fulfilled">Fulfilled</option>
+                  <option value="cancelled">Cancelled</option>
+                  <option value="refunded">Refunded</option>
+                  <option value="failed">Failed</option>
                 </select>
                 <button
                   type="submit"
                   disabled={updating || nextStatus === order.status}
-                  className="dv-btn-primary px-4 py-2 uppercase tracking-wider text-[11px] disabled:opacity-40"
+                  className="dv-btn-primary px-4 py-2 text-[12px] font-semibold disabled:opacity-40"
                 >
                   {updating ? 'Saving...' : 'Update'}
                 </button>
@@ -164,39 +175,45 @@ const AdminOrderDetailPage = () => {
           </div>
 
           {/* Order Items Table */}
-          <section className="dv-card p-6">
-            <h2 className="text-xs font-semibold text-[#1F2937] uppercase tracking-widest mb-4">
-              Purchased Line Items (Immutable Snapshots)
-            </h2>
+          <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+            <div className="p-5 border-b border-[#E5E7EB]">
+              <AdminSectionHeader
+                icon={Package}
+                title="Purchased Line Items"
+                subtitle="Immutable pricing snapshots recorded at checkout"
+              />
+            </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-[#E5E7EB] text-[#64748B] uppercase">
-                    <th className="py-2.5 pr-4 font-semibold">Product Snapshot</th>
-                    <th className="py-2.5 pr-4 font-semibold">Original Price</th>
-                    <th className="py-2.5 pr-4 font-semibold">Purchase Price</th>
-                    <th className="py-2.5 pr-4 font-semibold">Qty</th>
-                    <th className="py-2.5 pr-4 font-semibold">Line Total</th>
-                    <th className="py-2.5 pr-4 font-semibold">Downloads Used</th>
+                  <tr className="bg-[#F8FAFC] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#475569]">
+                    <th className="py-3 px-4">Product Snapshot</th>
+                    <th className="py-3 px-4">Original Price</th>
+                    <th className="py-3 px-4">Purchase Price</th>
+                    <th className="py-3 px-4">Qty</th>
+                    <th className="py-3 px-4">Line Total</th>
+                    <th className="py-3 px-4">Downloads Used</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E5E7EB]">
+                <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                   {order.items.map((item) => (
-                    <tr key={item.id}>
-                      <td className="py-3 pr-4 font-semibold text-[#1F2937]">
+                    <tr key={item.id} className="hover:bg-[#EDF5FC]/45 transition">
+                      <td className="py-3.5 px-4 font-semibold text-[#263445]">
                         {item.product_name_snapshot}
                       </td>
-                      <td className="py-3 pr-4 font-mono text-[#64748B]">
+                      <td className="py-3.5 px-4 font-mono text-[#64748B] tabular-nums">
                         {formatINR(item.original_price_snapshot)}
                       </td>
-                      <td className="py-3 pr-4 font-mono text-[#1F2937]">
+                      <td className="py-3.5 px-4 font-mono text-[#263445] tabular-nums">
                         {formatINR(item.purchase_price)}
                       </td>
-                      <td className="py-3 pr-4 font-mono text-[#243247]">{item.quantity}</td>
-                      <td className="py-3 pr-4 font-mono font-semibold text-[#1F2937]">
+                      <td className="py-3.5 px-4 font-mono text-[#263445] tabular-nums">
+                        {item.quantity}
+                      </td>
+                      <td className="py-3.5 px-4 font-mono font-semibold text-[#263445] tabular-nums">
                         {formatINR(item.line_total)}
                       </td>
-                      <td className="py-3 pr-4 font-mono text-[#243247]">
+                      <td className="py-3.5 px-4 font-mono text-[#475569] tabular-nums">
                         {item.downloads_used} / {item.max_downloads}
                       </td>
                     </tr>
@@ -207,43 +224,53 @@ const AdminOrderDetailPage = () => {
           </section>
 
           {/* Payment References */}
-          <section className="dv-card p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <ShieldCheck className="w-4 h-4 text-[#FF6B0A]" />
-              <h2 className="text-xs font-semibold text-[#1F2937] uppercase tracking-widest">
-                Gateway Payment Records
-              </h2>
+          <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+            <div className="p-5 border-b border-[#E5E7EB]">
+              <AdminSectionHeader
+                icon={ShieldCheck}
+                title="Gateway Payment Records"
+                subtitle="Cryptographic signature checks and payment gateway references"
+              />
             </div>
 
             {order.payments.length === 0 ? (
-              <p className="text-xs text-[#64748B]">No payment attempts recorded.</p>
+              <p className="text-[13px] text-[#64748B] p-6">No payment attempts recorded.</p>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+                <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-[#E5E7EB] text-[#64748B] uppercase">
-                      <th className="py-2.5 pr-4 font-semibold">Gateway</th>
-                      <th className="py-2.5 pr-4 font-semibold">Gateway Order ID</th>
-                      <th className="py-2.5 pr-4 font-semibold">Gateway Payment ID</th>
-                      <th className="py-2.5 pr-4 font-semibold">Amount</th>
-                      <th className="py-2.5 pr-4 font-semibold">Status</th>
-                      <th className="py-2.5 pr-4 font-semibold">Signature Verified</th>
+                    <tr className="bg-[#F8FAFC] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#475569]">
+                      <th className="py-3 px-4">Gateway</th>
+                      <th className="py-3 px-4">Gateway Order ID</th>
+                      <th className="py-3 px-4">Gateway Payment ID</th>
+                      <th className="py-3 px-4">Amount</th>
+                      <th className="py-3 px-4">Status</th>
+                      <th className="py-3 px-4">Signature</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#E5E7EB]">
+                  <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                     {order.payments.map((p) => (
-                      <tr key={p.id}>
-                        <td className="py-3 pr-4 uppercase font-medium text-[#1F2937]">{p.gateway_name}</td>
-                        <td className="py-3 pr-4 font-mono text-[#243247]">{p.gateway_order_id}</td>
-                        <td className="py-3 pr-4 font-mono text-[#64748B]">{p.gateway_payment_id || '—'}</td>
-                        <td className="py-3 pr-4 font-mono text-[#1F2937]">{formatINR(p.amount)}</td>
-                        <td className="py-3 pr-4 uppercase text-[#243247]">{p.status}</td>
-                        <td className="py-3 pr-4">
-                          {p.is_signature_verified ? (
-                            <span className="font-medium text-emerald-700">Verified</span>
-                          ) : (
-                            <span className="text-[#64748B]">Unverified</span>
-                          )}
+                      <tr key={p.id} className="hover:bg-[#EDF5FC]/45 transition">
+                        <td className="py-3.5 px-4 font-semibold text-[#263445]">
+                          {String(p.gateway_name || '').toUpperCase()}
+                        </td>
+                        <td className="py-3.5 px-4 font-mono text-[12px] text-[#263445]">
+                          {p.gateway_order_id}
+                        </td>
+                        <td className="py-3.5 px-4 font-mono text-[12px] text-[#64748B]">
+                          {p.gateway_payment_id || '—'}
+                        </td>
+                        <td className="py-3.5 px-4 font-mono text-[#263445] tabular-nums">
+                          {formatINR(p.amount)}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <AdminStatusBadge status={p.status} />
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <AdminStatusBadge
+                            status={p.is_signature_verified ? 'verified' : 'pending'}
+                            label={p.is_signature_verified ? 'Verified' : 'Unverified'}
+                          />
                         </td>
                       </tr>
                     ))}
@@ -254,37 +281,41 @@ const AdminOrderDetailPage = () => {
           </section>
 
           {/* Download Activity */}
-          <section className="dv-card p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Download className="w-4 h-4 text-[#FF6B0A]" />
-              <h2 className="text-xs font-semibold text-[#1F2937] uppercase tracking-widest">
-                Customer Download Activity ({order.downloads.length})
-              </h2>
+          <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+            <div className="p-5 border-b border-[#E5E7EB]">
+              <AdminSectionHeader
+                icon={Download}
+                title={`Customer Download Activity (${order.downloads.length})`}
+              />
             </div>
 
             {order.downloads.length === 0 ? (
-              <p className="text-xs text-[#64748B]">No downloads recorded for this order.</p>
+              <p className="text-[13px] text-[#64748B] p-6">
+                No downloads recorded for this order.
+              </p>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+                <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-[#E5E7EB] text-[#64748B] uppercase">
-                      <th className="py-2.5 pr-4 font-semibold">Product</th>
-                      <th className="py-2.5 pr-4 font-semibold">Status</th>
-                      <th className="py-2.5 pr-4 font-semibold">Client IP</th>
-                      <th className="py-2.5 pr-4 font-semibold">Timestamp</th>
+                    <tr className="bg-[#F8FAFC] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#475569]">
+                      <th className="py-3 px-4">Product</th>
+                      <th className="py-3 px-4">Status</th>
+                      <th className="py-3 px-4">Client IP</th>
+                      <th className="py-3 px-4">Timestamp</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#E5E7EB]">
+                  <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                     {order.downloads.map((d) => (
-                      <tr key={d.id}>
-                        <td className="py-2.5 pr-4 font-medium text-[#1F2937]">{d.product_name}</td>
-                        <td className="py-2.5 pr-4 uppercase text-[#243247]">{d.status}</td>
-                        <td className="py-2.5 pr-4 font-mono text-[#64748B]">
+                      <tr key={d.id} className="hover:bg-[#EDF5FC]/45 transition">
+                        <td className="py-3 px-4 font-medium text-[#263445]">{d.product_name}</td>
+                        <td className="py-3 px-4">
+                          <AdminStatusBadge status={d.status} />
+                        </td>
+                        <td className="py-3 px-4 font-mono text-[12px] text-[#64748B]">
                           {d.ip_address || '—'}
                         </td>
-                        <td className="py-2.5 pr-4 text-[#64748B]">
-                          {new Date(d.downloaded_at).toLocaleString()}
+                        <td className="py-3 px-4 text-[#64748B] tabular-nums whitespace-nowrap">
+                          {formatAdminDateTime(d.downloaded_at)}
                         </td>
                       </tr>
                     ))}

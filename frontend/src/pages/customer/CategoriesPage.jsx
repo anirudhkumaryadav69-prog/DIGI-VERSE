@@ -40,16 +40,16 @@ const CategoriesPage = () => {
   return (
     <StorefrontLayout>
       <SectionHeading
-        eyebrow="Taxonomy"
-        title="Product Categories"
-        subtitle="Browse curated digital collections organized by creative discipline."
+        eyebrow="Browse Collections"
+        title="Digital Product Categories"
+        subtitle="Explore curated toolkits, UI kits, study guides, templates, and creator assets across eight marketplace categories."
         action={
           <div className="relative w-full sm:w-72">
             <label htmlFor="category-search" className="sr-only">
               Search categories
             </label>
             <Search
-              className="w-4 h-4 text-[#8490A0] absolute left-3.5 top-1/2 -translate-y-1/2"
+              className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2"
               aria-hidden="true"
             />
             <input
@@ -58,7 +58,7 @@ const CategoriesPage = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search categories..."
-              className="dv-input pl-10 pr-4 py-2 text-xs"
+              className="dv-input pl-10 pr-4 py-2 text-[13px]"
             />
           </div>
         }
@@ -67,7 +67,7 @@ const CategoriesPage = () => {
       {error && <ErrorAlert message={error} onRetry={fetchCategories} className="mb-6" />}
 
       {loading ? (
-        <LoadingState label="Loading Categories..." />
+        <LoadingState label="Loading categories..." />
       ) : categories.length === 0 ? (
         <EmptyState
           icon={FolderTree}
@@ -75,7 +75,7 @@ const CategoriesPage = () => {
           description="No active product categories matched your search."
         />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
           {categories.map((cat) => (
             <CategoryCard key={cat.id} category={cat} />
           ))}

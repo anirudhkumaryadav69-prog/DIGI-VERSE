@@ -87,7 +87,7 @@ const CustomerOrderDetailPage = () => {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Link
             to="/orders"
-            className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] hover:underline inline-flex items-center gap-1.5"
+            className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] hover:underline inline-flex items-center gap-1.5"
           >
             <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Back to Orders</span>
@@ -95,22 +95,22 @@ const CustomerOrderDetailPage = () => {
 
           {order && (
             <div className="flex flex-wrap items-center gap-3">
-              {order.payment_status !== 'paid' &&
-                !['fulfilled', 'refunded', 'cancelled'].includes(order.status) && (
-                  <Link
-                    to={`/checkout?order_id=${order.id}`}
-                    className="dv-btn-primary text-xs font-semibold uppercase tracking-wider px-4 py-2 inline-flex items-center gap-1.5"
-                  >
-                    <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
-                    <span>Retry Payment</span>
-                  </Link>
-                )}
+                {order.payment_status !== 'paid' &&
+                  !['fulfilled', 'refunded', 'cancelled'].includes(order.status) && (
+                    <Link
+                      to={`/checkout?order_id=${order.id}`}
+                      className="dv-btn-primary text-xs font-semibold px-4 py-2 inline-flex items-center gap-1.5"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>Retry Payment</span>
+                    </Link>
+                  )}
 
-              <button
-                type="button"
-                onClick={handleToggleInvoice}
-                className="dv-btn-secondary text-xs font-semibold uppercase tracking-wider px-4 py-2 inline-flex items-center gap-1.5"
-              >
+                <button
+                  type="button"
+                  onClick={handleToggleInvoice}
+                  className="dv-btn-secondary text-xs font-semibold px-4 py-2 inline-flex items-center gap-1.5"
+                >
                 <FileText className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>{showInvoice ? 'Hide Invoice' : 'View Purchase Invoice'}</span>
               </button>
@@ -132,10 +132,10 @@ const CustomerOrderDetailPage = () => {
               {/* Order Header Summary */}
               <section className="dv-card p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[#FF6B0A] font-semibold mb-1">
+                  <p className="text-xs text-[#2563EB] font-semibold mb-1">
                     Order Reference
                   </p>
-                  <h1 className="text-2xl font-mono font-bold text-[#1F2937]">
+                  <h1 className="text-2xl font-mono font-bold text-[#263445]">
                     {order.order_number}
                   </h1>
                   <p className="text-xs text-[#64748B] mt-1">
@@ -163,14 +163,14 @@ const CustomerOrderDetailPage = () => {
               {showInvoice && invoice && (
                 <section
                   aria-label="Official Purchase Invoice"
-                  className="dv-card-warm p-6 md:p-8 space-y-6 bg-[#FFF6ED]/40"
+                  className="dv-card-warm p-6 md:p-8 space-y-6 bg-[#F8FAFC]/40"
                 >
-                  <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#FFD4AE] pb-4">
+                  <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#BFDBFE] pb-4">
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-[#FF6B0A] font-semibold">
+                      <p className="text-xs text-[#2563EB] font-semibold">
                         Official Purchase Invoice
                       </p>
-                      <h2 className="text-xl font-mono font-bold text-[#1F2937] mt-1">
+                      <h2 className="text-xl font-mono font-bold text-[#263445] mt-1">
                         {invoice.invoice_number}
                       </h2>
                     </div>
@@ -185,7 +185,7 @@ const CustomerOrderDetailPage = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-2 text-xs text-[#243247]">
+                  <div className="space-y-2 text-xs text-[#263445]">
                     <div className="flex justify-between">
                       <span>Subtotal</span>
                       <span className="font-mono">{formatINR(invoice.subtotal_amount)}</span>
@@ -194,9 +194,9 @@ const CustomerOrderDetailPage = () => {
                       <span>Discount</span>
                       <span className="font-mono">-{formatINR(invoice.discount_amount)}</span>
                     </div>
-                    <div className="flex justify-between font-bold text-sm pt-2 border-t border-[#FFD4AE]">
+                    <div className="flex justify-between font-bold text-sm pt-2 border-t border-[#BFDBFE]">
                       <span>Total Paid</span>
-                      <span className="font-mono text-[#F4510B]">
+                      <span className="font-mono text-[#1D4ED8]">
                         {formatINR(invoice.total_amount)}
                       </span>
                     </div>
@@ -206,7 +206,7 @@ const CustomerOrderDetailPage = () => {
 
               {/* Purchased Items & Digital Downloads */}
               <section className="dv-card p-6 md:p-8 space-y-4">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-[#1F2937] border-b border-[#E5E7EB] pb-3">
+                <h2 className="text-sm font-semibold text-[#263445] border-b border-[#E5E7EB] pb-3">
                   Purchased Products &amp; Digital Delivery
                 </h2>
 
@@ -219,21 +219,21 @@ const CustomerOrderDetailPage = () => {
                         className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                       >
                         <div>
-                          <p className="text-base font-semibold text-[#1F2937]">
+                          <p className="text-base font-semibold text-[#263445]">
                             {item.product_name_snapshot}
                           </p>
                           <p className="text-xs text-[#64748B] font-mono mt-0.5">
                             Qty: {item.quantity} × {formatINR(item.purchase_price)} (Original:{' '}
                             {formatINR(item.original_price_snapshot)})
                           </p>
-                          <p className="text-[11px] font-medium text-[#D94300] mt-1">
+                          <p className="text-[11px] font-medium text-[#1D4ED8] mt-1">
                             Downloads used: {item.downloads_used} / {item.max_downloads} ({remaining}{' '}
                             remaining)
                           </p>
                         </div>
 
                         <div className="flex items-center justify-between sm:justify-end gap-4">
-                          <span className="font-mono text-sm font-bold text-[#F4510B]">
+                          <span className="font-mono text-sm font-bold text-[#1D4ED8]">
                             {formatINR(item.line_total)}
                           </span>
 
@@ -241,7 +241,7 @@ const CustomerOrderDetailPage = () => {
                             type="button"
                             disabled={!item.download_eligible || downloadingItem === item.id}
                             onClick={() => handleDownloadItem(item)}
-                            className="dv-btn-primary px-4 py-2.5 text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-1.5 disabled:opacity-40"
+                            className="dv-btn-primary px-4 py-2.5 text-xs font-semibold inline-flex items-center gap-1.5 disabled:opacity-40"
                           >
                             <Download className="w-3.5 h-3.5" aria-hidden="true" />
                             <span>

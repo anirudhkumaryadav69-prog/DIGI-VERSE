@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Save, Activity, ShieldCheck } from 'lucide-react';
+import { Activity, Save, ShieldCheck } from 'lucide-react';
 import AdminLayout from '../../layouts/AdminLayout';
+import {
+  ErrorAlert,
+  LoadingState,
+  ToastBanner,
+} from '../../components/common/StorefrontDesignSystem';
+import { AdminSectionHeader, formatAdminDateTime } from '../../components/admin/AdminPrimitives';
 import { adminOperationsApi } from '../../services/api';
 
 const DEFAULT_SETTINGS_KEYS = [
@@ -22,7 +28,7 @@ const DEFAULT_SETTINGS_KEYS = [
   },
   {
     key: 'checkout.invoice_footer',
-    label: 'Invoice Footer Note (Internal/Receipt)',
+    label: 'Invoice Footer Note (Receipt)',
     placeholder: 'Thank you for supporting digital creators on DIGI-VERSE.',
   },
 ];
@@ -34,7 +40,7 @@ const AdminSettingsPage = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [toast, setToast] = useState(null);
 
   const loadSettingsAndAudit = () => {
     setLoading(true);
@@ -67,7 +73,7 @@ const AdminSettingsPage = () => {
     e.preventDefault();
     setSaving(true);
     setError('');
-    setSuccess('');
+    setToast(null);
     try {
       const payload = {};
       DEFAULT_SETTINGS_KEYS.forEach(({ key }) => {
@@ -76,7 +82,7 @@ const AdminSettingsPage = () => {
         }
       });
       await adminOperationsApi.batchUpdateSettings(payload);
-      setSuccess('Store configuration saved and audited.');
+      setToast({ type: 'success', message: 'Store configuration saved and audited.' });
       loadSettingsAndAudit();
     } catch (err) {
       const detail = err.response?.data?.detail;
@@ -88,107 +94,108 @@ const AdminSettingsPage = () => {
 
   return (
     <AdminLayout
-      title="Store Settings & Security Audit Ledger"
-      subtitle="Manage non-sensitive storefront parameters and inspect immutable administrative audit logs"
+      title="Settings & Security Audit"
+      subtitle="Manage storefront configuration parameters and inspect immutable administrative audit logs"
     >
-      {error && (
-        <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs">
-          {error}
-        </div>
-      )}
-      {success && (
-        <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
-          {success}
-        </div>
-      )}
+      {error && <ErrorAlert message={error} onRetry={loadSettingsAndAudit} className="mb-5" />}
+      <ToastBanner toast={toast} onDismiss={() => setToast(null)} className="mb-5" />
 
-      {/* Store Settings Form */}
-      <form
-        onSubmit={handleSaveSettings}
-        className="dv-card p-6 mb-8 space-y-5"
-      >
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E5E7EB] pb-4">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-[#FF6B0A]" />
-            <h2 className="text-xs font-semibold text-[#1F2937] uppercase tracking-widest">
-              Storefront & Receipt Configuration
-            </h2>
-          </div>
-          <span className="text-[11px] text-[#64748B]">
-            Secrets & API keys are strictly blocked from database settings
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {DEFAULT_SETTINGS_KEYS.map((item) => (
-            <div key={item.key}>
-              <label className="block text-[11px] font-medium uppercase tracking-wider text-[#64748B] mb-1">
-                {item.label} <span className="font-mono text-[10px]">({item.key})</span>
-              </label>
-              <input
-                type="text"
-                value={settingsMap[item.key] || ''}
-                onChange={(e) =>
-                  setSettingsMap({ ...settingsMap, [item.key]: e.target.value })
-                }
-                placeholder={item.placeholder}
-                className="dv-input px-3 py-2 text-xs"
+      {loading && !auditLogs.length ? (
+        <LoadingState label="Loading settings and audit logs..." />
+      ) : (
+        <div className="space-y-6">
+          {/* Store Settings Form */}
+          <form
+            onSubmit={handleSaveSettings}
+            className="bg-white border border-[#D5DEE8] rounded-xl p-6 space-y-5 shadow-2xs"
+          >
+            <div className="border-b border-[#E5E7EB] pb-4">
+              <AdminSectionHeader
+                icon={ShieldCheck}
+                title="Storefront & Receipt Configuration"
+                subtitle="Non-sensitive storefront settings (secrets and API keys are strictly excluded)"
               />
             </div>
-          ))}
-        </div>
 
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={saving || loading}
-            className="dv-btn-primary text-xs uppercase tracking-wider px-5 py-2.5 inline-flex items-center gap-1.5 disabled:opacity-50"
-          >
-            <Save className="w-3.5 h-3.5" />
-            <span>{saving ? 'Saving...' : 'Save Configuration'}</span>
-          </button>
-        </div>
-      </form>
-
-      {/* Administrative Audit Logs */}
-      <section className="dv-card p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Activity className="w-4 h-4 text-[#FF6B0A]" />
-            <h2 className="text-xs font-semibold text-[#1F2937] uppercase tracking-widest">
-              Administrative Audit Logs ({auditTotal})
-            </h2>
-          </div>
-          <span className="text-[11px] text-[#64748B]">Latest 25 Events</span>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="border-b border-[#E5E7EB] text-[#64748B] uppercase">
-                <th className="py-2.5 pr-4 font-semibold">Administrator</th>
-                <th className="py-2.5 pr-4 font-semibold">Action</th>
-                <th className="py-2.5 pr-4 font-semibold">Entity</th>
-                <th className="py-2.5 pr-4 font-semibold">Timestamp</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#E5E7EB]">
-              {auditLogs.map((log) => (
-                <tr key={log.id} className="hover:bg-[#FFF0E2]/45 transition">
-                  <td className="py-2.5 pr-4 font-medium text-[#1F2937]">{log.admin_username || 'System'}</td>
-                  <td className="py-2.5 pr-4 font-mono text-[#D94300]">{log.action}</td>
-                  <td className="py-2.5 pr-4 text-[#64748B]">
-                    {log.entity_type} {log.entity_id ? `(${log.entity_id})` : ''}
-                  </td>
-                  <td className="py-2.5 pr-4 text-[#64748B]">
-                    {new Date(log.created_at).toLocaleString()}
-                  </td>
-                </tr>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {DEFAULT_SETTINGS_KEYS.map((item) => (
+                <div key={item.key}>
+                  <label
+                    htmlFor={`setting-${item.key}`}
+                    className="block text-[12.5px] font-medium text-[#263445] mb-1.5"
+                  >
+                    {item.label}{' '}
+                    <span className="font-mono text-[11px] text-[#64748B]">({item.key})</span>
+                  </label>
+                  <input
+                    id={`setting-${item.key}`}
+                    type="text"
+                    value={settingsMap[item.key] || ''}
+                    onChange={(e) =>
+                      setSettingsMap({ ...settingsMap, [item.key]: e.target.value })
+                    }
+                    placeholder={item.placeholder}
+                    className="dv-input px-3.5 py-2 text-[13px]"
+                  />
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+
+            <div className="flex justify-end pt-1">
+              <button
+                type="submit"
+                disabled={saving || loading}
+                className="dv-btn-primary text-[12px] font-semibold px-5 py-2 inline-flex items-center gap-1.5 disabled:opacity-50"
+              >
+                <Save className="w-3.5 h-3.5" />
+                <span>{saving ? 'Saving...' : 'Save Configuration'}</span>
+              </button>
+            </div>
+          </form>
+
+          {/* Administrative Audit Logs */}
+          <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+            <div className="p-5 border-b border-[#E5E7EB]">
+              <AdminSectionHeader
+                icon={Activity}
+                title={`Administrative Audit Logs (${auditTotal})`}
+                subtitle="Latest 25 recorded administrative actions"
+              />
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-[#D5DEE8] bg-[#F8FAFC] text-[#475569] text-[11.5px] font-semibold">
+                    <th className="py-3 px-4">Administrator</th>
+                    <th className="py-3 px-4">Action</th>
+                    <th className="py-3 px-4">Entity</th>
+                    <th className="py-3 px-4">Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
+                  {auditLogs.map((log) => (
+                    <tr key={log.id} className="hover:bg-[#EDF5FC]/45 transition">
+                      <td className="py-3 px-4 font-medium text-[#263445]">
+                        {log.admin_username || 'System'}
+                      </td>
+                      <td className="py-3 px-4 font-mono text-[12px] text-[#1D4ED8]">
+                        {log.action}
+                      </td>
+                      <td className="py-3 px-4 text-[#64748B]">
+                        {log.entity_type} {log.entity_id ? `(${log.entity_id})` : ''}
+                      </td>
+                      <td className="py-3 px-4 text-[#64748B] tabular-nums whitespace-nowrap">
+                        {formatAdminDateTime(log.created_at)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
         </div>
-      </section>
+      )}
     </AdminLayout>
   );
 };

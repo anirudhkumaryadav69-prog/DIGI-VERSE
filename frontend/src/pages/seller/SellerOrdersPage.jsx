@@ -11,7 +11,7 @@ import { sellerApi } from '../../services/api';
 
 const FULFILMENT_BADGE = {
   ready: { label: 'Download Ready', variant: 'success' },
-  downloaded: { label: 'Downloaded', variant: 'orange' },
+  downloaded: { label: 'Downloaded', variant: 'accent' },
   pending_payment: { label: 'Pending Payment', variant: 'neutral' },
   revoked: { label: 'Refunded / Revoked', variant: 'danger' },
 };
@@ -54,14 +54,13 @@ const SellerOrdersPage = () => {
     >
       <div className="space-y-5">
         <ToastBanner
-          type={toast.type}
-          message={toast.message}
+          toast={toast}
           onDismiss={() => setToast({ type: '', message: '' })}
         />
 
         <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 flex flex-col sm:flex-row gap-3 justify-between">
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-[#8490A0] absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
             <input
               type="search"
               value={search}
@@ -69,8 +68,9 @@ const SellerOrdersPage = () => {
                 setSearch(e.target.value);
                 setPage(1);
               }}
+              aria-label="Search orders by reference"
               placeholder="Search by order reference (DV-...)..."
-              className="dv-input pl-10 text-sm"
+              className="dv-input pl-10 pr-3.5 py-2 text-[13px]"
             />
           </div>
 
@@ -96,8 +96,8 @@ const SellerOrdersPage = () => {
             <LoadingState label="Loading seller order attributions..." />
           ) : !data.items.length ? (
             <div className="bg-white border border-[#E5E7EB] rounded-2xl p-10 text-center">
-              <ShoppingBag className="w-8 h-8 text-[#FF6B0A] mx-auto mb-2" />
-              <p className="text-sm font-semibold text-[#1F2937]">No matching orders found</p>
+              <ShoppingBag className="w-8 h-8 text-[#2563EB] mx-auto mb-2" />
+              <p className="text-sm font-semibold text-[#263445]">No matching orders found</p>
               <p className="text-xs text-[#64748B] mt-1">
                 Only orders containing at least one item you own appear here.
               </p>
@@ -113,9 +113,9 @@ const SellerOrdersPage = () => {
                   key={ord.order_id}
                   className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs"
                 >
-                  <div className="px-5 py-3.5 bg-[#FFF6ED] border-b border-[#E5E7EB] flex flex-wrap items-center justify-between gap-3">
+                  <div className="px-5 py-3.5 bg-[#F8FAFC] border-b border-[#E5E7EB] flex flex-wrap items-center justify-between gap-3">
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="font-mono text-xs font-bold text-[#1F2937]">
+                      <span className="font-mono text-xs font-bold text-[#263445]">
                         {ord.order_number}
                       </span>
                       <span className="text-[11px] text-[#64748B]">
@@ -130,7 +130,7 @@ const SellerOrdersPage = () => {
                       <span className="text-[11px] text-[#64748B] mr-2">
                         Your Items Total ({ord.seller_units_count} qty):
                       </span>
-                      <span className="font-mono text-sm font-bold text-[#F4510B]">
+                      <span className="font-mono text-sm font-bold text-[#1D4ED8]">
                         {formatINR(ord.seller_items_subtotal)}
                       </span>
                     </div>
@@ -143,17 +143,17 @@ const SellerOrdersPage = () => {
                         className="px-5 py-3 flex flex-wrap items-center justify-between gap-3 text-xs"
                       >
                         <div>
-                          <p className="font-semibold text-[#1F2937]">{item.product_name_snapshot}</p>
+                          <p className="font-semibold text-[#263445]">{item.product_name_snapshot}</p>
                           <p className="text-[11px] text-[#64748B]">
                             Qty: {item.quantity} × {formatINR(item.purchase_price)} · Snapshot: {item.seller_store_name_snapshot}
                           </p>
                         </div>
                         <div className="flex items-center gap-4">
                           <span className="inline-flex items-center gap-1 text-[11px] text-[#64748B]">
-                            <Download className="w-3.5 h-3.5 text-[#FF6B0A]" />
+                            <Download className="w-3.5 h-3.5 text-[#2563EB]" />
                             {item.downloads_used}/{item.max_downloads} downloads
                           </span>
-                          <span className="font-mono font-bold text-[#1F2937]">
+                          <span className="font-mono font-bold text-[#263445]">
                             {formatINR(item.line_total)}
                           </span>
                         </div>
@@ -168,27 +168,29 @@ const SellerOrdersPage = () => {
 
         <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 flex items-center justify-between text-xs text-[#64748B]">
           <span>
-            Total: <strong className="text-[#1F2937]">{data.total}</strong> seller orders
+            Total: <strong className="text-[#263445]">{data.total}</strong> seller orders
           </span>
           <div className="flex items-center gap-2">
             <button
               type="button"
+              aria-label="Previous page"
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white disabled:opacity-40"
             >
-              <ChevronLeft className="w-3.5 h-3.5" />
+              <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
             <span>
               Page {data.page} of {data.total_pages}
             </span>
             <button
               type="button"
+              aria-label="Next page"
               disabled={page >= data.total_pages}
               onClick={() => setPage((p) => p + 1)}
               className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white disabled:opacity-40"
             >
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
           </div>
         </div>

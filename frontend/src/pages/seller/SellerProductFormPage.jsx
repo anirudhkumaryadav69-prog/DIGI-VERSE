@@ -276,8 +276,7 @@ const SellerProductFormPage = () => {
     >
       <div className="space-y-6">
         <ToastBanner
-          type={toast.type}
-          message={toast.message}
+          toast={toast}
           onDismiss={() => setToast({ type: '', message: '' })}
         />
 
@@ -291,7 +290,7 @@ const SellerProductFormPage = () => {
           <div className="lg:col-span-2 space-y-5 bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Product Title *
                 </label>
                 <input
@@ -311,7 +310,7 @@ const SellerProductFormPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   URL Slug *
                 </label>
                 <input
@@ -327,7 +326,7 @@ const SellerProductFormPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Category *
                 </label>
                 <select
@@ -346,7 +345,7 @@ const SellerProductFormPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Price (INR) *
                 </label>
                 <input
@@ -361,7 +360,7 @@ const SellerProductFormPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                   Product Type
                 </label>
                 <input
@@ -375,7 +374,7 @@ const SellerProductFormPage = () => {
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-[#243247] mb-1.5">Format</label>
+                  <label className="block text-xs font-semibold text-[#263445] mb-1.5">Format</label>
                   <input
                     type="text"
                     value={form.metadata_format}
@@ -387,7 +386,7 @@ const SellerProductFormPage = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-[#243247] mb-1.5">Version</label>
+                  <label className="block text-xs font-semibold text-[#263445] mb-1.5">Version</label>
                   <input
                     type="text"
                     value={form.metadata_version}
@@ -402,7 +401,7 @@ const SellerProductFormPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                 Short Summary
               </label>
               <input
@@ -417,7 +416,7 @@ const SellerProductFormPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                 Main Overview
               </label>
               <textarea
@@ -431,7 +430,7 @@ const SellerProductFormPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#243247] mb-1.5">
+              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
                 Detailed Documentation / Whats Included
               </label>
               <textarea
@@ -460,10 +459,20 @@ const SellerProductFormPage = () => {
             {isEdit && product && (
               <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs space-y-3">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xs font-bold uppercase tracking-wider text-[#64748B]">
+                  <h2 className="text-xs font-semibold text-[#64748B]">
                     Publication State
                   </h2>
-                  <Badge variant={product.approval_status === 'published' ? 'success' : 'orange'}>
+                  <Badge
+                    variant={
+                      product.approval_status === 'published'
+                        ? 'success'
+                        : product.approval_status === 'rejected'
+                          ? 'danger'
+                          : product.approval_status === 'pending_review'
+                            ? 'warning'
+                            : 'neutral'
+                    }
+                  >
                     {product.approval_status}
                   </Badge>
                 </div>
@@ -506,13 +515,13 @@ const SellerProductFormPage = () => {
 
             {/* Private Digital Asset Box */}
             <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs space-y-3">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-2">
-                <FileArchive className="w-4 h-4 text-[#FF6B0A]" />
+              <h2 className="text-xs font-semibold text-[#64748B] flex items-center gap-2">
+                <FileArchive className="w-4 h-4 text-[#2563EB]" aria-hidden="true" />
                 Private Digital Asset
               </h2>
               {isEdit && product?.asset?.has_asset ? (
-                <div className="p-3 rounded-xl bg-[#FFF6ED] border border-[#FFD4AE] text-xs space-y-1">
-                  <p className="font-semibold text-[#1F2937] flex items-center gap-1.5">
+                <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#BFDBFE] text-xs space-y-1">
+                  <p className="font-semibold text-[#263445] flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
                     {product.asset.filename}
                   </p>
@@ -521,7 +530,7 @@ const SellerProductFormPage = () => {
                   </p>
                 </div>
               ) : pendingAsset ? (
-                <div className="p-3 rounded-xl bg-[#FFF6ED] border border-[#FFD4AE] text-xs">
+                <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#BFDBFE] text-xs">
                   Ready to upload on create: <strong>{pendingAsset.name}</strong>
                 </div>
               ) : (
@@ -557,10 +566,10 @@ const SellerProductFormPage = () => {
             {/* Product Gallery Images */}
             <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
-                <h2 className="text-xs font-bold uppercase tracking-wider text-[#64748B]">
+                <h2 className="text-xs font-semibold text-[#64748B]">
                   Storefront Images
                 </h2>
-                <label className="text-xs font-semibold text-[#FF6B0A] hover:underline cursor-pointer">
+                <label className="text-xs font-semibold text-[#2563EB] hover:underline cursor-pointer">
                   {uploadingImage ? 'Uploading...' : '+ Upload Image'}
                   <input
                     type="file"
@@ -577,10 +586,10 @@ const SellerProductFormPage = () => {
                   {product.images.map((img) => (
                     <div
                       key={img.id}
-                      className="relative border border-[#E5E7EB] rounded-xl overflow-hidden bg-[#FFF6ED]"
+                      className="relative border border-[#E5E7EB] rounded-xl overflow-hidden bg-[#F8FAFC]"
                     >
                       <img src={img.image_url} alt="" className="w-full h-24 object-cover" />
-                      <div className="p-1.5 flex items-center justify-between bg-white text-[10px]">
+                      <div className="p-2 flex items-center justify-between bg-white text-[11px]">
                         <button
                           type="button"
                           onClick={async () => {
@@ -588,21 +597,22 @@ const SellerProductFormPage = () => {
                             await loadProduct();
                           }}
                           className={`inline-flex items-center gap-1 font-semibold ${
-                            img.is_primary ? 'text-[#FF6B0A]' : 'text-[#64748B]'
+                            img.is_primary ? 'text-[#2563EB]' : 'text-[#64748B]'
                           }`}
                         >
-                          <Star className="w-3 h-3" />
+                          <Star className="w-3 h-3" aria-hidden="true" />
                           {img.is_primary ? 'Primary' : 'Make Primary'}
                         </button>
                         <button
                           type="button"
+                          aria-label="Delete product image"
                           onClick={async () => {
                             await sellerApi.deleteProductImage(id, img.id);
                             await loadProduct();
                           }}
-                          className="text-red-600"
+                          className="text-red-600 hover:text-red-700"
                         >
-                          <Trash2 className="w-3 h-3" />
+                          <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                         </button>
                       </div>
                     </div>

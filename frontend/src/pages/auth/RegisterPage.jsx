@@ -85,10 +85,10 @@ const RegisterPage = () => {
   return (
     <StorefrontLayout>
       <div className="w-full max-w-md mx-auto my-6 dv-card-warm p-6 sm:p-8">
-        <p className="text-xs uppercase tracking-[0.2em] text-[#FF6B0A] font-semibold mb-2">
+        <p className="text-xs text-[#2563EB] font-semibold mb-1.5">
           Customer Account
         </p>
-        <h1 className="text-2xl font-bold tracking-tight text-[#1F2937] mb-6">
+        <h1 className="text-2xl font-bold tracking-tight text-[#263445] mb-6">
           Create your account
         </h1>
 
@@ -106,7 +106,7 @@ const RegisterPage = () => {
           <div>
             <label
               htmlFor="register-full-name"
-              className="block text-xs font-medium text-[#243247] mb-1.5"
+              className="block text-xs font-medium text-[#263445] mb-1.5"
             >
               Full Name
             </label>
@@ -125,7 +125,7 @@ const RegisterPage = () => {
           <div>
             <label
               htmlFor="register-email"
-              className="block text-xs font-medium text-[#243247] mb-1.5"
+              className="block text-xs font-medium text-[#263445] mb-1.5"
             >
               Email Address
             </label>
@@ -144,7 +144,7 @@ const RegisterPage = () => {
           <div>
             <label
               htmlFor="register-phone"
-              className="block text-xs font-medium text-[#243247] mb-1.5"
+              className="block text-xs font-medium text-[#263445] mb-1.5"
             >
               Phone Number (E.164)
             </label>
@@ -163,7 +163,7 @@ const RegisterPage = () => {
           <div>
             <label
               htmlFor="register-password"
-              className="block text-xs font-medium text-[#243247] mb-1.5"
+              className="block text-xs font-medium text-[#263445] mb-1.5"
             >
               Password
             </label>
@@ -182,7 +182,7 @@ const RegisterPage = () => {
           <div>
             <label
               htmlFor="register-confirm-password"
-              className="block text-xs font-medium text-[#243247] mb-1.5"
+              className="block text-xs font-medium text-[#263445] mb-1.5"
             >
               Confirm Password
             </label>
@@ -199,25 +199,25 @@ const RegisterPage = () => {
           </div>
 
           <div className="pt-2 space-y-2 text-xs text-[#64748B]">
-            <label className="flex items-center gap-2 cursor-pointer text-[#243247]">
+            <label className="flex items-center gap-2 cursor-pointer text-[#263445]">
               <input
                 type="checkbox"
                 checked={formData.email_marketing_consent}
                 onChange={(e) =>
                   setFormData({ ...formData, email_marketing_consent: e.target.checked })
                 }
-                className="accent-[#FF6B0A]"
+                className="accent-[#2563EB]"
               />
               <span>Receive curated digital product releases via email</span>
             </label>
-            <label className="flex items-center gap-2 cursor-pointer text-[#243247]">
+            <label className="flex items-center gap-2 cursor-pointer text-[#263445]">
               <input
                 type="checkbox"
                 checked={formData.whatsapp_marketing_consent}
                 onChange={(e) =>
                   setFormData({ ...formData, whatsapp_marketing_consent: e.target.checked })
                 }
-                className="accent-[#FF6B0A]"
+                className="accent-[#2563EB]"
               />
               <span>Receive order and product updates via WhatsApp</span>
             </label>
@@ -226,7 +226,7 @@ const RegisterPage = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="dv-btn-primary w-full mt-4 py-3 px-4 text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-50"
+            className="dv-btn-primary w-full mt-4 py-3 px-4 text-[13.5px] font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <span>{submitting ? 'Creating Account...' : 'Create Account'}</span>
             <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -235,7 +235,7 @@ const RegisterPage = () => {
 
         <p className="mt-6 text-xs text-[#64748B] text-center">
           Already have an account?{' '}
-          <Link to="/login" className="text-[#FF6B0A] font-semibold hover:text-[#D94300] hover:underline">
+          <Link to="/login" className="text-[#2563EB] font-semibold hover:text-[#1D4ED8] hover:underline">
             Sign in
           </Link>
         </p>

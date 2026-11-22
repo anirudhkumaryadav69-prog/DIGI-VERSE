@@ -1,18 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, FolderTree } from 'lucide-react';
+import { ChevronRight, FolderTree, RotateCcw, Search } from 'lucide-react';
 import StorefrontLayout from '../../components/common/StorefrontLayout';
 import ProductCard from '../../components/products/ProductCard';
 import {
+  Button,
   EmptyState,
   ErrorAlert,
   ProductCardSkeleton,
-  SectionHeading,
   ToastBanner,
   useDocumentMeta,
 } from '../../components/common/StorefrontDesignSystem';
 import { commerceApi, publicCatalogApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { getCategoryTheme } from '../../utils/categoryTheme';
+import {
+  CategoryDisciplineStrip,
+  CategoryVisualIcon,
+} from '../../components/products/CategoryVisual';
 
 const CategoryDetailPage = () => {
   const { slug } = useParams();
@@ -21,9 +26,19 @@ const CategoryDetailPage = () => {
 
   const [category, setCategory] = useState(null);
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [totalMatching, setTotalMatching] = useState(0);
+  const [searchInput, setSearchInput] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [sortBy, setSortBy] = useState('newest');
+  const [onSaleOnly, setOnSaleOnly] = useState(false);
+
+  const [categoryLoading, setCategoryLoading] = useState(true);
+  const [productsLoading, setProductsLoading] = useState(true);
   const [error, setError] = useState('');
   const [toast, setToast] = useState({ type: '', message: '' });
+
+  const latestReqRef = useRef(0);
+  const theme = getCategoryTheme(category?.slug || slug || category?.name);
 
   useDocumentMeta({
     title: category ? `${category.name} Collection` : 'Category Collection',
@@ -32,26 +47,73 @@ const CategoryDetailPage = () => {
     canonicalPath: `/categories/${slug}`,
   });
 
-  const loadCategoryAndProducts = useCallback(() => {
-    setLoading(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput.trim());
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  useEffect(() => {
+    setSearchInput('');
+    setDebouncedSearch('');
+    setSortBy('newest');
+    setOnSaleOnly(false);
+    setCategoryLoading(true);
     setError('');
-    Promise.all([
-      publicCatalogApi.getCategoryBySlug(slug),
-      publicCatalogApi.listProducts({ category: slug, page: 1, page_size: 24 }),
-    ])
-      .then(([catData, prodData]) => {
+    publicCatalogApi
+      .getCategoryBySlug(slug)
+      .then((catData) => {
         setCategory(catData);
-        setProducts(prodData.items || []);
       })
       .catch(() => {
         setError('Category not found or currently inactive.');
       })
-      .finally(() => setLoading(false));
+      .finally(() => setCategoryLoading(false));
   }, [slug]);
 
+  const loadProducts = useCallback(() => {
+    const reqId = ++latestReqRef.current;
+    setProductsLoading(true);
+    const params = {
+      category: slug,
+      page: 1,
+      page_size: 24,
+      sort_by: sortBy,
+    };
+    if (debouncedSearch) params.search = debouncedSearch;
+    if (onSaleOnly) params.on_sale = true;
+
+    publicCatalogApi
+      .listProducts(params)
+      .then((prodData) => {
+        if (reqId !== latestReqRef.current) return;
+        setProducts(prodData.items || []);
+        setTotalMatching(prodData.total ?? (prodData.items?.length || 0));
+      })
+      .catch(() => {
+        if (reqId !== latestReqRef.current) return;
+        setError('Unable to load products for this category right now.');
+      })
+      .finally(() => {
+        if (reqId === latestReqRef.current) {
+          setProductsLoading(false);
+        }
+      });
+  }, [slug, debouncedSearch, sortBy, onSaleOnly]);
+
   useEffect(() => {
-    loadCategoryAndProducts();
-  }, [loadCategoryAndProducts]);
+    loadProducts();
+  }, [loadProducts]);
+
+  const hasFilters = Boolean(debouncedSearch || sortBy !== 'newest' || onSaleOnly);
+
+  const resetFilters = () => {
+    setSearchInput('');
+    setDebouncedSearch('');
+    setSortBy('newest');
+    setOnSaleOnly(false);
+  };
 
   const handleAddToCart = async (e, prod) => {
     e.preventDefault();
@@ -93,15 +155,23 @@ const CategoryDetailPage = () => {
 
   return (
     <StorefrontLayout>
-      <div className="mb-6">
-        <Link
-          to="/categories"
-          className="text-xs font-semibold text-[#FF6B0A] hover:text-[#D94300] hover:underline inline-flex items-center gap-1.5"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
-          <span>All Categories</span>
+      {/* Breadcrumb Navigation */}
+      <nav
+        aria-label="Breadcrumb"
+        className="mb-6 flex flex-wrap items-center gap-1.5 text-[13px] font-medium text-[#64748B]"
+      >
+        <Link to="/" className="hover:text-[#0F172A] transition-colors">
+          Home
         </Link>
-      </div>
+        <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" aria-hidden="true" />
+        <Link to="/categories" className="hover:text-[#0F172A] transition-colors">
+          Categories
+        </Link>
+        <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" aria-hidden="true" />
+        <span className="text-[#0F172A] font-semibold">
+          {category ? category.name : 'Collection'}
+        </span>
+      </nav>
 
       {toast.message && (
         <ToastBanner
@@ -111,34 +181,161 @@ const CategoryDetailPage = () => {
         />
       )}
 
-      {loading ? (
-        <ProductCardSkeleton count={6} />
+      {categoryLoading ? (
+        <ProductCardSkeleton
+          count={4}
+          gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        />
       ) : error || !category ? (
-        <ErrorAlert message={error || 'Category not found.'} onRetry={loadCategoryAndProducts} />
+        <ErrorAlert
+          message={error || 'Category not found.'}
+          onRetry={loadProducts}
+        />
       ) : (
-        <>
-          <SectionHeading
-            eyebrow={`Category Collection (${category.product_count} Products)`}
-            title={category.name}
-            subtitle={category.description}
-          />
+        <div className="space-y-8">
+          {/* Category Hero Header */}
+          <section className="relative overflow-hidden rounded-2xl bg-white border border-[#E5E7EB] p-6 sm:p-8 shadow-xs">
+            <div
+              className={`absolute inset-x-0 top-0 h-1 ${theme.accentLineClass}`}
+              aria-hidden="true"
+            />
 
-          {products.length === 0 ? (
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+              <div className="space-y-3 max-w-2xl">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <div
+                    className={`w-12 h-12 rounded-xl border flex items-center justify-center shrink-0 ${theme.iconBoxClass}`}
+                  >
+                    <CategoryVisualIcon theme={theme} className="w-6 h-6" />
+                  </div>
+                  <span
+                    className={`inline-flex items-center rounded-full border px-3 py-1 text-[12px] font-semibold tabular-nums ${theme.badgeClass}`}
+                  >
+                    {category.product_count}{' '}
+                    {category.product_count === 1 ? 'product available' : 'products available'}
+                  </span>
+                  {theme.disciplineIcons?.length > 0 && (
+                    <span className="inline-flex items-center gap-2 rounded-full border border-[#D5DEE8] bg-[#F8FAFC] px-3 py-1 text-[12px] font-medium text-[#64748B]">
+                      <CategoryDisciplineStrip icons={theme.disciplineIcons} className="w-3.5 h-3.5" />
+                      <span>{theme.disciplineLabel}</span>
+                    </span>
+                  )}
+                </div>
+
+                <h1 className="text-[32px] sm:text-[38px] leading-[1.15] font-bold tracking-tight text-[#0F172A]">
+                  {category.name}
+                </h1>
+
+                {category.description && (
+                  <p className="text-[15px] sm:text-[16px] leading-relaxed font-normal text-[#475569]">
+                    {category.description}
+                  </p>
+                )}
+              </div>
+
+              {/* Category Filter & Sort Toolbar */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+                <div className="relative flex-1 sm:w-60">
+                  <label htmlFor="category-product-search" className="sr-only">
+                    Search in {category.name}
+                  </label>
+                  <Search
+                    className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                    aria-hidden="true"
+                  />
+                  <input
+                    id="category-product-search"
+                    type="search"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    placeholder={`Search ${category.name}...`}
+                    className="dv-input pl-10 pr-3.5 py-2 text-[13px]"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2.5">
+                  <label htmlFor="category-sort" className="sr-only">
+                    Sort products
+                  </label>
+                  <select
+                    id="category-sort"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="dv-input px-3 py-2 text-[13px] font-medium sm:w-44"
+                  >
+                    <option value="newest">Sort: Newest</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                    <option value="popularity">Most Popular</option>
+                  </select>
+
+                  <label className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-[#E5E7EB] bg-[#F8FAFC] text-[13px] font-medium text-[#1E293B] cursor-pointer select-none whitespace-nowrap hover:bg-white transition">
+                    <input
+                      type="checkbox"
+                      checked={onSaleOnly}
+                      onChange={(e) => setOnSaleOnly(e.target.checked)}
+                      className="accent-[#2563EB]"
+                    />
+                    <span>On sale</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {hasFilters && !productsLoading && (
+              <div className="mt-4 pt-3.5 border-t border-[#F1F5F9] flex flex-wrap items-center justify-between gap-2 text-[13px] text-[#64748B]">
+                <span>
+                  Showing <strong className="text-[#0F172A]">{totalMatching}</strong> matching{' '}
+                  {totalMatching === 1 ? 'result' : 'results'} in {category.name}
+                </span>
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="inline-flex items-center gap-1.5 font-semibold text-[#2563EB] hover:text-[#1D4ED8]"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Reset filters</span>
+                </button>
+              </div>
+            )}
+          </section>
+
+          {/* Product Grid */}
+          {productsLoading ? (
+            <ProductCardSkeleton
+              count={4}
+              gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            />
+          ) : products.length === 0 ? (
             <EmptyState
               icon={FolderTree}
-              title="No active products in this category yet"
-              description="Check back soon or browse our full digital product catalog."
+              title={
+                hasFilters
+                  ? 'No matching products in this category'
+                  : 'No active products in this category yet'
+              }
+              description={
+                hasFilters
+                  ? 'Try clearing your search terms or toggling the active deals filter.'
+                  : 'Check back soon or browse our full digital product catalog.'
+              }
               action={
-                <Link
-                  to="/products"
-                  className="dv-btn-primary inline-block text-xs font-semibold uppercase tracking-wider px-5 py-2.5"
-                >
-                  Browse All Products
-                </Link>
+                hasFilters ? (
+                  <Button variant="secondary" size="sm" onClick={resetFilters}>
+                    Reset category filters
+                  </Button>
+                ) : (
+                  <Link
+                    to="/products"
+                    className="dv-btn-primary inline-block text-xs font-semibold px-5 py-2.5"
+                  >
+                    Browse all products
+                  </Link>
+                )
               }
             />
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
               {products.map((prod) => (
                 <ProductCard
                   key={prod.id}
@@ -149,7 +346,7 @@ const CategoryDetailPage = () => {
               ))}
             </div>
           )}
-        </>
+        </div>
       )}
     </StorefrontLayout>
   );

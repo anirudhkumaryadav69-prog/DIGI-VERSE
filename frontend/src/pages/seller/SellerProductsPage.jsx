@@ -23,7 +23,7 @@ import { sellerApi } from '../../services/api';
 
 const STATUS_BADGE = {
   published: { label: 'Published', variant: 'success' },
-  pending_review: { label: 'Pending Review', variant: 'orange' },
+  pending_review: { label: 'Pending Review', variant: 'warning' },
   draft: { label: 'Draft', variant: 'neutral' },
   rejected: { label: 'Rejected', variant: 'danger' },
   archived: { label: 'Archived', variant: 'neutral' },
@@ -109,14 +109,13 @@ const SellerProductsPage = () => {
     >
       <div className="space-y-5">
         <ToastBanner
-          type={toast.type}
-          message={toast.message}
+          toast={toast}
           onDismiss={() => setToast({ type: '', message: '' })}
         />
 
         <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 flex flex-col sm:flex-row gap-3 justify-between">
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-[#8490A0] absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
             <input
               type="search"
               value={search}
@@ -124,8 +123,9 @@ const SellerProductsPage = () => {
                 setSearch(e.target.value);
                 setPage(1);
               }}
+              aria-label="Search your products"
               placeholder="Search your products..."
-              className="dv-input pl-10 text-sm"
+              className="dv-input pl-10 pr-3.5 py-2 text-[13px]"
             />
           </div>
 
@@ -152,7 +152,7 @@ const SellerProductsPage = () => {
             <LoadingState label="Loading your catalog..." />
           ) : !data.items.length ? (
             <div className="p-10 text-center space-y-3">
-              <p className="text-sm font-semibold text-[#1F2937]">No seller products found</p>
+              <p className="text-sm font-semibold text-[#263445]">No seller products found</p>
               <p className="text-xs text-[#64748B]">
                 Create your first digital asset listing and submit it for administrator approval.
               </p>
@@ -164,7 +164,7 @@ const SellerProductsPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-[#FFF6ED] border-b border-[#E5E7EB] text-[#64748B] uppercase tracking-wider text-[10px]">
+                  <tr className="bg-[#F8FAFC] border-b border-[#E5E7EB] text-[#64748B] font-semibold text-[12px]">
                     <th className="py-3.5 px-4">Product</th>
                     <th className="py-3.5 px-4">Price</th>
                     <th className="py-3.5 px-4">Digital Asset</th>
@@ -176,10 +176,10 @@ const SellerProductsPage = () => {
                   {data.items.map((p) => {
                     const st = STATUS_BADGE[p.approval_status] || STATUS_BADGE.draft;
                     return (
-                      <tr key={p.id} className="hover:bg-[#FFFAF5]">
+                      <tr key={p.id} className="hover:bg-[#EAF4FC]">
                         <td className="py-3.5 px-4">
                           <div className="min-w-0">
-                            <p className="font-semibold text-[#1F2937]">{p.name}</p>
+                            <p className="font-semibold text-[#263445]">{p.name}</p>
                             <p className="text-[11px] font-mono text-[#64748B]">{p.slug}</p>
                             {p.approval_status === 'rejected' && p.rejection_reason && (
                               <p className="text-[11px] text-red-600 mt-1">
@@ -189,15 +189,15 @@ const SellerProductsPage = () => {
                           </div>
                         </td>
                         <td className="py-3.5 px-4 font-mono">
-                          <span className="font-bold text-[#F4510B]">{formatINR(p.effective_price)}</span>
+                          <span className="font-bold text-[#1D4ED8]">{formatINR(p.effective_price)}</span>
                           {p.is_on_sale && (
-                            <span className="text-[#8490A0] line-through ml-1.5 text-[11px]">
+                            <span className="text-[#64748B] line-through ml-1.5 text-[11px]">
                               {formatINR(p.original_price)}
                             </span>
                           )}
                         </td>
                         <td className="py-3.5 px-4">
-                          <Badge variant={p.asset?.has_asset ? 'orange' : 'neutral'}>
+                          <Badge variant={p.asset?.has_asset ? 'accent' : 'neutral'}>
                             {p.asset?.has_asset ? p.asset.filename : 'Missing File'}
                           </Badge>
                         </td>
@@ -205,7 +205,7 @@ const SellerProductsPage = () => {
                           <div className="flex flex-col gap-1 items-start">
                             <Badge variant={st.variant}>{st.label}</Badge>
                             {p.approval_status === 'published' && !p.is_active && (
-                              <span className="text-[10px] text-[#64748B]">Unpublished (hidden)</span>
+                              <span className="text-[11px] text-[#64748B]">Unpublished (hidden)</span>
                             )}
                           </div>
                         </td>
@@ -219,7 +219,7 @@ const SellerProductsPage = () => {
                                   handleStatusAction(p, 'submit_for_review', 'Submitted for Review')
                                 }
                                 title="Submit for Admin Review"
-                                className="px-2.5 py-1.5 rounded-lg border border-[#FFD4AE] bg-[#FFF2E6] text-[#D94300] hover:bg-[#FFE9D6] font-semibold inline-flex items-center gap-1"
+                                className="px-2.5 py-1.5 rounded-lg border border-[#BFDBFE] bg-[#EAF4FC] text-[#1D4ED8] hover:bg-[#DCE6EF] font-semibold inline-flex items-center gap-1"
                               >
                                 <Send className="w-3 h-3" />
                                 <span>Submit</span>
@@ -231,7 +231,7 @@ const SellerProductsPage = () => {
                                 disabled={busyId === p.id}
                                 onClick={() => handleStatusAction(p, 'unpublish', 'Unpublished')}
                                 title="Unpublish listing"
-                                className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#FFD4AE] text-[#243247]"
+                                className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#93C5FD] text-[#263445]"
                               >
                                 <EyeOff className="w-3.5 h-3.5" />
                               </button>
@@ -242,7 +242,7 @@ const SellerProductsPage = () => {
                                 disabled={busyId === p.id}
                                 onClick={() => handleStatusAction(p, 'archive', 'Archived')}
                                 title="Archive product"
-                                className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#FFD4AE] text-[#243247]"
+                                className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#93C5FD] text-[#263445]"
                               >
                                 <Archive className="w-3.5 h-3.5" />
                               </button>
@@ -250,7 +250,7 @@ const SellerProductsPage = () => {
                             <Link
                               to={`/seller/products/${p.id}/edit`}
                               title="Edit Product & Assets"
-                              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#FFD4AE] text-[#243247]"
+                              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#93C5FD] text-[#263445]"
                             >
                               <Edit3 className="w-3.5 h-3.5" />
                             </Link>
@@ -272,9 +272,9 @@ const SellerProductsPage = () => {
             </div>
           )}
 
-          <div className="p-4 border-t border-[#E5E7EB] bg-[#FFF6ED] flex items-center justify-between text-xs text-[#64748B]">
+          <div className="p-4 border-t border-[#E5E7EB] bg-[#F8FAFC] flex items-center justify-between text-xs text-[#64748B]">
             <span>
-              Total: <strong className="text-[#1F2937]">{data.total}</strong> products
+              Total: <strong className="text-[#263445]">{data.total}</strong> products
             </span>
             <div className="flex items-center gap-2">
               <button

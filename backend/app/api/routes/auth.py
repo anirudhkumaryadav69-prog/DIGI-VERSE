@@ -1,6 +1,6 @@
 from typing import Literal
 
-from fastapi import APIRouter, Depends, Query, Request, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
@@ -82,13 +82,19 @@ def register(
     response: Response,
     db: Session = Depends(get_db),
 ) -> CustomerAuthResponse:
-    customer, access_token, refresh_token = register_customer(
-        db=db,
-        payload=payload,
-        ip_address=get_client_ip(request),
-        valid_inet=get_valid_inet_or_none(request),
-        user_agent=request.headers.get("user-agent"),
-    )
+    try:
+        customer, access_token, refresh_token, otp_delivery = register_customer(
+            db=db,
+            payload=payload,
+            ip_address=get_client_ip(request),
+            valid_inet=get_valid_inet_or_none(request),
+            user_agent=request.headers.get("user-agent"),
+        )
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="OTP delivery is disabled or misconfigured.",
+        ) from exc
     db.commit()
     db.refresh(customer)
     csrf = set_customer_auth_cookies(response, access_token, refresh_token)
@@ -97,6 +103,8 @@ def register(
         customer=CustomerProfileResponse.model_validate(customer),
         requires_phone_verification=not customer.is_phone_verified,
         csrf_token=csrf,
+        otp_delivery_status=otp_delivery.status,
+        otp_delivery_detail=otp_delivery.safe_detail,
     )
 
 
@@ -201,10 +209,33 @@ def send_phone_otp(
     customer: Customer = Depends(get_current_customer),
     db: Session = Depends(get_db),
 ) -> GenericMessageResponse:
-    request_customer_phone_otp(db, customer)
+    try:
+        _, otp_delivery = request_customer_phone_otp(db, customer)
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="OTP delivery is disabled or misconfigured.",
+        ) from exc
+    if otp_delivery.status == "failed":
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=otp_delivery.safe_detail or "OTP delivery provider could not accept the request.",
+        )
+    if otp_delivery.status == "disabled":
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="OTP delivery is disabled.",
+        )
     db.commit()
+    message = (
+        "Development OTP is available in the backend terminal. No WhatsApp message was sent."
+        if otp_delivery.status == "development_only"
+        else "A verification code has been accepted for delivery."
+    )
     return GenericMessageResponse(
-        message="A verification code has been sent to your phone number."
+        message=message,
+        delivery_status=otp_delivery.status,
+        delivery_detail=otp_delivery.safe_detail,
     )
 
 
@@ -308,7 +339,13 @@ def request_phone_number_change(
     customer: Customer = Depends(get_current_customer),
     db: Session = Depends(get_db),
 ) -> CustomerProfileResponse:
-    updated = initiate_customer_phone_change(db, customer, payload)
+    try:
+        updated = initiate_customer_phone_change(db, customer, payload)
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="OTP delivery is disabled or misconfigured.",
+        ) from exc
     db.commit()
     db.refresh(updated)
     return CustomerProfileResponse.model_validate(updated)

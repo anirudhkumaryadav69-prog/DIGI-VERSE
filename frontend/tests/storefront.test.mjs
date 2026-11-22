@@ -259,6 +259,41 @@ test('11. Phase 10.1 Seller Financial Dashboard is routed and uses backend finan
   assert.ok(page.includes('Pagination'));
 });
 
+test('16. OTP verification UI distinguishes development, WhatsApp, and resend states', () => {
+  const verifyPage = readSrc('pages/auth/VerifyPhonePage.jsx');
+  const authApi = readSrc('services/api.js');
+
+  assert.ok(verifyPage.includes('Development mode'));
+  assert.ok(verifyPage.includes('WhatsApp'));
+  assert.ok(verifyPage.includes('otpDeliveryStatus'));
+  assert.ok(authApi.includes("verifyOtp"));
+  assert.ok(authApi.includes("sendOtp"));
+});
+
+test('15. Phase 10.2 Stage 6.3 Payout operations includes verification and reconciliation interfaces', () => {
+  const api = readSrc('services/api.js');
+  const page = readSrc('pages/admin/AdminPayoutPage.jsx');
+
+  for (const method of [
+    'listVerification',
+    'getAccount',
+    'approveAccount',
+    'rejectAccount',
+    'getHistory',
+  ]) {
+    assert.ok(api.includes(method), `Payout account verification API must expose ${method}`);
+  }
+  assert.ok(page.includes("id: 'overview'"));
+  assert.ok(page.includes("id: 'requests'"));
+  assert.ok(page.includes("id: 'reconciliation'"));
+  assert.ok(page.includes("id: 'verification'"));
+  assert.ok(page.includes("id: 'reports'"));
+  assert.ok(page.includes('Record reconciliation resolution'));
+  assert.ok(page.includes('Mandatory reason'));
+  assert.ok(page.includes('No real money was transferred'));
+  assert.ok(page.includes('Payout account verification'));
+});
+
 test('12. Phase 10.1 Admin Financial Management is guarded and integrates all financial endpoints', () => {
   const routes = readSrc('routes/AppRoutes.jsx');
   const layout = readSrc('layouts/AdminLayout.jsx');
@@ -285,4 +320,182 @@ test('12. Phase 10.1 Admin Financial Management is guarded and integrates all fi
   assert.ok(page.includes('Commission report'));
   assert.ok(page.includes('Commission history'));
   assert.ok(page.includes('aria-label="Seller filter"'));
+});
+
+test('13. Phase 10.2 Seller Payout Dashboard exposes backend balances and masked account management', () => {
+  const routes = readSrc('routes/AppRoutes.jsx');
+  const layout = readSrc('layouts/SellerLayout.jsx');
+  const api = readSrc('services/api.js');
+  const page = readSrc('pages/seller/SellerPayoutPage.jsx');
+
+  assert.ok(routes.includes('<Route path="/seller/payouts" element={<SellerPayoutPage />} />'));
+  assert.ok(layout.includes("to: '/seller/payouts'"));
+  for (const method of [
+    'getBalance',
+    'listAccounts',
+    'createAccount',
+    'updateAccount',
+    'setDefaultAccount',
+    'deactivateAccount',
+    'createRequest',
+    'listRequests',
+    'getRequest',
+    'cancelRequest',
+    'getAttempts',
+  ]) {
+    assert.ok(api.includes(method), `Seller payout API must expose ${method}`);
+  }
+  assert.ok(page.includes('Signed payable'));
+  assert.ok(page.includes('Outstanding debt'));
+  assert.ok(page.includes('Reserved payout'));
+  assert.ok(page.includes('Available withdrawal'));
+  assert.ok(page.includes('Settled payout'));
+  assert.ok(page.includes('No money has been transferred'));
+  assert.ok(page.includes('Payout request history'));
+  assert.ok(page.includes('Execution timeline'));
+  assert.ok(page.includes('Simulated execution'));
+  assert.ok(page.includes('Edit masked payout account') || page.includes('>Edit<'));
+  assert.ok(page.includes('LoadingState'));
+});
+
+test('14. Phase 10.2 Admin Payout Dashboard exposes review, approval, rejection and reporting', () => {
+  const routes = readSrc('routes/AppRoutes.jsx');
+  const layout = readSrc('layouts/AdminLayout.jsx');
+  const api = readSrc('services/api.js');
+  const page = readSrc('pages/admin/AdminPayoutPage.jsx');
+
+  assert.ok(routes.includes('<Route path="/admin/payouts" element={<AdminPayoutPage />} />'));
+  assert.ok(layout.includes("to: '/admin/payouts'"));
+  for (const method of [
+    'listRequests',
+    'getRequest',
+    'reviewRequest',
+    'approveRequest',
+    'rejectRequest',
+    'getReport',
+    'getDetail',
+    'executeRequest',
+    'retryRequest',
+    'listAttempts',
+    'listReconciliation',
+    'getReconciliationSummary',
+    'getReconciliationDetail',
+    'resolveReconciliation',
+  ]) {
+    assert.ok(api.includes(method), `Admin payout API must expose ${method}`);
+  }
+  assert.ok(page.includes('Payout Management'));
+  assert.ok(page.includes('Mandatory rejection reason'));
+  assert.ok(page.includes('does not execute or confirm a money transfer'));
+  assert.ok(page.includes('Apply filters'));
+  assert.ok(page.includes('LoadingState'));
+  assert.ok(page.includes('Pagination'));
+});
+
+test('17. Stage A: Razorpay Checkout SDK loads lazily, prevents duplicates, and handles load errors', async () => {
+  const indexHtml = fs.readFileSync(path.join(FRONTEND_ROOT, 'index.html'), 'utf8');
+  assert.ok(
+    !indexHtml.includes('checkout.razorpay.com'),
+    'index.html must not statically load Razorpay Checkout SDK globally'
+  );
+
+  const checkoutSrc = readSrc('pages/customer/CheckoutPage.jsx');
+  assert.ok(checkoutSrc.includes('loadRazorpaySdk'), 'CheckoutPage must use lazy loadRazorpaySdk');
+  assert.ok(checkoutSrc.includes('payment.failed'), 'CheckoutPage must handle Razorpay payment.failed events');
+
+  const vercelJson = JSON.parse(fs.readFileSync(path.join(FRONTEND_ROOT, 'vercel.json'), 'utf8'));
+  assert.ok(
+    !JSON.stringify(vercelJson).includes('REPLACE-WITH-YOUR-STAGING-API-HOST'),
+    'vercel.json must not contain placeholder backend hostnames'
+  );
+  assert.ok(
+    vercelJson.rewrites?.some((r) => r.source === '/(.*)' && r.destination === '/index.html'),
+    'vercel.json must preserve SPA fallback rewrite'
+  );
+
+  const { loadRazorpaySdk, RAZORPAY_CHECKOUT_SCRIPT_URL, resetRazorpayLoaderForTests } = await import(
+    '../src/utils/razorpay.js'
+  );
+
+  const createMockDom = () => {
+    const scripts = [];
+    const defaultView = {};
+    const makeScript = () => {
+      const listeners = {};
+      const el = {
+        src: '',
+        async: false,
+        dataset: {},
+        addEventListener: (evt, fn) => {
+          listeners[evt] = listeners[evt] || [];
+          listeners[evt].push(fn);
+        },
+        removeEventListener: (evt, fn) => {
+          listeners[evt] = (listeners[evt] || []).filter((f) => f !== fn);
+        },
+        dispatch: (evt) => {
+          for (const fn of [...(listeners[evt] || [])]) fn();
+        },
+        remove: () => {
+          const idx = scripts.indexOf(el);
+          if (idx >= 0) scripts.splice(idx, 1);
+        },
+      };
+      return el;
+    };
+    const doc = {
+      defaultView,
+      head: {
+        appendChild: (el) => {
+          scripts.push(el);
+        },
+      },
+      createElement: (tag) => {
+        assert.equal(tag, 'script');
+        return makeScript();
+      },
+      querySelector: (sel) => {
+        if (sel.includes(RAZORPAY_CHECKOUT_SCRIPT_URL)) {
+          return scripts.find((s) => s.src === RAZORPAY_CHECKOUT_SCRIPT_URL) || null;
+        }
+        return null;
+      },
+    };
+    return { doc, defaultView, scripts };
+  };
+
+  // 1. Concurrent calls inject only a single script tag
+  resetRazorpayLoaderForTests();
+  const dom1 = createMockDom();
+  const p1 = loadRazorpaySdk({ doc: dom1.doc, timeoutMs: 2000 });
+  const p2 = loadRazorpaySdk({ doc: dom1.doc, timeoutMs: 2000 });
+  assert.equal(dom1.scripts.length, 1);
+  assert.equal(dom1.scripts[0].src, RAZORPAY_CHECKOUT_SCRIPT_URL);
+  function MockRazorpay() {}
+  dom1.defaultView.Razorpay = MockRazorpay;
+  dom1.scripts[0].dispatch('load');
+  const [ctor1, ctor2] = await Promise.all([p1, p2]);
+  assert.equal(ctor1, MockRazorpay);
+  assert.equal(ctor2, MockRazorpay);
+
+  // 2. Script load error rejects clearly and allows retry without duplicate lingering scripts
+  resetRazorpayLoaderForTests();
+  const dom2 = createMockDom();
+  const errPromise = loadRazorpaySdk({ doc: dom2.doc, timeoutMs: 2000 });
+  assert.equal(dom2.scripts.length, 1);
+  dom2.scripts[0].dispatch('error');
+  await assert.rejects(errPromise, /Unable to load the Razorpay payment gateway/);
+
+  const retryPromise = loadRazorpaySdk({ doc: dom2.doc, timeoutMs: 2000 });
+  assert.equal(dom2.scripts.length, 1);
+  dom2.defaultView.Razorpay = MockRazorpay;
+  dom2.scripts[0].dispatch('load');
+  assert.equal(await retryPromise, MockRazorpay);
+
+  // 3. Load event without window.Razorpay rejects cleanly
+  resetRazorpayLoaderForTests();
+  const dom3 = createMockDom();
+  const missingCtorPromise = loadRazorpaySdk({ doc: dom3.doc, timeoutMs: 2000 });
+  dom3.scripts[0].dispatch('load');
+  await assert.rejects(missingCtorPromise, /window\.Razorpay is unavailable/);
 });
