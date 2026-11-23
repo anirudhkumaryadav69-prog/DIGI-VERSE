@@ -439,6 +439,17 @@ def test_disabled_email_and_whatsapp_providers_fail_honestly(monkeypatch):
 # ---------------------------------------------------------------------------
 
 
+def _resolve_vercel_cache_control(header_rules: list[dict], path: str) -> str | None:
+    """Resolve effective Cache-Control under sequential vercel.json header rule order."""
+    val = None
+    for rule in header_rules:
+        if re.match("^" + rule["source"] + "$", path):
+            for hdr in rule["headers"]:
+                if hdr["key"].lower() == "cache-control":
+                    val = hdr["value"]
+    return val
+
+
 def test_cookie_security_attributes_and_vercel_json_routing_preserved(monkeypatch):
     monkeypatch.setattr(settings, "COOKIE_SECURE", True)
     monkeypatch.setattr(settings, "COOKIE_DOMAIN", None)
@@ -466,13 +477,50 @@ def test_cookie_security_attributes_and_vercel_json_routing_preserved(monkeypatc
     assert "samesite=strict" in adm_access_hdr.lower()
     assert "domain=" not in adm_access_hdr.lower()
 
-    # Verify vercel.json has no invented Render placeholder and still excludes /api/
-    vercel_cfg = json.loads((REPO_ROOT / "frontend" / "vercel.json").read_text(encoding="utf-8"))
+    # Verify vercel.json configures the external Render API reverse proxy while preserving SPA fallback and cache policy
+    vercel_text = (REPO_ROOT / "frontend" / "vercel.json").read_text(encoding="utf-8")
+    assert "<RENDER_API_HOST>" not in vercel_text
+    assert "REPLACE-WITH-YOUR-STAGING-API-HOST" not in vercel_text
+
+    vercel_cfg = json.loads(vercel_text)
     rewrites = vercel_cfg.get("rewrites", [])
-    assert len(rewrites) == 1
-    assert rewrites[0]["source"] == "/((?!api/).*)"
-    assert rewrites[0]["destination"] == "/index.html"
-    assert "onrender.com" not in json.dumps(vercel_cfg).lower()
+    assert len(rewrites) == 2
+
+    api_idx = next(
+        i for i, r in enumerate(rewrites)
+        if r.get("source") == "/api/:path*"
+    )
+    spa_idx = next(
+        i for i, r in enumerate(rewrites)
+        if r.get("destination") == "/index.html"
+    )
+    assert api_idx < spa_idx
+    assert rewrites[api_idx]["destination"] == "https://digi-verse-backend.onrender.com/api/:path*"
+
+    spa_rewrite = rewrites[spa_idx]
+    assert spa_rewrite["source"] == "/((?!api/).*)"
+    assert spa_rewrite["destination"] == "/index.html"
+
+    for api_path in ("/api/health", "/api/ready", "/api/auth/me", "/api/products", "/api/banners", "/api/uploads/images/sample.png"):
+        assert re.fullmatch(spa_rewrite["source"], api_path) is None
+    for api_proxy_path in ("/api", "/api/health", "/api/ready", "/api/auth/me", "/api/uploads/images/sample.png"):
+        assert re.fullmatch(r"/api(?:/.*)?", api_proxy_path) is not None
+    for spa_path in ("/", "/products", "/categories", "/admin/login", "/seller"):
+        assert re.fullmatch(spa_rewrite["source"], spa_path) is not None
+
+    headers_rules = vercel_cfg.get("headers", [])
+    api_hdr_idx = next(i for i, h in enumerate(headers_rules) if h.get("source") == "/api/(.*)")
+    img_hdr_idx = next(i for i, h in enumerate(headers_rules) if h.get("source") == "/api/uploads/images/(.*)")
+    assert api_hdr_idx < img_hdr_idx
+
+    for api_path in ("/api/health", "/api/ready", "/api/products", "/api/auth/me"):
+        cc = _resolve_vercel_cache_control(headers_rules, api_path)
+        assert cc is not None and "no-store" in cc
+        assert cc == "no-store, no-cache, must-revalidate"
+    assert (
+        _resolve_vercel_cache_control(headers_rules, "/api/uploads/images/0123456789abcdef0123456789abcdef.png")
+        == "public, max-age=86400"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -665,20 +713,15 @@ def test_render_blueprint_and_documented_vercel_cache_headers():
     assert m is not None
     doc_vercel = json.loads(m.group(1))
 
-    # Simulate sequential Vercel header rule evaluation (later matching rules overwrite same header key)
-    def resolve_cache_control(path: str) -> str | None:
-        val = None
-        for rule in doc_vercel["headers"]:
-            pattern = "^" + rule["source"] + "$"
-            if re.match(pattern, path):
-                for hdr in rule["headers"]:
-                    if hdr["key"].lower() == "cache-control":
-                        val = hdr["value"]
-        return val
-
-    assert resolve_cache_control("/api/products") == "no-store, no-cache, must-revalidate"
-    assert resolve_cache_control("/api/auth/me") == "no-store, no-cache, must-revalidate"
-    assert resolve_cache_control("/api/uploads/images/0123456789abcdef0123456789abcdef.png") == "public, max-age=86400"
+    assert _resolve_vercel_cache_control(doc_vercel["headers"], "/api/products") == "no-store, no-cache, must-revalidate"
+    assert _resolve_vercel_cache_control(doc_vercel["headers"], "/api/auth/me") == "no-store, no-cache, must-revalidate"
+    assert (
+        _resolve_vercel_cache_control(
+            doc_vercel["headers"],
+            "/api/uploads/images/0123456789abcdef0123456789abcdef.png",
+        )
+        == "public, max-age=86400"
+    )
 
     rewrites = doc_vercel["rewrites"]
     assert rewrites[0]["source"] == "/api/:path*"
