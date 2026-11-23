@@ -288,17 +288,77 @@ class MockPaymentProvider(PaymentGatewayProvider):
         )
 
 
+class DisabledPaymentProvider(PaymentGatewayProvider):
+    """Fail-closed payment adapter when live checkout is disabled or unconfigured in production."""
+
+    gateway_name = "disabled"
+
+    def __init__(self, reason: str = "Live payments are currently disabled in this environment.") -> None:
+        self._reason = reason
+
+    def _fail_unavailable(self) -> None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=self._reason,
+        )
+
+    def create_order(
+        self,
+        order_number: str,
+        amount: Decimal,
+        currency: str,
+        notes: Optional[dict[str, str]] = None,
+    ) -> GatewayOrderInitResult:
+        self._fail_unavailable()
+
+    def verify_payment_signature(
+        self,
+        gateway_order_id: str,
+        gateway_payment_id: str,
+        signature: str,
+    ) -> bool:
+        self._fail_unavailable()
+
+    def verify_webhook_signature(self, raw_body: bytes, signature: str) -> bool:
+        self._fail_unavailable()
+
+    def initiate_refund(
+        self,
+        gateway_payment_id: str,
+        amount: Decimal,
+    ) -> GatewayRefundResult:
+        self._fail_unavailable()
+
+
 razorpay_provider = RazorpayPaymentProvider()
 mock_payment_provider = MockPaymentProvider()
+disabled_payment_provider = DisabledPaymentProvider()
 
 
 def get_payment_provider() -> PaymentGatewayProvider:
-    provider_name = (settings.PAYMENT_PROVIDER or "razorpay").strip().lower()
-    if provider_name == "mock":
-        if settings.is_production:
+    state = settings.get_payment_provider_state()
+    if state == "mock":
+        if settings.is_production or settings.is_staging:
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Mock payment provider cannot be used in production.",
+                detail="Mock payment provider cannot be used in staging or production.",
             )
         return mock_payment_provider
+
+    if state == "disabled":
+        return disabled_payment_provider
+
+    if settings.is_production:
+        # In production, ONLY verified live credentials ('rzp_live_...') may execute checkout/refunds.
+        # Test credentials ('rzp_test_...') or missing keys must never execute as live checkout.
+        if state == "test":
+            return DisabledPaymentProvider(
+                "Live payments are disabled: Razorpay test credentials cannot process production checkout."
+            )
+        if state != "live":
+            return DisabledPaymentProvider(
+                "Live payment gateway credentials are not configured in this environment."
+            )
+        return razorpay_provider
+
     return razorpay_provider

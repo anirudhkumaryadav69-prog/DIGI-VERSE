@@ -224,7 +224,7 @@ def test_staging_workflows_a_to_e_end_to_end_simulation(
     monkeypatch.setattr(settings, "ASSET_STORAGE_SECRET_KEY", "staging_r2_sk_secret")
     monkeypatch.setattr(settings, "ASSET_STORAGE_USE_PATH_STYLE", True)
     monkeypatch.setattr(
-        "app.services.asset_storage_service.httpx.Client",
+        "app.services.s3_client.httpx.Client",
         lambda **kw: real_httpx_client(**{**kw, "transport": httpx.MockTransport(_s3_handler)}),
     )
 

@@ -5,7 +5,7 @@ from sqlalchemy import MetaData, create_engine, text
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
-from app.core.config import settings
+from app.core.config import build_postgres_connect_args, normalize_postgres_url, settings
 
 # Deterministic constraint names so Alembic migrations stay stable and reviewable.
 NAMING_CONVENTION = {
@@ -24,12 +24,17 @@ class Base(DeclarativeBase):
 
 
 def build_engine(url: str) -> Engine:
+    normalized_url = normalize_postgres_url(url) or url
     return create_engine(
-        url,
+        normalized_url,
         pool_pre_ping=True,
         pool_size=settings.DB_POOL_SIZE,
         max_overflow=settings.DB_MAX_OVERFLOW,
-        connect_args={"connect_timeout": settings.DB_CONNECT_TIMEOUT},
+        connect_args=build_postgres_connect_args(
+            normalized_url,
+            db_sslmode=settings.DB_SSLMODE,
+            connect_timeout=settings.DB_CONNECT_TIMEOUT,
+        ),
         echo=False,
     )
 

@@ -1012,11 +1012,11 @@ def upload_product_asset(
 
     old_storage_key = product.asset_storage_key
     old_storage_backend = product.asset_storage_backend
-    storage = get_asset_storage()
     stored_meta = None
 
     try:
         try:
+            storage = get_asset_storage()
             stored_meta = storage.save(
                 file_obj=spooled.spool,
                 storage_key=spooled.storage_key,

@@ -3,7 +3,7 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from app.core.config import settings
+from app.core.config import build_postgres_connect_args, normalize_postgres_url, settings
 from app.models import Base  # noqa: F401  - importing the package registers every model
 
 config = context.config
@@ -14,7 +14,8 @@ if config.config_file_name is not None:
 # Database URL always comes from environment-based settings (never from alembic.ini).
 # Programmatic callers (e.g. the test suite) may override it via config.attributes.
 # `%` must be escaped for ConfigParser interpolation (e.g. URL-encoded passwords).
-_database_url = config.attributes.get("database_url") or settings.DATABASE_URL
+_raw_database_url = config.attributes.get("database_url") or settings.DATABASE_URL
+_database_url = normalize_postgres_url(_raw_database_url) or _raw_database_url
 config.set_main_option("sqlalchemy.url", _database_url.replace("%", "%%"))
 
 target_metadata = Base.metadata
@@ -40,6 +41,11 @@ def run_migrations_online() -> None:
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        connect_args=build_postgres_connect_args(
+            _database_url,
+            db_sslmode=settings.DB_SSLMODE,
+            connect_timeout=settings.DB_CONNECT_TIMEOUT,
+        ),
     )
 
     with connectable.connect() as connection:

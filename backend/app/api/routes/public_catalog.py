@@ -3,7 +3,7 @@ from decimal import Decimal
 from typing import Any, Literal, Optional
 
 from fastapi import APIRouter, Depends, Query
-from fastapi.responses import FileResponse
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -124,24 +124,20 @@ def public_get_storefront(
 
 
 @router.get("/uploads/images/{filename}")
-def serve_uploaded_image(filename: str) -> FileResponse:
-    """Safely serve public product/category image assets with strict path-traversal protection."""
-    local_path = get_image_storage().resolve_local_path(filename)
-    ext = local_path.suffix.lower()
-    media_type_map = {
-        ".png": "image/png",
-        ".jpg": "image/jpeg",
-        ".jpeg": "image/jpeg",
-        ".webp": "image/webp",
+def serve_uploaded_image(filename: str) -> StreamingResponse:
+    """Safely serve public product/category/seller image assets from local or R2/S3 storage."""
+    handle = get_image_storage().open_image(filename)
+    headers = {
+        "Content-Disposition": "inline",
+        "X-Content-Type-Options": "nosniff",
+        "Cache-Control": "public, max-age=86400",
     }
-    return FileResponse(
-        path=local_path,
-        media_type=media_type_map.get(ext, "application/octet-stream"),
-        headers={
-            "Content-Disposition": "inline",
-            "X-Content-Type-Options": "nosniff",
-            "Cache-Control": "public, max-age=86400",
-        },
+    if handle.size_bytes is not None:
+        headers["Content-Length"] = str(handle.size_bytes)
+    return StreamingResponse(
+        handle.iter_chunks(),
+        media_type=handle.content_type or "application/octet-stream",
+        headers=headers,
     )
 
 

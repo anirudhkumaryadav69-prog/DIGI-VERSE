@@ -21,10 +21,8 @@ from app.models.customer import Customer
 from app.models.enums import ProductApprovalStatus, SellerApplicationStatus
 from app.models.order import Order, Payment
 from app.models.seller import SellerProfile
-from app.services import storage_service
 from app.services.catalog_service import _FORBIDDEN_PUBLIC_META_FRAGMENTS
 from app.services.payment_gateway import MockPaymentProvider
-from app.services.storage_service import LocalImageStorageProvider
 from scripts.seed_demo_catalog import (
     DEMO_CATEGORIES,
     DEMO_DISCLAIMER,
@@ -41,11 +39,8 @@ from scripts.seed_demo_catalog import (
 def _isolated_demo_image_storage(monkeypatch, tmp_path_factory):
     """Isolate uploaded demo PNG images in a temporary directory per test."""
     img_dir = tmp_path_factory.mktemp("digiverse_test_demo_images")
-    monkeypatch.setattr(
-        storage_service,
-        "_storage_provider",
-        LocalImageStorageProvider(base_dir=img_dir),
-    )
+    monkeypatch.setattr(settings, "IMAGE_STORAGE_BACKEND", "local")
+    monkeypatch.setattr(settings, "UPLOAD_DIR", str(img_dir))
     monkeypatch.setattr(settings, "PAYMENT_PROVIDER", "mock")
     return img_dir
 

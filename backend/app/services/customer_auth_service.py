@@ -32,8 +32,8 @@ from app.schemas.auth import (
     CustomerProfileUpdateRequest,
     CustomerRegisterRequest,
 )
-from app.services.email_service import get_email_provider
-from app.services.sms_service import SMSDeliveryResult, get_sms_provider
+from app.services.email_service import DisabledEmailProvider, EmailDeliveryError, get_email_provider
+from app.services.sms_service import DisabledSMSProvider, SMSDeliveryResult, get_sms_provider
 
 
 def _create_customer_session(
@@ -67,7 +67,16 @@ def issue_phone_otp_challenge(
     customer: Customer,
     target_phone: str,
     purpose: OTPPurpose,
-) -> tuple[PhoneOTPChallenge, SMSDeliveryResult]:
+) -> tuple[Optional[PhoneOTPChallenge], SMSDeliveryResult]:
+    sms_provider = get_sms_provider()
+    if isinstance(sms_provider, DisabledSMSProvider):
+        log_security_event("auth.otp_delivery_disabled", purpose=purpose.value)
+        return None, sms_provider.send_otp(
+            target_phone,
+            "",
+            settings.OTP_EXPIRE_MINUTES,
+        )
+
     now = datetime.now(timezone.utc)
     window_start = now - timedelta(minutes=settings.OTP_RATE_WINDOW_MINUTES)
 
@@ -112,7 +121,7 @@ def issue_phone_otp_challenge(
     db.add(challenge)
     db.flush()
 
-    delivery = get_sms_provider().send_otp(
+    delivery = sms_provider.send_otp(
         target_phone,
         otp_code,
         settings.OTP_EXPIRE_MINUTES,
@@ -280,7 +289,7 @@ def login_customer(
 def request_customer_phone_otp(
     db: Session,
     customer: Customer,
-) -> tuple[PhoneOTPChallenge, SMSDeliveryResult]:
+) -> tuple[Optional[PhoneOTPChallenge], SMSDeliveryResult]:
     if customer.pending_phone_number:
         return issue_phone_otp_challenge(
             db, customer, customer.pending_phone_number, OTPPurpose.PHONE_CHANGE
@@ -382,6 +391,14 @@ def verify_customer_phone_otp(db: Session, customer: Customer, otp_code: str) ->
 
 
 def initiate_forgot_password(db: Session, email: str, ip_address: Optional[str]) -> None:
+    email_provider = get_email_provider()
+    if isinstance(email_provider, DisabledEmailProvider):
+        log_security_event("auth.forgot_password_email_disabled", ip=ip_address)
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Password recovery is temporarily unavailable because email delivery is not configured.",
+        )
+
     customer = db.scalar(
         select(Customer).where(func.lower(Customer.email) == email.lower())
     )
@@ -410,7 +427,7 @@ def initiate_forgot_password(db: Session, email: str, ip_address: Optional[str])
     db.add(reset_entry)
     db.flush()
 
-    get_email_provider().send_password_reset_email(
+    email_provider.send_password_reset_email(
         customer.email, raw_token, settings.PASSWORD_RESET_EXPIRE_MINUTES
     )
 
@@ -625,6 +642,12 @@ def initiate_customer_phone_change(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="This phone number is already verified on your account.",
+        )
+
+    if isinstance(get_sms_provider(), DisabledSMSProvider):
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Phone number verification via OTP is currently unavailable.",
         )
 
     conflict = db.scalar(

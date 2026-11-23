@@ -27,6 +27,7 @@ import httpx
 from fastapi import HTTPException, UploadFile, status
 
 from app.core.config import settings
+from app.services.s3_client import S3ClientError, S3ObjectNotFoundError, S3SigV4Client
 
 BACKEND_ROOT = Path(__file__).resolve().parents[2]
 STREAM_READ_CHUNK_BYTES = 64 * 1024
@@ -741,28 +742,20 @@ class S3PrivateAssetStorageProvider(PrivateAssetStorageProvider):
         self.timeout_seconds = timeout_seconds or settings.ASSET_STORAGE_TIMEOUT_SECONDS
         self._transport = transport
 
-        if not self.bucket or not self.access_key or not self.secret_key:
-            raise AssetStorageError("S3 private asset storage is not completely configured.")
-
-    def _object_url_and_path(self, storage_key: str) -> tuple[str, str, str]:
-        clean_key = validate_storage_key(storage_key)
-        encoded_key = quote(clean_key, safe="/-_.~")
-        if self.endpoint_url:
-            parsed = urlparse(self.endpoint_url)
-            base_path = parsed.path.rstrip("/")
-            if self.use_path_style:
-                host = parsed.netloc
-                canonical_uri = f"{base_path}/{quote(self.bucket, safe='-_.~')}/{encoded_key}"
-                url = f"{parsed.scheme}://{host}{canonical_uri}"
-            else:
-                host = f"{self.bucket}.{parsed.netloc}"
-                canonical_uri = f"{base_path}/{encoded_key}"
-                url = f"{parsed.scheme}://{host}{canonical_uri}"
-        else:
-            host = f"{self.bucket}.s3.{self.region}.amazonaws.com"
-            canonical_uri = f"/{encoded_key}"
-            url = f"https://{host}{canonical_uri}"
-        return url, host, canonical_uri
+        try:
+            self._s3 = S3SigV4Client(
+                bucket=self.bucket,
+                region=self.region,
+                endpoint_url=self.endpoint_url,
+                access_key=self.access_key,
+                secret_key=self.secret_key,
+                use_path_style=self.use_path_style,
+                timeout_seconds=self.timeout_seconds,
+                require_https=settings.is_production,
+                transport=self._transport,
+            )
+        except S3ClientError as exc:
+            raise AssetStorageError("S3 private asset storage is not completely configured.") from exc
 
     def _signed_headers(
         self,
@@ -771,63 +764,13 @@ class S3PrivateAssetStorageProvider(PrivateAssetStorageProvider):
         payload_sha256: str = "UNSIGNED-PAYLOAD",
         extra_headers: Optional[dict[str, str]] = None,
     ) -> tuple[str, dict[str, str]]:
-        url, host, canonical_uri = self._object_url_and_path(storage_key)
-        now = datetime.now(timezone.utc)
-        amz_date = now.strftime("%Y%m%dT%H%M%SZ")
-        date_stamp = now.strftime("%Y%m%d")
-
-        headers_to_sign: dict[str, str] = {
-            "host": host,
-            "x-amz-content-sha256": payload_sha256,
-            "x-amz-date": amz_date,
-        }
-        outgoing_headers: dict[str, str] = {
-            "Host": host,
-            "x-amz-content-sha256": payload_sha256,
-            "x-amz-date": amz_date,
-        }
-        if extra_headers:
-            for k, v in extra_headers.items():
-                headers_to_sign[k.lower()] = v.strip()
-                outgoing_headers[k] = v.strip()
-
-        sorted_keys = sorted(headers_to_sign.keys())
-        canonical_headers = "".join(f"{k}:{headers_to_sign[k]}\n" for k in sorted_keys)
-        signed_headers_str = ";".join(sorted_keys)
-        canonical_request = "\n".join(
-            [
-                method.upper(),
-                canonical_uri,
-                "",
-                canonical_headers,
-                signed_headers_str,
-                payload_sha256,
-            ]
+        clean_key = validate_storage_key(storage_key)
+        return self._s3.signed_headers(
+            method=method,
+            key=clean_key,
+            payload_sha256=payload_sha256,
+            extra_headers=extra_headers,
         )
-
-        credential_scope = f"{date_stamp}/{self.region}/s3/aws4_request"
-        string_to_sign = "\n".join(
-            [
-                "AWS4-HMAC-SHA256",
-                amz_date,
-                credential_scope,
-                hashlib.sha256(canonical_request.encode("utf-8")).hexdigest(),
-            ]
-        )
-        k_date = _hmac_sha256(f"AWS4{self.secret_key}".encode("utf-8"), date_stamp)
-        k_region = _hmac_sha256(k_date, self.region)
-        k_service = _hmac_sha256(k_region, "s3")
-        k_signing = _hmac_sha256(k_service, "aws4_request")
-        signature = hmac.new(k_signing, string_to_sign.encode("utf-8"), hashlib.sha256).hexdigest()
-
-        outgoing_headers["Authorization"] = (
-            f"AWS4-HMAC-SHA256 Credential={self.access_key}/{credential_scope}, "
-            f"SignedHeaders={signed_headers_str}, Signature={signature}"
-        )
-        return url, outgoing_headers
-
-    def _client(self) -> httpx.Client:
-        return httpx.Client(timeout=self.timeout_seconds, transport=self._transport)
 
     def save(
         self,
@@ -837,39 +780,24 @@ class S3PrivateAssetStorageProvider(PrivateAssetStorageProvider):
         size_bytes: int,
         sha256_hex: Optional[str] = None,
     ) -> StoredAssetMetadata:
-        payload_hash = sha256_hex or "UNSIGNED-PAYLOAD"
-        url, headers = self._signed_headers(
-            method="PUT",
-            storage_key=storage_key,
-            payload_sha256=payload_hash,
-            extra_headers={
-                "Content-Type": content_type,
-                "Content-Length": str(size_bytes),
-            },
-        )
-        file_obj.seek(0)
-
-        def _iter_upload() -> Iterator[bytes]:
-            while True:
-                chunk = file_obj.read(STREAM_READ_CHUNK_BYTES)
-                if not chunk:
-                    break
-                yield chunk
-
+        clean_key = validate_storage_key(storage_key)
         try:
-            with self._client() as client:
-                resp = client.put(url, headers=headers, content=_iter_upload())
-            if resp.status_code not in (200, 201, 204):
-                raise AssetStorageError("Private object storage rejected asset upload.")
-            return StoredAssetMetadata(
-                storage_key=storage_key,
-                storage_backend=self.backend_name,
-                size_bytes=size_bytes,
+            res = self._s3.put_stream(
+                key=clean_key,
+                file_obj=file_obj,
                 content_type=content_type,
-                sha256=sha256_hex,
-                etag=(resp.headers.get("etag") or "").strip('"') or None,
+                size_bytes=size_bytes,
+                sha256_hex=sha256_hex,
             )
-        except httpx.HTTPError as exc:
+            return StoredAssetMetadata(
+                storage_key=clean_key,
+                storage_backend=self.backend_name,
+                size_bytes=res.size_bytes,
+                content_type=res.content_type,
+                sha256=res.sha256,
+                etag=res.etag,
+            )
+        except S3ClientError as exc:
             raise AssetStorageError("Private object storage upload failed.") from exc
 
     def open(
@@ -877,58 +805,24 @@ class S3PrivateAssetStorageProvider(PrivateAssetStorageProvider):
         storage_key: str,
         chunk_size: int = STREAM_READ_CHUNK_BYTES,
     ) -> AssetStreamHandle:
-        url, headers = self._signed_headers(method="GET", storage_key=storage_key, payload_sha256="UNSIGNED-PAYLOAD")
-        client = self._client()
-        stream_ctx = None
-        entered = False
+        clean_key = validate_storage_key(storage_key)
         try:
-            stream_ctx = client.stream("GET", url, headers=headers)
-            resp = stream_ctx.__enter__()
-            entered = True
-            if resp.status_code == 404:
-                raise AssetNotFoundError("Digital asset file not found in private storage.")
-            if resp.status_code >= 400:
-                raise AssetStorageError("Private object storage retrieval failed.")
-
-            content_len_raw = resp.headers.get("content-length")
-            size_bytes = int(content_len_raw) if content_len_raw and content_len_raw.isdigit() else None
-            content_type = resp.headers.get("content-type")
-
-            def _cleanup() -> None:
-                try:
-                    stream_ctx.__exit__(None, None, None)
-                finally:
-                    client.close()
-
+            res = self._s3.open_stream(key=clean_key, chunk_size=chunk_size)
             return AssetStreamHandle(
-                chunk_iterator=resp.iter_bytes(chunk_size=chunk_size),
-                close_callback=_cleanup,
-                size_bytes=size_bytes,
-                content_type=content_type,
+                chunk_iterator=res.chunk_iterator,
+                close_callback=res.close_callback,
+                size_bytes=res.size_bytes,
+                content_type=res.content_type,
             )
-        except AssetNotFoundError:
-            if entered and stream_ctx is not None:
-                stream_ctx.__exit__(None, None, None)
-            client.close()
-            raise
-        except httpx.HTTPError as exc:
-            if entered and stream_ctx is not None:
-                stream_ctx.__exit__(None, None, None)
-            client.close()
+        except S3ObjectNotFoundError as exc:
+            raise AssetNotFoundError("Digital asset file not found in private storage.") from exc
+        except S3ClientError as exc:
             raise AssetStorageError("Unable to stream asset from private object storage.") from exc
-        except Exception:
-            if entered and stream_ctx is not None:
-                stream_ctx.__exit__(None, None, None)
-            client.close()
-            raise
 
     def delete(self, storage_key: str) -> None:
         try:
-            url, headers = self._signed_headers(
-                method="DELETE", storage_key=storage_key, payload_sha256="UNSIGNED-PAYLOAD"
-            )
-            with self._client() as client:
-                client.delete(url, headers=headers)
+            clean_key = validate_storage_key(storage_key)
+            self._s3.delete_object(key=clean_key)
         except Exception:
             pass
 
@@ -939,33 +833,61 @@ class S3PrivateAssetStorageProvider(PrivateAssetStorageProvider):
             return False
 
     def get_metadata(self, storage_key: str) -> Optional[StoredAssetMetadata]:
-        url, headers = self._signed_headers(
-            method="HEAD", storage_key=storage_key, payload_sha256="UNSIGNED-PAYLOAD"
-        )
+        clean_key = validate_storage_key(storage_key)
         try:
-            with self._client() as client:
-                resp = client.head(url, headers=headers)
-            if resp.status_code == 404:
+            res = self._s3.head_object(key=clean_key)
+            if res is None:
                 return None
-            if resp.status_code >= 400:
-                raise AssetStorageError("Private object storage metadata lookup failed.")
-            length_raw = resp.headers.get("content-length")
-            size = int(length_raw) if length_raw and length_raw.isdigit() else 0
             return StoredAssetMetadata(
-                storage_key=storage_key,
+                storage_key=clean_key,
                 storage_backend=self.backend_name,
-                size_bytes=size,
-                content_type=resp.headers.get("content-type") or "application/octet-stream",
-                etag=(resp.headers.get("etag") or "").strip('"') or None,
+                size_bytes=res.size_bytes,
+                content_type=res.content_type,
+                etag=res.etag,
             )
-        except httpx.HTTPError as exc:
+        except S3ClientError as exc:
             raise AssetStorageError("Private object storage metadata lookup failed.") from exc
 
 
+class DisabledPrivateAssetStorageProvider(PrivateAssetStorageProvider):
+    """Fail-closed private asset provider when S3/R2 storage is disabled or unavailable."""
+
+    backend_name = "disabled"
+
+    def save(
+        self,
+        file_obj: BinaryIO,
+        storage_key: str,
+        content_type: str,
+        size_bytes: int,
+        sha256_hex: Optional[str] = None,
+    ) -> StoredAssetMetadata:
+        raise AssetStorageError("Private digital asset storage (R2/S3) is not configured in this environment.")
+
+    def open(self, storage_key: str, chunk_size: int = STREAM_READ_CHUNK_BYTES) -> AssetStreamHandle:
+        raise AssetStorageError("Private digital asset storage (R2/S3) is not configured in this environment.")
+
+    def delete(self, storage_key: str) -> None:
+        return None
+
+    def exists(self, storage_key: str) -> bool:
+        return False
+
+    def get_metadata(self, storage_key: str) -> Optional[StoredAssetMetadata]:
+        return None
+
+
 def get_asset_storage(backend_override: Optional[str] = None) -> PrivateAssetStorageProvider:
-    """Resolve the active private digital asset storage provider from configuration."""
+    """Resolve the active private digital asset storage provider from configuration.
+
+    Never falls back silently to local disk in production.
+    """
     backend = (backend_override or settings.ASSET_STORAGE_BACKEND or "local").strip().lower()
+    if backend == "disabled":
+        return DisabledPrivateAssetStorageProvider()
     if backend == "local":
+        if settings.is_production:
+            raise AssetStorageError("Local private asset storage cannot be used in production.")
         return LocalPrivateAssetStorageProvider()
     if backend == "s3":
         return S3PrivateAssetStorageProvider()

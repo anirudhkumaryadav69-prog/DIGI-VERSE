@@ -478,12 +478,22 @@ def _generate_order_number() -> str:
 
 
 def _resolve_public_key_id(provider: Any) -> str:
+    if provider.gateway_name == "disabled":
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Live payments are currently disabled in this environment.",
+        )
     if provider.gateway_name == "razorpay":
         key_id = (settings.RAZORPAY_KEY_ID or "").strip()
         if not key_id or key_id == "your_razorpay_key_id_placeholder":
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail="Razorpay public key (RAZORPAY_KEY_ID) is not configured.",
+            )
+        if settings.is_production and not key_id.startswith("rzp_live_"):
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Live payments are disabled: Razorpay live key is required in production.",
             )
         return key_id
     return "rzp_test_mock_public_key"
@@ -607,9 +617,15 @@ def initialize_checkout(
             detail="Order total must be greater than zero for payment processing.",
         )
 
+    currency = settings.STORE_CURRENCY
+
+    # Resolve payment provider before persisting pending order rows so disabled checkout fails cleanly.
+    provider = get_payment_provider()
+    if provider.gateway_name == "disabled":
+        provider.create_order(order_number="DISABLED-CHECK", amount=final_total, currency=currency)
+
     # 3. Create pending order & immutable order item snapshots
     order_number = _generate_order_number()
-    currency = settings.STORE_CURRENCY
     order = Order(
         customer_id=customer.id,
         order_number=order_number,
@@ -642,7 +658,6 @@ def initialize_checkout(
     snapshot_order_commissions(db, order)
 
     # 4. Initialize payment with configured provider
-    provider = get_payment_provider()
     gateway_init = provider.create_order(
         order_number=order.order_number,
         amount=final_total,

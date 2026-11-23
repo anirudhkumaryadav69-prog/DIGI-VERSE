@@ -98,8 +98,13 @@ def register(
     db.commit()
     db.refresh(customer)
     csrf = set_customer_auth_cookies(response, access_token, refresh_token)
+    reg_message = (
+        "Registration successful. Phone OTP verification is currently unavailable."
+        if otp_delivery.status == "disabled"
+        else "Registration successful. Please verify your phone number with the OTP sent."
+    )
     return CustomerAuthResponse(
-        message="Registration successful. Please verify your phone number with the OTP sent.",
+        message=reg_message,
         customer=CustomerProfileResponse.model_validate(customer),
         requires_phone_verification=not customer.is_phone_verified,
         csrf_token=csrf,

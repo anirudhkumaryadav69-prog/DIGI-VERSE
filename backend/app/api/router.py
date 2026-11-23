@@ -79,6 +79,13 @@ def readiness_check() -> JSONResponse:
             "database": "ok" if db_connected else (db_error or "unreachable"),
             "configuration": "ok" if not config_issues else "invalid",
         },
+        "capabilities": {
+            "payments": settings.get_payment_provider_state(),
+            "email": settings.get_email_provider_state(),
+            "whatsapp": settings.get_whatsapp_provider_state(),
+            "asset_storage": settings.get_asset_storage_state(),
+            "image_storage": settings.get_image_storage_state(),
+        },
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
     return JSONResponse(status_code=200 if is_ready else 503, content=payload)

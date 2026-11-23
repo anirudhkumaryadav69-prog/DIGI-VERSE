@@ -289,11 +289,34 @@ class MetaWhatsAppCloudProvider(WhatsAppProvider):
         return str(msg_id)
 
 
+class DisabledWhatsAppProvider(WhatsAppProvider):
+    """Fail-closed WhatsApp provider when WhatsApp delivery is intentionally disabled."""
+
+    def send_template_message(
+        self,
+        phone_number: str,
+        approved_template_name: str,
+        content: str,
+        metadata: Optional[dict[str, Any]] = None,
+        idempotency_key: Optional[str] = None,
+    ) -> str:
+        log_background_event("whatsapp.disabled_dispatch", level=logging.WARNING)
+        raise WhatsAppDeliveryError(
+            "WhatsApp delivery is disabled in this environment.",
+            code="whatsapp_disabled",
+            retryable=False,
+        )
+
+
 dev_whatsapp_provider = DevelopmentWhatsAppProvider()
 prod_whatsapp_provider = MetaWhatsAppCloudProvider()
+disabled_whatsapp_provider = DisabledWhatsAppProvider()
 
 
 def get_whatsapp_provider() -> WhatsAppProvider:
+    otp_provider = (settings.OTP_DELIVERY_PROVIDER or "").strip().lower()
+    if otp_provider == "disabled" and not settings.WHATSAPP_OTP_ENABLED:
+        return disabled_whatsapp_provider
     if settings.is_production:
         return prod_whatsapp_provider
     token = (settings.WHATSAPP_ACCESS_TOKEN or "").strip()

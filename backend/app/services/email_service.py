@@ -410,11 +410,48 @@ class ProductionEmailProvider(EmailProvider):
         )
 
 
+class DisabledEmailProvider(EmailProvider):
+    """Fail-closed email provider when email delivery is intentionally disabled."""
+
+    def send_password_reset_email(self, email: str, reset_token: str, expires_minutes: int) -> None:
+        log_background_event("email.disabled_password_reset", level=logging.WARNING)
+        raise EmailDeliveryError(
+            "Email delivery is disabled in this environment.",
+            code="email_disabled",
+            retryable=False,
+        )
+
+    def send_transactional_email(
+        self,
+        email: str,
+        template_name: str,
+        subject: str,
+        body: str,
+        metadata: Optional[dict[str, Any]] = None,
+        category: EmailCategory = "transactional",
+        idempotency_key: Optional[str] = None,
+    ) -> str:
+        log_background_event(
+            "email.disabled_dispatch",
+            level=logging.WARNING,
+            template=template_name,
+            category=category,
+        )
+        raise EmailDeliveryError(
+            "Email delivery is disabled in this environment.",
+            code="email_disabled",
+            retryable=False,
+        )
+
+
 dev_email_provider = DevelopmentEmailProvider()
 prod_email_provider = ProductionEmailProvider()
+disabled_email_provider = DisabledEmailProvider()
 
 
 def get_email_provider() -> EmailProvider:
+    if not settings.EMAIL_ENABLED:
+        return disabled_email_provider
     if settings.is_production:
         return prod_email_provider
     key = (settings.RESEND_API_KEY or "").strip()

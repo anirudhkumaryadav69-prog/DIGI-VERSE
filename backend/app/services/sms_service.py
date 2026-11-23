@@ -184,16 +184,32 @@ class WhatsAppCloudSMSProvider(SMSProvider):
         )
 
 
+class DisabledSMSProvider(SMSProvider):
+    """Honest OTP provider when WhatsApp OTP delivery is intentionally disabled."""
+
+    def send_otp(self, phone_number: str, otp_code: str, expires_minutes: int) -> SMSDeliveryResult:
+        return SMSDeliveryResult(
+            status="disabled",
+            provider="disabled",
+            safe_detail="Phone OTP delivery via WhatsApp is currently unavailable.",
+        )
+
+
 dev_sms_provider = DevelopmentSMSProvider()
 whatsapp_sms_provider = WhatsAppCloudSMSProvider()
+disabled_sms_provider = DisabledSMSProvider()
 
 
 def get_sms_provider() -> SMSProvider:
     provider = (settings.OTP_DELIVERY_PROVIDER or "development").strip().lower()
     environment = settings.ENVIRONMENT.lower()
+    if provider == "disabled":
+        if settings.WHATSAPP_OTP_ENABLED:
+            raise RuntimeError("WHATSAPP_OTP_ENABLED cannot be True when OTP_DELIVERY_PROVIDER is 'disabled'.")
+        return disabled_sms_provider
     if environment == "production":
         if provider != "whatsapp" or not settings.WHATSAPP_OTP_ENABLED:
-            raise RuntimeError("Production OTP delivery must use explicitly enabled WhatsApp.")
+            raise RuntimeError("Production OTP delivery must use explicitly enabled WhatsApp or 'disabled'.")
         return whatsapp_sms_provider
     if provider == "whatsapp" and settings.WHATSAPP_OTP_ENABLED:
         return whatsapp_sms_provider
