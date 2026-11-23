@@ -136,15 +136,8 @@ const HomePage = () => {
           <ToastBanner toast={toast} onDismiss={() => setToast({ type: '', message: '' })} />
         )}
 
-<<<<<<< Updated upstream
-        {/* 1. Hero Section (Soft White Elevated Surface) */}
-        <section className="relative overflow-hidden rounded-3xl bg-[#F8FAFC] border border-[#D5DEE8] p-6 sm:p-10 md:p-12 shadow-[0_8px_28px_-8px_rgba(38,52,69,0.08)]">
-=======
-        {catalogError && <ErrorAlert message={catalogError} onRetry={loadHomeData} />}
-
         {/* 1. Hero Section (Dark Secondary Elevated Surface) */}
         <section className="relative overflow-hidden rounded-3xl bg-[#0D1424] border border-[#D5DEE8] p-6 sm:p-10 md:p-12 shadow-[0_8px_28px_-8px_rgba(38,52,69,0.08)]">
->>>>>>> Stashed changes
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[#18243A]/70 blur-2xl"
