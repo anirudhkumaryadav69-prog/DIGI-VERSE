@@ -21,6 +21,12 @@ import {
 } from '../../components/common/StorefrontDesignSystem';
 import { checkBackendHealth, commerceApi, publicCatalogApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import {
+  asArray,
+  asPaginatedItems,
+  asPlainObject,
+  isPlainObject,
+} from '../../utils/apiValidation';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -45,43 +51,45 @@ const HomePage = () => {
 
   useEffect(() => {
     checkBackendHealth()
-      .then((data) => setHealthStatus(data?.status === 'healthy' ? 'online' : 'degraded'))
+      .then((data) =>
+        setHealthStatus(isPlainObject(data) && data.status === 'healthy' ? 'online' : 'degraded')
+      )
       .catch(() => setHealthStatus('offline'));
 
     publicCatalogApi
       .listBanners()
-      .then((data) => setBanners(data || []))
-      .catch(() => {});
+      .then((data) => setBanners(asArray(data)))
+      .catch(() => setBanners([]));
 
     publicCatalogApi
       .listVideos()
-      .then((data) => setVideos(data || []))
-      .catch(() => {});
+      .then((data) => setVideos(asArray(data)))
+      .catch(() => setVideos([]));
 
     publicCatalogApi
       .getPublicSettings()
-      .then((data) => setStoreSettings(data || {}))
-      .catch(() => {});
+      .then((data) => setStoreSettings(asPlainObject(data)))
+      .catch(() => setStoreSettings({}));
 
     publicCatalogApi
       .listCategories({ page: 1, page_size: 8 })
-      .then((res) => setCategories(res.items || []))
-      .catch(() => {});
+      .then((res) => setCategories(asPaginatedItems(res)))
+      .catch(() => setCategories([]));
 
     publicCatalogApi
       .listProducts({ page: 1, page_size: 4, sort_by: 'popularity' })
-      .then((res) => setBestSellers(res.items || []))
-      .catch(() => {});
+      .then((res) => setBestSellers(asPaginatedItems(res)))
+      .catch(() => setBestSellers([]));
 
     publicCatalogApi
       .listProducts({ page: 1, page_size: 8, sort_by: 'newest' })
-      .then((res) => setRecentProducts(res.items || []))
-      .catch(() => {});
+      .then((res) => setRecentProducts(asPaginatedItems(res)))
+      .catch(() => setRecentProducts([]));
 
     publicCatalogApi
       .listProducts({ page: 1, page_size: 4, on_sale: true })
-      .then((res) => setDiscountedProducts(res.items || []))
-      .catch(() => {});
+      .then((res) => setDiscountedProducts(asPaginatedItems(res)))
+      .catch(() => setDiscountedProducts([]));
   }, []);
 
   const handleAddToCart = async (e, prod) => {
@@ -122,12 +130,19 @@ const HomePage = () => {
     }
   };
 
-  const storeName = storeSettings['store.name'] || 'DIGI-VERSE';
+  const safeStoreSettings = asPlainObject(storeSettings);
+  const safeBanners = asArray(banners);
+  const safeVideos = asArray(videos);
+  const safeCategories = asArray(categories);
+  const safeBestSellers = asArray(bestSellers);
+  const safeRecentProducts = asArray(recentProducts);
+  const safeDiscountedProducts = asArray(discountedProducts);
+  const storeName = safeStoreSettings['store.name'] || 'DIGI-VERSE';
 
   return (
     <div className="min-h-screen bg-[#080D19] text-[#F1F5F9] flex flex-col justify-between px-4 py-6 sm:px-6 md:px-10 overflow-x-hidden">
       <StorefrontHeader
-        announcementText={storeSettings['store.announcement_text']}
+        announcementText={safeStoreSettings['store.announcement_text']}
         storeName={storeName}
       />
 
@@ -245,9 +260,9 @@ const HomePage = () => {
         </section>
 
         {/* 2. Active Promotional Banners (Shown only when active & scheduled) */}
-        {banners.length > 0 && (
+        {safeBanners.length > 0 && (
           <section aria-label="Promotional Banners" className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {banners.map((b) => (
+            {safeBanners.map((b) => (
               <div
                 key={b.id}
                 className="bg-[#111C30] border border-[#D5DEE8] rounded-2xl p-6 md:p-8 flex flex-col justify-between gap-4 shadow-xs"
@@ -282,7 +297,7 @@ const HomePage = () => {
         )}
 
         {/* 3. Featured Categories */}
-        {categories.length > 0 && (
+        {safeCategories.length > 0 && (
           <section>
             <SectionHeading
               eyebrow="Taxonomy"
@@ -299,7 +314,7 @@ const HomePage = () => {
               }
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
-              {categories.map((cat) => (
+              {safeCategories.map((cat) => (
                 <CategoryCard key={cat.id} category={cat} />
               ))}
             </div>
@@ -307,7 +322,7 @@ const HomePage = () => {
         )}
 
         {/* 4. Promotional Offers & Active Discounts (Secondary Dark Navy Band) */}
-        {discountedProducts.length > 0 && (
+        {safeDiscountedProducts.length > 0 && (
           <section className="rounded-3xl bg-[#0D1424] border border-[#D5DEE8] p-6 sm:p-8">
             <SectionHeading
               eyebrow="Limited-Time Savings"
@@ -324,7 +339,7 @@ const HomePage = () => {
               }
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
-              {discountedProducts.map((prod) => (
+              {safeDiscountedProducts.map((prod) => (
                 <ProductCard
                   key={prod.id}
                   product={prod}
@@ -337,7 +352,7 @@ const HomePage = () => {
         )}
 
         {/* 5. Best-Selling & Featured Products (Secondary Dark Navy Band) */}
-        {bestSellers.length > 0 && (
+        {safeBestSellers.length > 0 && (
           <section className="rounded-3xl bg-[#0D1424] border border-[#D5DEE8] p-6 sm:p-8">
             <SectionHeading
               eyebrow="Popular Selection"
@@ -354,7 +369,7 @@ const HomePage = () => {
               }
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
-              {bestSellers.map((prod) => (
+              {safeBestSellers.map((prod) => (
                 <ProductCard
                   key={prod.id}
                   product={prod}
@@ -367,7 +382,7 @@ const HomePage = () => {
         )}
 
         {/* 6. Recently Added Products */}
-        {recentProducts.length > 0 && (
+        {safeRecentProducts.length > 0 && (
           <section>
             <SectionHeading
               eyebrow="Latest Releases"
@@ -384,7 +399,7 @@ const HomePage = () => {
               }
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
-              {recentProducts.map((prod) => (
+              {safeRecentProducts.map((prod) => (
                 <ProductCard
                   key={prod.id}
                   product={prod}
@@ -397,7 +412,7 @@ const HomePage = () => {
         )}
 
         {/* 7. Advertisement Video Section */}
-        {videos.length > 0 && (
+        {safeVideos.length > 0 && (
           <section>
             <SectionHeading
               eyebrow="Creator Showcases"
@@ -405,7 +420,7 @@ const HomePage = () => {
               subtitle="Tour featured digital toolkits and creator workflows."
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {videos.slice(0, 4).map((v) => (
+              {safeVideos.slice(0, 4).map((v) => (
                 <div
                   key={v.id}
                   className="bg-[#111C30] border border-[#D5DEE8] rounded-2xl p-6 md:p-8 flex flex-col justify-between gap-4 shadow-xs"
@@ -438,7 +453,7 @@ const HomePage = () => {
         )}
       </main>
 
-      <StorefrontFooter storeSettings={storeSettings} />
+      <StorefrontFooter storeSettings={safeStoreSettings} />
     </div>
   );
 };

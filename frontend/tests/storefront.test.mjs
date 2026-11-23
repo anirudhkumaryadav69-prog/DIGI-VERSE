@@ -409,8 +409,10 @@ test('17. Stage A: Razorpay Checkout SDK loads lazily, prevents duplicates, and 
     'vercel.json must not contain placeholder backend hostnames'
   );
   assert.ok(
-    vercelJson.rewrites?.some((r) => r.source === '/(.*)' && r.destination === '/index.html'),
-    'vercel.json must preserve SPA fallback rewrite'
+    vercelJson.rewrites?.some(
+      (r) => r.source === '/((?!api/).*)' && r.destination === '/index.html'
+    ),
+    'vercel.json must preserve SPA fallback rewrite while excluding /api/* routes'
   );
 
   const { loadRazorpaySdk, RAZORPAY_CHECKOUT_SCRIPT_URL, resetRazorpayLoaderForTests } = await import(
@@ -498,4 +500,136 @@ test('17. Stage A: Razorpay Checkout SDK loads lazily, prevents duplicates, and 
   const missingCtorPromise = loadRazorpaySdk({ doc: dom3.doc, timeoutMs: 2000 });
   dom3.scripts[0].dispatch('load');
   await assert.rejects(missingCtorPromise, /window\.Razorpay is unavailable/);
+});
+
+test('18. Production stability: Vercel /api exclusion, HTML fallback guard, HomePage/AuthContext safety & ErrorBoundary', async () => {
+  const vercelJson = JSON.parse(fs.readFileSync(path.join(FRONTEND_ROOT, 'vercel.json'), 'utf8'));
+  const spaRewrite = vercelJson.rewrites?.find((r) => r.destination === '/index.html');
+  assert.ok(spaRewrite, 'vercel.json must include an /index.html SPA rewrite');
+  const spaRegex = new RegExp(`^${spaRewrite.source}$`);
+  assert.equal(spaRegex.test('/api/banners'), false, '/api/banners must not match SPA rewrite');
+  assert.equal(spaRegex.test('/api/auth/me'), false, '/api/auth/me must not match SPA rewrite');
+  assert.equal(spaRegex.test('/'), true, '/ must match SPA rewrite');
+  assert.equal(spaRegex.test('/products'), true, '/products must match SPA rewrite');
+  assert.equal(spaRegex.test('/categories'), true, '/categories must match SPA rewrite');
+  assert.equal(spaRegex.test('/admin/login'), true, '/admin/login must match SPA rewrite');
+  assert.equal(spaRegex.test('/seller'), true, '/seller must match SPA rewrite');
+
+  const {
+    asArray,
+    asPaginatedItems,
+    asPlainObject,
+    isHtmlPayload,
+    isValidAdminProfile,
+    isValidCustomerProfile,
+    validateApiResponse,
+  } = await import('../src/utils/apiValidation.js');
+
+  const htmlDoc = '<!doctype html><html lang="en"><body><div id="root"></div></body></html>';
+  const htmlTagOnly = '  <HTML><head></head><body>Fallback</body></html>';
+
+  // 1. HTML detection & interceptor validation
+  assert.equal(isHtmlPayload(htmlDoc), true);
+  assert.equal(isHtmlPayload(htmlTagOnly), true);
+  assert.equal(isHtmlPayload({ items: [] }), false);
+  assert.equal(isHtmlPayload(null), false);
+
+  assert.throws(
+    () =>
+      validateApiResponse({
+        status: 200,
+        headers: { 'content-type': 'text/html; charset=utf-8' },
+        config: {},
+        data: htmlDoc,
+      }),
+    (err) => err.code === 'API_HTML_RESPONSE' && typeof err.response?.data?.detail === 'string'
+  );
+
+  assert.throws(
+    () =>
+      validateApiResponse({
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+        config: {},
+        data: htmlTagOnly,
+      }),
+    (err) => err.code === 'API_HTML_RESPONSE'
+  );
+
+  // 2. Preserve valid JSON, 204, and binary / explicit non-JSON responses
+  const validJson = validateApiResponse({
+    status: 200,
+    headers: { 'content-type': 'application/json' },
+    config: {},
+    data: [{ id: 'banner-1' }],
+  });
+  assert.deepEqual(validJson.data, [{ id: 'banner-1' }]);
+
+  const noContent = validateApiResponse({ status: 204, headers: {}, config: {}, data: '' });
+  assert.equal(noContent.status, 204);
+
+  const blobPayload = { size: 512, type: 'application/zip' };
+  assert.equal(
+    validateApiResponse({
+      status: 200,
+      headers: { 'content-type': 'application/octet-stream' },
+      config: { responseType: 'blob' },
+      data: blobPayload,
+    }).data,
+    blobPayload
+  );
+  assert.equal(
+    validateApiResponse({
+      status: 200,
+      headers: { 'content-type': 'text/html' },
+      config: { responseType: 'arraybuffer' },
+      data: new ArrayBuffer(8),
+    }).status,
+    200
+  );
+
+  // 3. HomePage safe array & plain-object coercion
+  for (const malformed of [htmlDoc, {}, null, undefined, 123, 'bad']) {
+    assert.deepEqual(asArray(malformed), []);
+    assert.deepEqual(asPaginatedItems(malformed), []);
+  }
+  assert.deepEqual(asArray([{ id: 'b1' }]), [{ id: 'b1' }]);
+  assert.deepEqual(asPaginatedItems({ items: [{ id: 'p1' }], total: 1 }), [{ id: 'p1' }]);
+
+  for (const malformedObj of [htmlDoc, [], null, undefined, 'bad']) {
+    assert.deepEqual(asPlainObject(malformedObj), {});
+  }
+  assert.deepEqual(asPlainObject({ 'store.name': 'DIGI-VERSE' }), { 'store.name': 'DIGI-VERSE' });
+
+  // 4. AuthContext profile validation rejects HTML/malformed values
+  for (const invalidProfile of [htmlDoc, [], null, undefined, {}, { email: 'a@b.com' }]) {
+    assert.equal(isValidCustomerProfile(invalidProfile), false);
+  }
+  assert.equal(
+    isValidCustomerProfile({ id: 'cust-1', email: 'buyer@example.com', full_name: 'Buyer' }),
+    true
+  );
+
+  for (const invalidAdmin of [htmlDoc, [], null, undefined, {}, { id: '1', role: 'CUSTOMER' }]) {
+    assert.equal(isValidAdminProfile(invalidAdmin), false);
+  }
+  assert.equal(
+    isValidAdminProfile({ id: 'adm-1', role: 'ADMIN', username: 'admin' }),
+    true
+  );
+
+  // 5. Wiring checks across App, api.js, HomePage, AuthContext, and StorefrontLayout
+  const appSrc = readSrc('App.jsx');
+  assert.ok(appSrc.includes('AppErrorBoundary'), 'App.jsx must wrap routes with AppErrorBoundary');
+  const apiSrc = readSrc('services/api.js');
+  assert.ok(apiSrc.includes('validateApiResponse'), 'api.js must validate responses in interceptor');
+  const homeSrc = readSrc('pages/customer/HomePage.jsx');
+  assert.ok(homeSrc.includes('asArray(banners)'), 'HomePage must guard banners with asArray');
+  assert.ok(homeSrc.includes('asArray(videos)'), 'HomePage must guard videos with asArray');
+  assert.ok(homeSrc.includes('asPlainObject(storeSettings)'), 'HomePage must guard storeSettings');
+  const authSrc = readSrc('context/AuthContext.jsx');
+  assert.ok(authSrc.includes('isValidCustomerProfile'), 'AuthContext must validate customer profile');
+  assert.ok(authSrc.includes('isValidAdminProfile'), 'AuthContext must validate admin profile');
+  const layoutSrc = readSrc('components/common/StorefrontLayout.jsx');
+  assert.ok(layoutSrc.includes('isPlainObject'), 'StorefrontLayout must validate public settings');
 });

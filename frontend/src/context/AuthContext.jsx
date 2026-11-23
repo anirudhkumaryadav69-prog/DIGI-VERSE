@@ -1,6 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { adminAuthApi, commerceApi, customerAuthApi } from '../services/api';
+import {
+  isPlainObject,
+  isValidAdminProfile,
+  isValidCustomerProfile,
+} from '../utils/apiValidation';
 
 const AuthContext = createContext(null);
 
@@ -21,8 +26,16 @@ export const AuthProvider = ({ children }) => {
         commerceApi.getCart(),
         commerceApi.getWishlist(),
       ]);
-      setCartCount(cartData?.total_quantity || 0);
-      setWishlistCount(wishData?.total_items || 0);
+      const cartTotal =
+        isPlainObject(cartData) && Number.isFinite(Number(cartData.total_quantity))
+          ? Number(cartData.total_quantity)
+          : 0;
+      const wishTotal =
+        isPlainObject(wishData) && Number.isFinite(Number(wishData.total_items))
+          ? Number(wishData.total_items)
+          : 0;
+      setCartCount(cartTotal);
+      setWishlistCount(wishTotal);
     } catch {
       setCartCount(0);
       setWishlistCount(0);
@@ -32,6 +45,9 @@ export const AuthProvider = ({ children }) => {
   const refreshCustomerProfile = useCallback(async () => {
     try {
       const profile = await customerAuthApi.getProfile();
+      if (!isValidCustomerProfile(profile)) {
+        throw new Error('Invalid customer profile payload.');
+      }
       setCustomer(profile);
       await refreshCartAndWishlistCounts();
       return profile;
@@ -48,6 +64,9 @@ export const AuthProvider = ({ children }) => {
   const refreshAdminProfile = useCallback(async () => {
     try {
       const profile = await adminAuthApi.getMe();
+      if (!isValidAdminProfile(profile)) {
+        throw new Error('Invalid administrator profile payload.');
+      }
       setAdmin(profile);
       return profile;
     } catch {
@@ -86,6 +105,9 @@ export const AuthProvider = ({ children }) => {
 
   const registerCustomer = async (payload) => {
     const data = await customerAuthApi.register(payload);
+    if (!isPlainObject(data) || !isValidCustomerProfile(data.customer)) {
+      throw new Error('Invalid customer registration response.');
+    }
     setCustomer(data.customer);
     setOtpDeliveryStatus({
       status: data.otp_delivery_status,
@@ -97,6 +119,9 @@ export const AuthProvider = ({ children }) => {
 
   const loginCustomer = async (payload) => {
     const data = await customerAuthApi.login(payload);
+    if (!isPlainObject(data) || !isValidCustomerProfile(data.customer)) {
+      throw new Error('Invalid customer login response.');
+    }
     setCustomer(data.customer);
     await refreshCartAndWishlistCounts();
     return data;
@@ -124,6 +149,9 @@ export const AuthProvider = ({ children }) => {
 
   const loginAdmin = async (payload) => {
     const data = await adminAuthApi.login(payload);
+    if (!isPlainObject(data) || !isValidAdminProfile(data.admin)) {
+      throw new Error('Invalid administrator login response.');
+    }
     setAdmin(data.admin);
     return data;
   };
@@ -144,7 +172,7 @@ export const AuthProvider = ({ children }) => {
     setOtpDeliveryStatus,
     loading: customerLoading,
     customerLoading,
-    isAuthenticated: Boolean(customer),
+    isAuthenticated: isValidCustomerProfile(customer),
     isPhoneVerified: Boolean(customer?.is_phone_verified),
     isSeller: Boolean(customer?.is_seller),
     sellerStatus: customer?.seller_status || null,
@@ -163,8 +191,8 @@ export const AuthProvider = ({ children }) => {
     admin,
     setAdmin,
     adminLoading,
-    isAdminAuthenticated: Boolean(admin),
-    isAdmin: Boolean(admin && admin.role === 'ADMIN'),
+    isAdminAuthenticated: isValidAdminProfile(admin),
+    isAdmin: isValidAdminProfile(admin),
     adminMustChangePassword: Boolean(admin?.must_change_password),
     loginAdmin,
     logoutAdmin,
