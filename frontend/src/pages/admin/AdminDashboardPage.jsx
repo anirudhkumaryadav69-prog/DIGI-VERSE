@@ -68,7 +68,7 @@ const AdminDashboardPage = () => {
       adminAuthApi.getDashboardOverview(),
       adminOperationsApi.getAnalytics(),
       adminSellersApi.listSellers({ status: 'pending', page_size: 1 }).catch(() => null),
-      adminCatalogApi.listProducts({ approval_status: 'submitted', page_size: 1 }).catch(() => null),
+      adminCatalogApi.listProducts({ approval_status: 'pending_review', page_size: 1 }).catch(() => null),
       adminPayoutApi.listRequests({ status: 'requested', page_size: 1 }).catch(() => null),
     ])
       .then(([overviewData, analyticsData, sellerQueue, productQueue, payoutQueue]) => {

@@ -633,3 +633,32 @@ test('18. Production stability: Vercel /api exclusion, HTML fallback guard, Home
   const layoutSrc = readSrc('components/common/StorefrontLayout.jsx');
   assert.ok(layoutSrc.includes('isPlainObject'), 'StorefrontLayout must validate public settings');
 });
+
+test('19. Stage 3.12 Admin Dashboard pending_review query & Payout production simulation guard', () => {
+  const dashboardSrc = readSrc('pages/admin/AdminDashboardPage.jsx');
+  assert.ok(
+    dashboardSrc.includes("approval_status: 'pending_review'"),
+    'AdminDashboardPage must query pending_review to match backend ProductApprovalStatus enum'
+  );
+  assert.ok(
+    !dashboardSrc.includes("approval_status: 'submitted'"),
+    'AdminDashboardPage must not send invalid approval_status submitted'
+  );
+
+  const payoutSrc = readSrc('pages/admin/AdminPayoutPage.jsx');
+  assert.ok(
+    payoutSrc.includes('isPayoutSimulationSupported') && payoutSrc.includes('checkBackendHealth'),
+    'AdminPayoutPage must gate mock payout simulation by backend environment'
+  );
+  assert.ok(
+    payoutSrc.includes('simulationSupported') &&
+      payoutSrc.includes('Payout execution and simulation are unavailable in this environment'),
+    'AdminPayoutPage must hide simulation buttons and explain unavailability in non-dev environments'
+  );
+  assert.ok(
+    payoutSrc.includes('Simulate success') &&
+      payoutSrc.includes('Simulate failure') &&
+      payoutSrc.includes('Retry failed payout'),
+    'AdminPayoutPage must preserve simulation and retry actions for isolated development/test environments'
+  );
+});

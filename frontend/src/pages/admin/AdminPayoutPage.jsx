@@ -24,9 +24,16 @@ import {
 import {
   adminPayoutAccountApi,
   adminPayoutApi,
+  checkBackendHealth,
 } from '../../services/api';
 
 const PAGE_SIZE = 20;
+const ALLOWED_SIMULATION_ENVS = new Set(['development', 'dev', 'local', 'test', 'testing']);
+
+function isPayoutSimulationSupported(backendEnvironment) {
+  const normalized = String(backendEnvironment || '').trim().toLowerCase();
+  return Boolean(normalized) && ALLOWED_SIMULATION_ENVS.has(normalized);
+}
 
 const TABS = [
   { id: 'overview', label: 'Overview' },
@@ -98,6 +105,8 @@ const AdminPayoutPage = () => {
   const [approveTarget, setApproveTarget] = useState(null);
   const [accountRejectTarget, setAccountRejectTarget] = useState(null);
   const [accountRejectReason, setAccountRejectReason] = useState('');
+  const [backendEnvironment, setBackendEnvironment] = useState(null);
+  const simulationSupported = isPayoutSimulationSupported(backendEnvironment);
 
   const loadOverview = async () => {
     setLoading(true);
@@ -174,6 +183,24 @@ const AdminPayoutPage = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    let active = true;
+    checkBackendHealth()
+      .then((health) => {
+        if (active && typeof health?.environment === 'string') {
+          setBackendEnvironment(health.environment);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setBackendEnvironment(null);
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (tab === 'overview') loadOverview();
@@ -255,6 +282,10 @@ const AdminPayoutPage = () => {
   };
 
   const executeRequest = async (payoutId, scenario = 'success') => {
+    if (!simulationSupported) {
+      setError('Payout simulation is disabled in this environment.');
+      return;
+    }
     setSaving(true);
     try {
       await adminPayoutApi.executeRequest(payoutId, { scenario });
@@ -269,6 +300,10 @@ const AdminPayoutPage = () => {
   };
 
   const retryRequest = async (payoutId) => {
+    if (!simulationSupported) {
+      setError('Payout retry execution is unavailable in this environment.');
+      return;
+    }
     setSaving(true);
     try {
       await adminPayoutApi.retryRequest(payoutId, { scenario: 'success' });
@@ -338,7 +373,11 @@ const AdminPayoutPage = () => {
   return (
     <AdminLayout
       title="Payout Management"
-      subtitle="Requests, simulated execution, reconciliation and payout account verification"
+      subtitle={
+        simulationSupported
+          ? 'Requests, simulated execution, reconciliation and payout account verification'
+          : 'Requests, review, reconciliation and payout account verification'
+      }
       actions={
         <button type="button" onClick={refreshTab} className="dv-btn-secondary text-xs px-3.5 py-2.5 inline-flex items-center gap-2">
           <RefreshCw className="w-3.5 h-3.5" /> Refresh
@@ -450,6 +489,7 @@ const AdminPayoutPage = () => {
           }}
           onExecute={executeRequest}
           onRetry={retryRequest}
+          simulationSupported={simulationSupported}
         />
       )}
 
@@ -796,6 +836,7 @@ const PayoutDetailDrawer = ({
   onResolve,
   onExecute,
   onRetry,
+  simulationSupported,
 }) => {
   const payout = payoutDetail?.payout || selectedPayout;
   return (
@@ -817,7 +858,20 @@ const PayoutDetailDrawer = ({
               </dl>
             </section>
             <section className="dv-card p-5">
-              <div className="flex items-center justify-between mb-3"><h3 className="text-sm font-bold">Execution timeline</h3>{payoutDetail.payout?.status === 'approved' && <div className="flex gap-2"><button type="button" disabled={saving} onClick={() => onExecute(payoutDetail.payout.id, 'success')} className="dv-btn-primary text-[11px] px-3 py-1.5">Simulate success</button><button type="button" disabled={saving} onClick={() => onExecute(payoutDetail.payout.id, 'failure')} className="dv-btn-secondary text-[11px] px-3 py-1.5">Simulate failure</button></div>}</div>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-bold">Execution timeline</h3>
+                {payoutDetail.payout?.status === 'approved' && simulationSupported && (
+                  <div className="flex gap-2">
+                    <button type="button" disabled={saving} onClick={() => onExecute(payoutDetail.payout.id, 'success')} className="dv-btn-primary text-[11px] px-3 py-1.5">Simulate success</button>
+                    <button type="button" disabled={saving} onClick={() => onExecute(payoutDetail.payout.id, 'failure')} className="dv-btn-secondary text-[11px] px-3 py-1.5">Simulate failure</button>
+                  </div>
+                )}
+              </div>
+              {payoutDetail.payout?.status === 'approved' && !simulationSupported && (
+                <p className="text-xs text-[#94A3B8] mb-3 rounded-xl border border-[#E5E7EB] bg-[#18243A] px-3 py-2">
+                  Payout execution and simulation are unavailable in this environment. Simulated payout execution is restricted to development and testing, and live automated payout transfers are not enabled.
+                </p>
+              )}
               {!attempts.length ? <p className="text-xs text-[#94A3B8]">No execution attempts.</p> : <div className="space-y-3">{attempts.map((attempt) => (
                 <div key={attempt.id} className="border border-[#E5E7EB] rounded-xl p-3 text-xs">
                   <div className="flex justify-between gap-3"><strong>Attempt {attempt.attempt_no}</strong><Badge variant={attempt.outcome === 'success' ? 'success' : attempt.outcome === 'uncertain' ? 'warning' : attempt.outcome === 'failed' ? 'danger' : 'neutral'}>{attempt.outcome}</Badge></div>
@@ -825,7 +879,15 @@ const PayoutDetailDrawer = ({
                   {attempt.sanitized_error && <p className="text-red-300 mt-1">{attempt.sanitized_error}</p>}
                 </div>
               ))}</div>}
-              {payoutDetail.payout?.status === 'failed' && <button type="button" disabled={saving} onClick={() => onRetry(payoutDetail.payout.id)} className="dv-btn-secondary text-[11px] px-3 py-1.5 mt-3">Retry failed payout</button>}
+              {payoutDetail.payout?.status === 'failed' && (
+                simulationSupported ? (
+                  <button type="button" disabled={saving} onClick={() => onRetry(payoutDetail.payout.id)} className="dv-btn-secondary text-[11px] px-3 py-1.5 mt-3">Retry failed payout</button>
+                ) : (
+                  <p className="text-xs text-[#94A3B8] mt-3 rounded-xl border border-[#E5E7EB] bg-[#18243A] px-3 py-2">
+                    Payout retry execution is unavailable in this environment because simulated payout execution is restricted to development and testing and live automated payout transfers are not enabled.
+                  </p>
+                )
+              )}
             </section>
             <section className="dv-card p-5">
               <h3 className="text-sm font-bold mb-3">Reconciliation</h3>
