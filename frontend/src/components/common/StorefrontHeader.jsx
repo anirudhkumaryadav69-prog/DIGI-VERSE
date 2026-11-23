@@ -30,13 +30,13 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
   return (
     <div className="w-full">
       {announcementText && (
-        <div className="max-w-7xl w-full mx-auto mb-4 px-4 py-2 rounded-xl bg-[#DCE6EF] border border-[#D5DEE8] text-[#263445] text-xs font-medium flex items-center justify-center gap-2 text-center">
-          <Sparkles className="w-3.5 h-3.5 text-[#2563EB] shrink-0" aria-hidden="true" />
+        <div className="max-w-7xl w-full mx-auto mb-4 px-4 py-2 rounded-xl bg-[#0D1424] border border-[#D5DEE8] text-[#F1F5F9] text-xs font-medium flex items-center justify-center gap-2 text-center">
+          <Sparkles className="w-3.5 h-3.5 text-[#60A5FA] shrink-0" aria-hidden="true" />
           <span className="truncate">{announcementText}</span>
         </div>
       )}
 
-      <header className="max-w-7xl w-full mx-auto bg-white border border-[#D5DEE8] rounded-2xl px-4 sm:px-6 py-3.5 shadow-[0_2px_10px_-2px_rgba(38,52,69,0.06)]">
+      <header className="max-w-7xl w-full mx-auto bg-[#111C30] border border-[#D5DEE8] rounded-2xl px-4 sm:px-6 py-3.5 shadow-[0_2px_10px_-2px_rgba(38,52,69,0.06)]">
         <div className="flex items-center justify-between gap-3 lg:gap-5">
           {/* Brand + Primary Nav */}
           <div className="flex items-center gap-4 xl:gap-6 shrink-0">
@@ -47,7 +47,7 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
               <div className="w-9 h-9 rounded-xl bg-[#2563EB] text-white flex items-center justify-center shrink-0 shadow-[0_4px_12px_-2px_rgba(37,99,235,0.3)]">
                 <Layers className="w-4 h-4" aria-hidden="true" />
               </div>
-              <span className="font-bold tracking-tight text-base text-[#263445] whitespace-nowrap">
+              <span className="font-bold tracking-tight text-base text-[#F1F5F9] whitespace-nowrap">
                 {storeName}
                 <span className="text-[#0EA5E9]">.</span>
               </span>
@@ -62,8 +62,8 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                 end
                 className={({ isActive }) =>
                   isActive
-                    ? 'text-[#2563EB] border-b-2 border-[#2563EB] pb-1 transition whitespace-nowrap'
-                    : 'text-[#263445] hover:text-[#2563EB] pb-1 transition whitespace-nowrap'
+                    ? 'text-[#60A5FA] border-b-2 border-[#2563EB] pb-1 transition whitespace-nowrap'
+                    : 'text-[#F1F5F9] hover:text-[#60A5FA] pb-1 transition whitespace-nowrap'
                 }
               >
                 Home
@@ -72,8 +72,8 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                 to="/products"
                 className={({ isActive }) =>
                   isActive
-                    ? 'text-[#2563EB] border-b-2 border-[#2563EB] pb-1 transition whitespace-nowrap'
-                    : 'text-[#263445] hover:text-[#2563EB] pb-1 transition whitespace-nowrap'
+                    ? 'text-[#60A5FA] border-b-2 border-[#2563EB] pb-1 transition whitespace-nowrap'
+                    : 'text-[#F1F5F9] hover:text-[#60A5FA] pb-1 transition whitespace-nowrap'
                 }
               >
                 Products
@@ -82,8 +82,8 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                 to="/categories"
                 className={({ isActive }) =>
                   isActive
-                    ? 'text-[#2563EB] border-b-2 border-[#2563EB] pb-1 transition whitespace-nowrap'
-                    : 'text-[#263445] hover:text-[#2563EB] pb-1 transition whitespace-nowrap'
+                    ? 'text-[#60A5FA] border-b-2 border-[#2563EB] pb-1 transition whitespace-nowrap'
+                    : 'text-[#F1F5F9] hover:text-[#60A5FA] pb-1 transition whitespace-nowrap'
                 }
               >
                 Categories
@@ -92,15 +92,15 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                 to="/stores"
                 className={({ isActive }) =>
                   isActive
-                    ? 'text-[#2563EB] border-b-2 border-[#2563EB] pb-1 transition whitespace-nowrap'
-                    : 'text-[#263445] hover:text-[#2563EB] pb-1 transition whitespace-nowrap'
+                    ? 'text-[#60A5FA] border-b-2 border-[#2563EB] pb-1 transition whitespace-nowrap'
+                    : 'text-[#F1F5F9] hover:text-[#60A5FA] pb-1 transition whitespace-nowrap'
                 }
               >
                 Stores
               </NavLink>
               <NavLink
                 to="/products?on_sale=true"
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#EAF4FC] border border-[#D5DEE8] text-[#2563EB] hover:bg-[#EDF5FC] transition whitespace-nowrap"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#18243A] border border-[#D5DEE8] text-[#60A5FA] hover:bg-[#18243A] transition whitespace-nowrap"
               >
                 Deals
               </NavLink>
@@ -117,7 +117,7 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                 Search marketplace
               </label>
               <Search
-                className="w-3.5 h-3.5 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                className="w-3.5 h-3.5 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
                 aria-hidden="true"
               />
               <input
@@ -126,7 +126,7 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                 value={headerQuery}
                 onChange={(e) => setHeaderQuery(e.target.value)}
                 placeholder="Search products..."
-                className="w-full rounded-xl border border-[#D5DEE8] bg-[#F8FAFC] pl-9 pr-3 py-1.5 text-xs text-[#263445] placeholder:text-[#64748B] focus:bg-white focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition"
+                className="w-full rounded-xl border border-[#D5DEE8] bg-[#18243A] pl-9 pr-3 py-1.5 text-xs text-[#F1F5F9] placeholder:text-[#94A3B8] focus:bg-[#18243A] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition"
               />
             </form>
 
@@ -139,13 +139,13 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                   className={({ isActive }) =>
                     `shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-1.5 transition ${
                       isActive
-                        ? 'border-[#93C5FD] bg-[#EDF5FC] text-[#1D4ED8]'
-                        : 'border-[#D5DEE8] bg-white text-[#263445] hover:border-[#93C5FD] hover:bg-[#EDF5FC]'
+                        ? 'border-[#93C5FD] bg-[#18243A] text-[#93C5FD]'
+                        : 'border-[#D5DEE8] bg-[#111C30] text-[#F1F5F9] hover:border-[#93C5FD] hover:bg-[#18243A]'
                     }`
                   }
                 >
-                  <Heart className="w-3.5 h-3.5 text-[#2563EB] shrink-0" aria-hidden="true" />
-                  <span className="font-mono text-[11px] rounded-md bg-[#EAF4FC] text-[#1D4ED8] px-1.5 py-0.5">
+                  <Heart className="w-3.5 h-3.5 text-[#60A5FA] shrink-0" aria-hidden="true" />
+                  <span className="font-mono text-[11px] rounded-md bg-[#18243A] text-[#93C5FD] px-1.5 py-0.5">
                     {wishlistCount}
                   </span>
                 </NavLink>
@@ -157,12 +157,12 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                   className={({ isActive }) =>
                     `shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-1.5 transition ${
                       isActive
-                        ? 'border-[#93C5FD] bg-[#EDF5FC] text-[#1D4ED8]'
-                        : 'border-[#D5DEE8] bg-white text-[#263445] hover:border-[#93C5FD] hover:bg-[#EDF5FC]'
+                        ? 'border-[#93C5FD] bg-[#18243A] text-[#93C5FD]'
+                        : 'border-[#D5DEE8] bg-[#111C30] text-[#F1F5F9] hover:border-[#93C5FD] hover:bg-[#18243A]'
                     }`
                   }
                 >
-                  <ShoppingBag className="w-3.5 h-3.5 text-[#2563EB] shrink-0" aria-hidden="true" />
+                  <ShoppingBag className="w-3.5 h-3.5 text-[#60A5FA] shrink-0" aria-hidden="true" />
                   <span className="font-mono text-[11px] rounded-md bg-[#2563EB] text-white px-1.5 py-0.5">
                     {cartCount}
                   </span>
@@ -175,12 +175,12 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                   className={({ isActive }) =>
                     `hidden xl:flex shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-xl border text-xs font-medium items-center gap-1.5 transition ${
                       isActive
-                        ? 'border-[#93C5FD] bg-[#EDF5FC] text-[#1D4ED8]'
-                        : 'border-[#D5DEE8] bg-white text-[#263445] hover:border-[#93C5FD] hover:bg-[#EDF5FC]'
+                        ? 'border-[#93C5FD] bg-[#18243A] text-[#93C5FD]'
+                        : 'border-[#D5DEE8] bg-[#111C30] text-[#F1F5F9] hover:border-[#93C5FD] hover:bg-[#18243A]'
                     }`
                   }
                 >
-                  <Package className="w-3.5 h-3.5 text-[#2563EB] shrink-0" aria-hidden="true" />
+                  <Package className="w-3.5 h-3.5 text-[#60A5FA] shrink-0" aria-hidden="true" />
                 </NavLink>
 
                 <NavLink
@@ -190,12 +190,12 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                   className={({ isActive }) =>
                     `hidden xl:flex shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-xl border text-xs font-medium items-center gap-1.5 transition ${
                       isActive
-                        ? 'border-[#93C5FD] bg-[#EDF5FC] text-[#1D4ED8]'
-                        : 'border-[#D5DEE8] bg-white text-[#263445] hover:border-[#93C5FD] hover:bg-[#EDF5FC]'
+                        ? 'border-[#93C5FD] bg-[#18243A] text-[#93C5FD]'
+                        : 'border-[#D5DEE8] bg-[#111C30] text-[#F1F5F9] hover:border-[#93C5FD] hover:bg-[#18243A]'
                     }`
                   }
                 >
-                  <Download className="w-3.5 h-3.5 text-[#2563EB] shrink-0" aria-hidden="true" />
+                  <Download className="w-3.5 h-3.5 text-[#60A5FA] shrink-0" aria-hidden="true" />
                 </NavLink>
 
                 <Link
@@ -214,7 +214,7 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
               <div className="hidden sm:flex items-center gap-2 shrink-0">
                 <Link
                   to="/login"
-                  className="text-xs font-semibold text-[#263445] hover:text-[#2563EB] px-3 py-2 rounded-xl hover:bg-[#EDF5FC] transition whitespace-nowrap"
+                  className="text-xs font-semibold text-[#F1F5F9] hover:text-[#60A5FA] px-3 py-2 rounded-xl hover:bg-[#18243A] transition whitespace-nowrap"
                 >
                   Sign In
                 </Link>
@@ -235,7 +235,7 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
               aria-label="Toggle navigation menu"
               className={`${
                 isAuthenticated ? 'xl:hidden' : 'lg:hidden'
-              } shrink-0 p-2 rounded-xl border border-[#D5DEE8] bg-white text-[#263445] hover:border-[#93C5FD] hover:bg-[#EDF5FC] transition`}
+              } shrink-0 p-2 rounded-xl border border-[#D5DEE8] bg-[#111C30] text-[#F1F5F9] hover:border-[#93C5FD] hover:bg-[#18243A] transition`}
             >
               {mobileMenuOpen ? (
                 <X className="w-4 h-4" aria-hidden="true" />
@@ -252,11 +252,11 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
             aria-label="Mobile Navigation"
             className={`${
               isAuthenticated ? 'xl:hidden' : 'lg:hidden'
-            } mt-4 pt-4 border-t border-[#E5E7EB] bg-[#F8FAFC] rounded-xl p-3 space-y-3 text-xs font-semibold`}
+            } mt-4 pt-4 border-t border-[#E5E7EB] bg-[#0D1424] rounded-xl p-3 space-y-3 text-xs font-semibold`}
           >
             <form onSubmit={handleHeaderSearch} className="relative">
               <Search
-                className="w-3.5 h-3.5 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                className="w-3.5 h-3.5 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
                 aria-hidden="true"
               />
               <input
@@ -264,7 +264,7 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                 value={headerQuery}
                 onChange={(e) => setHeaderQuery(e.target.value)}
                 placeholder="Search products..."
-                className="w-full rounded-xl border border-[#D5DEE8] bg-white pl-8.5 pr-3 py-2 text-xs text-[#263445] placeholder:text-[#64748B]"
+                className="w-full rounded-xl border border-[#D5DEE8] bg-[#18243A] pl-8.5 pr-3 py-2 text-xs text-[#F1F5F9] placeholder:text-[#94A3B8]"
               />
             </form>
 
@@ -272,35 +272,35 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2.5 rounded-xl bg-white border border-[#D5DEE8] text-[#263445] hover:border-[#93C5FD] hover:text-[#2563EB]"
+                className="px-3 py-2.5 rounded-xl bg-[#111C30] border border-[#D5DEE8] text-[#F1F5F9] hover:border-[#93C5FD] hover:text-[#60A5FA]"
               >
                 Home
               </Link>
               <Link
                 to="/products"
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2.5 rounded-xl bg-white border border-[#D5DEE8] text-[#263445] hover:border-[#93C5FD] hover:text-[#2563EB]"
+                className="px-3 py-2.5 rounded-xl bg-[#111C30] border border-[#D5DEE8] text-[#F1F5F9] hover:border-[#93C5FD] hover:text-[#60A5FA]"
               >
                 Products
               </Link>
               <Link
                 to="/categories"
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2.5 rounded-xl bg-white border border-[#D5DEE8] text-[#263445] hover:border-[#93C5FD] hover:text-[#2563EB]"
+                className="px-3 py-2.5 rounded-xl bg-[#111C30] border border-[#D5DEE8] text-[#F1F5F9] hover:border-[#93C5FD] hover:text-[#60A5FA]"
               >
                 Categories
               </Link>
               <Link
                 to="/stores"
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2.5 rounded-xl bg-white border border-[#D5DEE8] text-[#263445] hover:border-[#93C5FD] hover:text-[#2563EB]"
+                className="px-3 py-2.5 rounded-xl bg-[#111C30] border border-[#D5DEE8] text-[#F1F5F9] hover:border-[#93C5FD] hover:text-[#60A5FA]"
               >
                 Creator Stores
               </Link>
               <Link
                 to="/products?on_sale=true"
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2.5 rounded-xl bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8]"
+                className="px-3 py-2.5 rounded-xl bg-[#18243A] border border-[#BFDBFE] text-[#93C5FD]"
               >
                 Promotional Deals
               </Link>
@@ -311,17 +311,17 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                 <Link
                   to="/orders"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2.5 rounded-xl bg-white border border-[#D5DEE8] text-[#263445] flex items-center gap-1.5"
+                  className="px-3 py-2.5 rounded-xl bg-[#111C30] border border-[#D5DEE8] text-[#F1F5F9] flex items-center gap-1.5"
                 >
-                  <Package className="w-3.5 h-3.5 text-[#2563EB]" />
+                  <Package className="w-3.5 h-3.5 text-[#60A5FA]" />
                   <span>Orders</span>
                 </Link>
                 <Link
                   to="/downloads"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2.5 rounded-xl bg-white border border-[#D5DEE8] text-[#263445] flex items-center gap-1.5"
+                  className="px-3 py-2.5 rounded-xl bg-[#111C30] border border-[#D5DEE8] text-[#F1F5F9] flex items-center gap-1.5"
                 >
-                  <Download className="w-3.5 h-3.5 text-[#2563EB]" />
+                  <Download className="w-3.5 h-3.5 text-[#60A5FA]" />
                   <span>Downloads</span>
                 </Link>
                 <Link
@@ -338,7 +338,7 @@ const StorefrontHeader = ({ announcementText, storeName = 'DIGI-VERSE' }) => {
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2.5 rounded-xl bg-[#EAF4FC] border border-[#D5DEE8] text-[#263445] text-center"
+                  className="px-3 py-2.5 rounded-xl bg-[#18243A] border border-[#D5DEE8] text-[#F1F5F9] text-center"
                 >
                   Sign In
                 </Link>

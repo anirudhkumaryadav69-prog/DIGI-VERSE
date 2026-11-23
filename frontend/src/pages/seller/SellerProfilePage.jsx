@@ -131,17 +131,17 @@ const SellerProfilePage = () => {
           onDismiss={() => setToast({ type: '', message: '' })}
         />
 
-        <form onSubmit={handleSubmit} className="bg-white border border-[#E5E7EB] rounded-2xl p-6 space-y-5 shadow-xs">
+        <form onSubmit={handleSubmit} className="bg-[#111C30] border border-[#E5E7EB] rounded-2xl p-6 space-y-5 shadow-xs">
           <div className="flex items-center gap-2 border-b border-[#E5E7EB] pb-3">
-            <Store className="w-5 h-5 text-[#2563EB]" />
-            <h2 className="text-sm font-bold text-[#263445]">
-              Storefront URL: <code className="text-[#2563EB]">/store/{profile?.store_slug}</code>
+            <Store className="w-5 h-5 text-[#60A5FA]" />
+            <h2 className="text-sm font-bold text-[#F1F5F9]">
+              Storefront URL: <code className="text-[#60A5FA]">/store/{profile?.store_slug}</code>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">Store Name</label>
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">Store Name</label>
               <input
                 type="text"
                 required
@@ -152,7 +152,7 @@ const SellerProfilePage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                 Seller Display Name
               </label>
               <input
@@ -167,7 +167,7 @@ const SellerProfilePage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                 Contact Email
               </label>
               <input
@@ -180,7 +180,7 @@ const SellerProfilePage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                 Contact Phone / Handle
               </label>
               <input
@@ -192,7 +192,7 @@ const SellerProfilePage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">Country</label>
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">Country</label>
               <input
                 type="text"
                 required
@@ -203,7 +203,7 @@ const SellerProfilePage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                 Business Type
               </label>
               <input
@@ -218,7 +218,7 @@ const SellerProfilePage = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">Logo URL</label>
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">Logo URL</label>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -240,7 +240,7 @@ const SellerProfilePage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">Banner URL</label>
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">Banner URL</label>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -263,7 +263,7 @@ const SellerProfilePage = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+            <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
               Categories Focus (comma separated)
             </label>
             <input
@@ -277,7 +277,7 @@ const SellerProfilePage = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+            <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
               Store Description
             </label>
             <textarea

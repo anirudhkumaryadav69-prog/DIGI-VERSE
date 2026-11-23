@@ -129,7 +129,7 @@ const AdminCategoryFormPage = () => {
         </Link>
       }
     >
-      <div className="max-w-2xl bg-white border border-[#D5DEE8] rounded-xl p-6 md:p-7 shadow-2xs">
+      <div className="max-w-2xl bg-[#111C30] border border-[#D5DEE8] rounded-xl p-6 md:p-7 shadow-2xs">
         {error && <ErrorAlert message={error} className="mb-5" />}
         <ToastBanner toast={toast} onDismiss={() => setToast(null)} className="mb-5" />
 
@@ -140,7 +140,7 @@ const AdminCategoryFormPage = () => {
             <div>
               <label
                 htmlFor="cat-name"
-                className="block text-[12.5px] font-medium text-[#263445] mb-1.5"
+                className="block text-[12.5px] font-medium text-[#F1F5F9] mb-1.5"
               >
                 Category Name *
               </label>
@@ -159,11 +159,11 @@ const AdminCategoryFormPage = () => {
               <div className="flex items-center justify-between mb-1.5">
                 <label
                   htmlFor="cat-slug"
-                  className="block text-[12.5px] font-medium text-[#263445]"
+                  className="block text-[12.5px] font-medium text-[#F1F5F9]"
                 >
                   URL Slug (kebab-case)
                 </label>
-                <label className="text-[12px] text-[#64748B] flex items-center gap-1.5 cursor-pointer select-none">
+                <label className="text-[12px] text-[#94A3B8] flex items-center gap-1.5 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={autoSlug}
@@ -189,7 +189,7 @@ const AdminCategoryFormPage = () => {
             <div>
               <label
                 htmlFor="cat-description"
-                className="block text-[12.5px] font-medium text-[#263445] mb-1.5"
+                className="block text-[12.5px] font-medium text-[#F1F5F9] mb-1.5"
               >
                 Description
               </label>
@@ -204,12 +204,12 @@ const AdminCategoryFormPage = () => {
             </div>
 
             <div>
-              <span className="block text-[12.5px] font-medium text-[#263445] mb-1.5">
+              <span className="block text-[12.5px] font-medium text-[#F1F5F9] mb-1.5">
                 Category Cover Image (Optional)
               </span>
               <div className="flex flex-wrap items-center gap-4">
                 <label className="dv-btn-secondary cursor-pointer px-4 py-2 text-[12px] font-medium inline-flex items-center gap-2">
-                  <Upload className="w-3.5 h-3.5 text-[#2563EB]" />
+                  <Upload className="w-3.5 h-3.5 text-[#60A5FA]" />
                   <span>{uploadingImage ? 'Uploading...' : 'Upload Image'}</span>
                   <input
                     type="file"
@@ -228,7 +228,7 @@ const AdminCategoryFormPage = () => {
                     <button
                       type="button"
                       onClick={() => setFormData({ ...formData, image_url: '' })}
-                      className="text-[12px] font-medium text-[#DC2626] hover:underline"
+                      className="text-[12px] font-medium text-red-300 hover:underline"
                     >
                       Remove
                     </button>
@@ -245,7 +245,7 @@ const AdminCategoryFormPage = () => {
                   onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
                   className="accent-[#2563EB]"
                 />
-                <span className="text-[#263445]">
+                <span className="text-[#F1F5F9]">
                   Category is active and visible in the public storefront
                 </span>
               </label>

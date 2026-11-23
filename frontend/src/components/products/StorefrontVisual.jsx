@@ -426,7 +426,7 @@ export const StorefrontBannerVisual = ({
   return (
     <div
       className={`relative w-full h-full overflow-hidden ${
-        hasValidBanner ? 'bg-[#F8FAFC]' : theme?.bannerBgClass || 'bg-[#F8FAFC]'
+        hasValidBanner ? 'bg-[#18243A]' : theme?.bannerBgClass || 'bg-[#18243A]'
       } ${className}`}
     >
       {/* Top 3px domain accent stripe */}
@@ -450,7 +450,7 @@ export const StorefrontBannerVisual = ({
       {showDomainPill && theme?.shortTag && (
         <span
           className={`absolute top-2.5 right-3 z-10 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold shadow-2xs backdrop-blur-xs ${
-            theme.pillClass || 'bg-white/95 text-[#1D4ED8] border-[#BFDBFE]'
+            theme.pillClass || 'bg-[#111C30]/95 text-[#93C5FD] border-[#BFDBFE]'
           }`}
         >
           <AccentIcon className="w-3 h-3 shrink-0" aria-hidden="true" />
@@ -484,8 +484,8 @@ export const StorefrontAvatarLogo = ({
     <div
       className={`${sizeClass} border-2 shadow-xs overflow-hidden flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-[1.03] ${
         hasValidLogo
-          ? `bg-white ${theme?.avatarBorderClass || 'border-[#BFDBFE]'}`
-          : theme?.iconBoxClass || 'bg-[#EAF4FC] text-[#2563EB] border-[#BFDBFE]'
+          ? `bg-[#111C30] ${theme?.avatarBorderClass || 'border-[#BFDBFE]'}`
+          : theme?.iconBoxClass || 'bg-[#18243A] text-[#60A5FA] border-[#BFDBFE]'
       }`}
     >
       {hasValidLogo ? (

@@ -8,7 +8,7 @@ const AdminRoute = ({ allowPasswordChangePending = false }) => {
 
   if (adminLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#EAF4FC] text-[#263445] p-6">
+      <div className="min-h-screen flex items-center justify-center bg-[#080D19] text-[#F1F5F9] p-6">
         <LoadingState label="Verifying administrator session..." />
       </div>
     );

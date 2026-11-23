@@ -85,17 +85,17 @@ const RegisterPage = () => {
   return (
     <StorefrontLayout>
       <div className="w-full max-w-md mx-auto my-6 dv-card-warm p-6 sm:p-8">
-        <p className="text-xs text-[#2563EB] font-semibold mb-1.5">
+        <p className="text-xs text-[#60A5FA] font-semibold mb-1.5">
           Customer Account
         </p>
-        <h1 className="text-2xl font-bold tracking-tight text-[#263445] mb-6">
+        <h1 className="text-2xl font-bold tracking-tight text-[#F1F5F9] mb-6">
           Create your account
         </h1>
 
         {error && (
           <div
             role="alert"
-            className="mb-6 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2.5"
+            className="mb-6 p-3.5 rounded-xl bg-red-950/50 border border-red-200 text-red-300 text-xs flex items-start gap-2.5"
           >
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
             <span>{error}</span>
@@ -106,7 +106,7 @@ const RegisterPage = () => {
           <div>
             <label
               htmlFor="register-full-name"
-              className="block text-xs font-medium text-[#263445] mb-1.5"
+              className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
             >
               Full Name
             </label>
@@ -125,7 +125,7 @@ const RegisterPage = () => {
           <div>
             <label
               htmlFor="register-email"
-              className="block text-xs font-medium text-[#263445] mb-1.5"
+              className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
             >
               Email Address
             </label>
@@ -144,7 +144,7 @@ const RegisterPage = () => {
           <div>
             <label
               htmlFor="register-phone"
-              className="block text-xs font-medium text-[#263445] mb-1.5"
+              className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
             >
               Phone Number (E.164)
             </label>
@@ -163,7 +163,7 @@ const RegisterPage = () => {
           <div>
             <label
               htmlFor="register-password"
-              className="block text-xs font-medium text-[#263445] mb-1.5"
+              className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
             >
               Password
             </label>
@@ -182,7 +182,7 @@ const RegisterPage = () => {
           <div>
             <label
               htmlFor="register-confirm-password"
-              className="block text-xs font-medium text-[#263445] mb-1.5"
+              className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
             >
               Confirm Password
             </label>
@@ -198,8 +198,8 @@ const RegisterPage = () => {
             />
           </div>
 
-          <div className="pt-2 space-y-2 text-xs text-[#64748B]">
-            <label className="flex items-center gap-2 cursor-pointer text-[#263445]">
+          <div className="pt-2 space-y-2 text-xs text-[#94A3B8]">
+            <label className="flex items-center gap-2 cursor-pointer text-[#F1F5F9]">
               <input
                 type="checkbox"
                 checked={formData.email_marketing_consent}
@@ -210,7 +210,7 @@ const RegisterPage = () => {
               />
               <span>Receive curated digital product releases via email</span>
             </label>
-            <label className="flex items-center gap-2 cursor-pointer text-[#263445]">
+            <label className="flex items-center gap-2 cursor-pointer text-[#F1F5F9]">
               <input
                 type="checkbox"
                 checked={formData.whatsapp_marketing_consent}
@@ -233,9 +233,9 @@ const RegisterPage = () => {
           </button>
         </form>
 
-        <p className="mt-6 text-xs text-[#64748B] text-center">
+        <p className="mt-6 text-xs text-[#94A3B8] text-center">
           Already have an account?{' '}
-          <Link to="/login" className="text-[#2563EB] font-semibold hover:text-[#1D4ED8] hover:underline">
+          <Link to="/login" className="text-[#60A5FA] font-semibold hover:text-[#93C5FD] hover:underline">
             Sign in
           </Link>
         </p>

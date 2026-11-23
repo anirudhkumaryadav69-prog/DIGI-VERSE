@@ -58,9 +58,9 @@ const SellerOrdersPage = () => {
           onDismiss={() => setToast({ type: '', message: '' })}
         />
 
-        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 flex flex-col sm:flex-row gap-3 justify-between">
+        <div className="bg-[#111C30] border border-[#E5E7EB] rounded-2xl p-4 flex flex-col sm:flex-row gap-3 justify-between">
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
+            <Search className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
             <input
               type="search"
               value={search}
@@ -95,10 +95,10 @@ const SellerOrdersPage = () => {
           {loading ? (
             <LoadingState label="Loading seller order attributions..." />
           ) : !data.items.length ? (
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-10 text-center">
-              <ShoppingBag className="w-8 h-8 text-[#2563EB] mx-auto mb-2" />
-              <p className="text-sm font-semibold text-[#263445]">No matching orders found</p>
-              <p className="text-xs text-[#64748B] mt-1">
+            <div className="bg-[#111C30] border border-[#E5E7EB] rounded-2xl p-10 text-center">
+              <ShoppingBag className="w-8 h-8 text-[#60A5FA] mx-auto mb-2" />
+              <p className="text-sm font-semibold text-[#F1F5F9]">No matching orders found</p>
+              <p className="text-xs text-[#94A3B8] mt-1">
                 Only orders containing at least one item you own appear here.
               </p>
             </div>
@@ -111,14 +111,14 @@ const SellerOrdersPage = () => {
               return (
                 <div
                   key={ord.order_id}
-                  className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs"
+                  className="bg-[#111C30] border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs"
                 >
-                  <div className="px-5 py-3.5 bg-[#F8FAFC] border-b border-[#E5E7EB] flex flex-wrap items-center justify-between gap-3">
+                  <div className="px-5 py-3.5 bg-[#18243A] border-b border-[#E5E7EB] flex flex-wrap items-center justify-between gap-3">
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="font-mono text-xs font-bold text-[#263445]">
+                      <span className="font-mono text-xs font-bold text-[#F1F5F9]">
                         {ord.order_number}
                       </span>
-                      <span className="text-[11px] text-[#64748B]">
+                      <span className="text-[11px] text-[#94A3B8]">
                         {new Date(ord.created_at).toLocaleString()}
                       </span>
                       <Badge variant={ord.payment_status === 'paid' ? 'success' : ord.payment_status === 'refunded' ? 'danger' : 'neutral'}>
@@ -127,10 +127,10 @@ const SellerOrdersPage = () => {
                       <Badge variant={dlBadge.variant}>{dlBadge.label}</Badge>
                     </div>
                     <div className="text-right">
-                      <span className="text-[11px] text-[#64748B] mr-2">
+                      <span className="text-[11px] text-[#94A3B8] mr-2">
                         Your Items Total ({ord.seller_units_count} qty):
                       </span>
-                      <span className="font-mono text-sm font-bold text-[#1D4ED8]">
+                      <span className="font-mono text-sm font-bold text-[#93C5FD]">
                         {formatINR(ord.seller_items_subtotal)}
                       </span>
                     </div>
@@ -143,17 +143,17 @@ const SellerOrdersPage = () => {
                         className="px-5 py-3 flex flex-wrap items-center justify-between gap-3 text-xs"
                       >
                         <div>
-                          <p className="font-semibold text-[#263445]">{item.product_name_snapshot}</p>
-                          <p className="text-[11px] text-[#64748B]">
+                          <p className="font-semibold text-[#F1F5F9]">{item.product_name_snapshot}</p>
+                          <p className="text-[11px] text-[#94A3B8]">
                             Qty: {item.quantity} × {formatINR(item.purchase_price)} · Snapshot: {item.seller_store_name_snapshot}
                           </p>
                         </div>
                         <div className="flex items-center gap-4">
-                          <span className="inline-flex items-center gap-1 text-[11px] text-[#64748B]">
-                            <Download className="w-3.5 h-3.5 text-[#2563EB]" />
+                          <span className="inline-flex items-center gap-1 text-[11px] text-[#94A3B8]">
+                            <Download className="w-3.5 h-3.5 text-[#60A5FA]" />
                             {item.downloads_used}/{item.max_downloads} downloads
                           </span>
-                          <span className="font-mono font-bold text-[#263445]">
+                          <span className="font-mono font-bold text-[#F1F5F9]">
                             {formatINR(item.line_total)}
                           </span>
                         </div>
@@ -166,9 +166,9 @@ const SellerOrdersPage = () => {
           )}
         </div>
 
-        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 flex items-center justify-between text-xs text-[#64748B]">
+        <div className="bg-[#111C30] border border-[#E5E7EB] rounded-2xl p-4 flex items-center justify-between text-xs text-[#94A3B8]">
           <span>
-            Total: <strong className="text-[#263445]">{data.total}</strong> seller orders
+            Total: <strong className="text-[#F1F5F9]">{data.total}</strong> seller orders
           </span>
           <div className="flex items-center gap-2">
             <button
@@ -176,7 +176,7 @@ const SellerOrdersPage = () => {
               aria-label="Previous page"
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white disabled:opacity-40"
+              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-[#111C30] disabled:opacity-40"
             >
               <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
@@ -188,7 +188,7 @@ const SellerOrdersPage = () => {
               aria-label="Next page"
               disabled={page >= data.total_pages}
               onClick={() => setPage((p) => p + 1)}
-              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white disabled:opacity-40"
+              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-[#111C30] disabled:opacity-40"
             >
               <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
             </button>

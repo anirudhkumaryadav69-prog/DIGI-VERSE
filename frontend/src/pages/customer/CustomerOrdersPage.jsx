@@ -107,11 +107,11 @@ const CustomerOrdersPage = () => {
           {data.items.map((ord) => (
             <div
               key={ord.id}
-              className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-[#EDF5FC]/45 transition"
+              className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-[#18243A]/70 transition"
             >
               <div className="space-y-1.5">
                 <div className="flex flex-wrap items-center gap-2.5">
-                  <span className="font-mono text-sm font-bold text-[#263445]">
+                  <span className="font-mono text-sm font-bold text-[#F1F5F9]">
                     {ord.order_number}
                   </span>
                   <Badge
@@ -129,7 +129,7 @@ const CustomerOrdersPage = () => {
                   </Badge>
                   <Badge variant="accent">Order: {ord.status}</Badge>
                 </div>
-                <p className="text-xs text-[#64748B]">
+                <p className="text-xs text-[#94A3B8]">
                   Placed on {new Date(ord.created_at).toLocaleString()} · {ord.items.length}{' '}
                   {ord.items.length === 1 ? 'item' : 'items'}
                 </p>
@@ -137,17 +137,17 @@ const CustomerOrdersPage = () => {
 
               <div className="flex flex-wrap items-center justify-between md:justify-end gap-4">
                 <div className="text-left md:text-right">
-                  <p className="font-mono text-base font-bold text-[#1D4ED8]">
+                  <p className="font-mono text-base font-bold text-[#93C5FD]">
                     {formatINR(ord.total_amount)}
                   </p>
                   <p className="text-[11px] flex items-center md:justify-end gap-1 mt-0.5">
                     {ord.download_eligible ? (
-                      <span className="text-emerald-700 font-medium inline-flex items-center gap-1">
+                      <span className="text-emerald-300 font-medium inline-flex items-center gap-1">
                         <CheckCircle2 className="w-3 h-3" aria-hidden="true" />
                         <span>Downloads Ready</span>
                       </span>
                     ) : (
-                      <span className="text-[#64748B] inline-flex items-center gap-1">
+                      <span className="text-[#94A3B8] inline-flex items-center gap-1">
                         <Clock className="w-3 h-3" aria-hidden="true" />
                         <span>Awaiting Verified Payment</span>
                       </span>

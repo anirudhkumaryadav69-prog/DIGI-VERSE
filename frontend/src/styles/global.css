@@ -2,25 +2,25 @@
 
 @theme {
   /* Backgrounds */
-  --color-canvas: #EAF4FC;
-  --color-secondary: #DCE6EF;
-  --color-ash: #E5E7EB;
-  --color-section: #F8FAFC;
-  --color-surface: #FFFFFF;
-  --color-highlight: #EDF5FC;
-  --color-hoverwarm: #EDF5FC;
+  --color-canvas: #080D19;
+  --color-secondary: #0D1424;
+  --color-ash: #0D1424;
+  --color-section: #0D1424;
+  --color-surface: #111C30;
+  --color-highlight: #18243A;
+  --color-hoverwarm: #18243A;
 
   /* Blue Accents */
   --color-brand: #2563EB;
   --color-brand-secondary: #0EA5E9;
   --color-brand-dark: #1D4ED8;
   --color-brand-border: #D5DEE8;
-  --color-brand-tint: #DCE6EF;
+  --color-brand-tint: #18243A;
 
   /* Typography */
-  --color-heading: #263445;
-  --color-ink: #263445;
-  --color-slate: #64748B;
+  --color-heading: #F1F5F9;
+  --color-ink: #F1F5F9;
+  --color-slate: #94A3B8;
   --color-muted: #94A3B8;
 
   /* Borders & States */
@@ -31,23 +31,25 @@
 }
 
 :root {
-  --dv-bg-page: #EAF4FC;
-  --dv-bg-secondary: #DCE6EF;
-  --dv-bg-ash: #E5E7EB;
-  --dv-bg-section: #F8FAFC;
-  --dv-bg-card: #FFFFFF;
-  --dv-bg-highlight: #EDF5FC;
-  --dv-bg-hover: #EDF5FC;
+  color-scheme: dark;
+
+  --dv-bg-page: #080D19;
+  --dv-bg-secondary: #0D1424;
+  --dv-bg-ash: #0D1424;
+  --dv-bg-section: #0D1424;
+  --dv-bg-card: #111C30;
+  --dv-bg-highlight: #18243A;
+  --dv-bg-hover: #18243A;
 
   --dv-blue: #2563EB;
   --dv-blue-secondary: #0EA5E9;
   --dv-blue-dark: #1D4ED8;
   --dv-border: #D5DEE8;
-  --dv-blue-tint: #DCE6EF;
+  --dv-blue-tint: #18243A;
 
-  --dv-heading: #263445;
-  --dv-text: #263445;
-  --dv-text-secondary: #64748B;
+  --dv-heading: #F1F5F9;
+  --dv-text: #F1F5F9;
+  --dv-text-secondary: #94A3B8;
   --dv-text-muted: #94A3B8;
 
   --dv-success: #16A34A;
@@ -107,7 +109,7 @@
   }
 
   .dv-card-warm {
-    background-color: var(--dv-bg-section);
+    background-color: var(--dv-bg-card);
     border: 1px solid var(--dv-border);
     border-radius: 1rem;
     box-shadow: var(--dv-shadow-card);
@@ -142,7 +144,7 @@
   }
 
   .dv-btn-secondary {
-    background-color: var(--dv-bg-page);
+    background-color: var(--dv-bg-secondary);
     color: var(--dv-text);
     border: 1px solid var(--dv-border);
     border-radius: 0.75rem;
@@ -152,12 +154,12 @@
   .dv-btn-secondary:hover:not(:disabled) {
     background-color: var(--dv-bg-hover);
     border-color: #93C5FD;
-    color: var(--dv-blue-dark);
+    color: #93C5FD;
   }
 
   .dv-input {
     width: 100%;
-    background-color: #FFFFFF;
+    background-color: #18243A;
     border: 1px solid var(--dv-border);
     border-radius: 0.75rem;
     padding: 0.5625rem 0.875rem;

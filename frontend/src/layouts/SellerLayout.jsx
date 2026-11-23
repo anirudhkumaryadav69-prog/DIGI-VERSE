@@ -34,9 +34,9 @@ const SellerLayout = ({ title, subtitle, actions, children }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#E5E7EB] text-[#263445] flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-[#0D1424] text-[#F1F5F9] flex flex-col lg:flex-row">
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-68 bg-white border-r border-[#D5DEE8] flex flex-col justify-between transition-transform lg:static lg:translate-x-0 shadow-xs ${
+        className={`fixed inset-y-0 left-0 z-40 w-68 bg-[#111C30] border-r border-[#D5DEE8] flex flex-col justify-between transition-transform lg:static lg:translate-x-0 shadow-xs ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -47,10 +47,10 @@ const SellerLayout = ({ title, subtitle, actions, children }) => {
                 <Store className="w-4 h-4" />
               </div>
               <div>
-                <span className="font-bold tracking-tight text-sm text-[#263445] block">
-                  DIGI-VERSE<span className="text-[#2563EB]">.</span>
+                <span className="font-bold tracking-tight text-sm text-[#F1F5F9] block">
+                  DIGI-VERSE<span className="text-[#60A5FA]">.</span>
                 </span>
-                <span className="text-[11px] text-[#2563EB] font-semibold">
+                <span className="text-[11px] text-[#60A5FA] font-semibold">
                   Seller Studio
                 </span>
               </div>
@@ -59,7 +59,7 @@ const SellerLayout = ({ title, subtitle, actions, children }) => {
               type="button"
               onClick={() => setMobileOpen(false)}
               aria-label="Close seller navigation"
-              className="lg:hidden text-[#64748B] hover:text-[#263445]"
+              className="lg:hidden text-[#94A3B8] hover:text-[#F1F5F9]"
             >
               <X className="w-5 h-5" />
             </button>
@@ -77,8 +77,8 @@ const SellerLayout = ({ title, subtitle, actions, children }) => {
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3.5 py-2.5 text-xs font-medium rounded-xl transition ${
                       isActive
-                        ? 'bg-[#EAF4FC] text-[#1D4ED8] border border-[#BFDBFE] font-semibold'
-                        : 'text-[#263445] hover:text-[#2563EB] hover:bg-[#EDF5FC]'
+                        ? 'bg-[#18243A] text-[#93C5FD] border border-[#BFDBFE] font-semibold'
+                        : 'text-[#F1F5F9] hover:text-[#60A5FA] hover:bg-[#18243A]'
                     }`
                   }
                 >
@@ -90,23 +90,23 @@ const SellerLayout = ({ title, subtitle, actions, children }) => {
           </nav>
         </div>
 
-        <div className="p-4 border-t border-[#D5DEE8] space-y-3 bg-[#F8FAFC]">
+        <div className="p-4 border-t border-[#D5DEE8] space-y-3 bg-[#18243A]">
           {customer && (
-            <div className="px-3 py-2.5 rounded-xl bg-white border border-[#D5DEE8]">
-              <p className="text-[11px] font-medium text-[#64748B] flex items-center gap-1.5">
-                <UserCheck className="w-3.5 h-3.5 text-[#2563EB]" aria-hidden="true" /> Approved Seller
+            <div className="px-3 py-2.5 rounded-xl bg-[#111C30] border border-[#D5DEE8]">
+              <p className="text-[11px] font-medium text-[#94A3B8] flex items-center gap-1.5">
+                <UserCheck className="w-3.5 h-3.5 text-[#60A5FA]" aria-hidden="true" /> Approved Seller
               </p>
-              <p className="text-xs font-semibold text-[#263445] truncate mt-0.5">
+              <p className="text-xs font-semibold text-[#F1F5F9] truncate mt-0.5">
                 {customer.full_name}
               </p>
-              <p className="text-[11px] text-[#64748B] truncate">{customer.email}</p>
+              <p className="text-[11px] text-[#94A3B8] truncate">{customer.email}</p>
             </div>
           )}
 
           {sellerStoreSlug && (
             <Link
               to={`/store/${sellerStoreSlug}`}
-              className="flex items-center justify-between px-3 py-2 text-xs text-[#263445] hover:text-[#2563EB] border border-[#D5DEE8] bg-white hover:border-[#93C5FD] hover:bg-[#EDF5FC] rounded-xl transition"
+              className="flex items-center justify-between px-3 py-2 text-xs text-[#F1F5F9] hover:text-[#60A5FA] border border-[#D5DEE8] bg-[#111C30] hover:border-[#93C5FD] hover:bg-[#18243A] rounded-xl transition"
             >
               <span>Public Storefront</span>
               <ExternalLink className="w-3.5 h-3.5" />
@@ -114,7 +114,7 @@ const SellerLayout = ({ title, subtitle, actions, children }) => {
           )}
           <Link
             to="/products"
-            className="flex items-center justify-between px-3 py-2 text-xs text-[#64748B] hover:text-[#263445] border border-[#D5DEE8] bg-white hover:bg-[#EDF5FC] rounded-xl transition"
+            className="flex items-center justify-between px-3 py-2 text-xs text-[#94A3B8] hover:text-[#F1F5F9] border border-[#D5DEE8] bg-[#111C30] hover:bg-[#18243A] rounded-xl transition"
           >
             <span>Browse Marketplace</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -124,25 +124,25 @@ const SellerLayout = ({ title, subtitle, actions, children }) => {
 
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-30 bg-[#263445]/30 backdrop-blur-[2px] lg:hidden"
+          className="fixed inset-0 z-30 bg-[#080D19]/70 backdrop-blur-[2px] lg:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="bg-white/95 backdrop-blur-md border-b border-[#D5DEE8] px-6 py-4 flex items-center justify-between gap-4 sticky top-0 z-20">
+        <header className="bg-[#111C30]/95 backdrop-blur-md border-b border-[#D5DEE8] px-6 py-4 flex items-center justify-between gap-4 sticky top-0 z-20">
           <div className="flex items-center gap-3 min-w-0">
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
               aria-label="Open seller navigation"
-              className="lg:hidden p-2 border border-[#D5DEE8] bg-white rounded-xl text-[#263445] hover:border-[#93C5FD] hover:bg-[#EDF5FC]"
+              className="lg:hidden p-2 border border-[#D5DEE8] bg-[#111C30] rounded-xl text-[#F1F5F9] hover:border-[#93C5FD] hover:bg-[#18243A]"
             >
               <Menu className="w-4 h-4" />
             </button>
             <div className="min-w-0">
-              <h1 className="text-lg font-bold tracking-tight text-[#263445] truncate">{title}</h1>
-              {subtitle && <p className="text-xs text-[#64748B] truncate">{subtitle}</p>}
+              <h1 className="text-lg font-bold tracking-tight text-[#F1F5F9] truncate">{title}</h1>
+              {subtitle && <p className="text-xs text-[#94A3B8] truncate">{subtitle}</p>}
             </div>
           </div>
           {actions && <div className="flex items-center gap-3 shrink-0">{actions}</div>}

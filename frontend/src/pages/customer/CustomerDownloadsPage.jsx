@@ -112,11 +112,11 @@ const CustomerDownloadsPage = () => {
           {/* Purchased Items Eligible for Download */}
           <section className="dv-card-warm p-6 md:p-8 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E5E7EB] pb-3">
-              <h2 className="text-sm font-semibold text-[#263445]">
+              <h2 className="text-sm font-semibold text-[#F1F5F9]">
                 Purchased Digital Products ({overview.eligible_items.length})
               </h2>
-              <span className="text-[11px] text-[#64748B] inline-flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#2563EB]" aria-hidden="true" />
+              <span className="text-[11px] text-[#94A3B8] inline-flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#60A5FA]" aria-hidden="true" />
                 <span>Signed URLs expire automatically and are never cached in browser storage</span>
               </span>
             </div>
@@ -149,12 +149,12 @@ const CustomerDownloadsPage = () => {
                           {item.product_slug ? (
                             <Link
                               to={`/products/${item.product_slug}`}
-                              className="text-base font-semibold text-[#263445] hover:text-[#2563EB] transition"
+                              className="text-base font-semibold text-[#F1F5F9] hover:text-[#60A5FA] transition"
                             >
                               {item.product_name}
                             </Link>
                           ) : (
-                            <p className="text-base font-semibold text-[#263445]">
+                            <p className="text-base font-semibold text-[#F1F5F9]">
                               {item.product_name}
                             </p>
                           )}
@@ -168,11 +168,11 @@ const CustomerDownloadsPage = () => {
                           </Badge>
                         </div>
 
-                        <p className="text-xs text-[#64748B]">
+                        <p className="text-xs text-[#94A3B8]">
                           Order{' '}
                           <Link
                             to={`/orders/${item.order_id}`}
-                            className="font-mono text-[#1D4ED8] underline hover:text-[#2563EB]"
+                            className="font-mono text-[#93C5FD] underline hover:text-[#60A5FA]"
                           >
                             {item.order_number}
                           </Link>{' '}
@@ -180,16 +180,16 @@ const CustomerDownloadsPage = () => {
                         </p>
 
                         <div className="flex flex-wrap items-center gap-4 text-[11px] pt-1">
-                          <span className="font-mono text-[#263445]">
+                          <span className="font-mono text-[#F1F5F9]">
                             Downloads Used: <strong>{item.downloads_used}</strong> /{' '}
                             {item.max_downloads}
                           </span>
-                          <span className="font-mono text-[#2563EB]">
+                          <span className="font-mono text-[#60A5FA]">
                             Remaining: <strong>{item.remaining_downloads}</strong>
                           </span>
                           {item.asset_filename && (
-                            <span className="inline-flex items-center gap-1 font-mono text-[#64748B]">
-                              <FileArchive className="w-3 h-3 text-[#2563EB]" aria-hidden="true" />
+                            <span className="inline-flex items-center gap-1 font-mono text-[#94A3B8]">
+                              <FileArchive className="w-3 h-3 text-[#60A5FA]" aria-hidden="true" />
                               <span>{item.asset_filename}</span>
                               {formatFileBytes(item.asset_size_bytes) && (
                                 <span>({formatFileBytes(item.asset_size_bytes)})</span>
@@ -200,7 +200,7 @@ const CustomerDownloadsPage = () => {
                         {activeId === item.order_item_id &&
                           downloadProgress?.orderItemId === item.order_item_id && (
                             <div className="pt-1 max-w-xs space-y-1">
-                              <div className="w-full h-1.5 rounded-full bg-[#EAF4FC] overflow-hidden">
+                              <div className="w-full h-1.5 rounded-full bg-[#18243A] overflow-hidden">
                                 <div
                                   className="h-full bg-[#2563EB] transition-all"
                                   style={{
@@ -250,19 +250,19 @@ const CustomerDownloadsPage = () => {
           {/* Download History Audit Log */}
           <section className="dv-card p-6 md:p-8 space-y-4">
             <div className="flex items-center gap-2 border-b border-[#E5E7EB] pb-3">
-              <Clock className="w-4 h-4 text-[#2563EB]" aria-hidden="true" />
-              <h2 className="text-sm font-semibold text-[#263445]">
+              <Clock className="w-4 h-4 text-[#60A5FA]" aria-hidden="true" />
+              <h2 className="text-sm font-semibold text-[#F1F5F9]">
                 Download Activity History ({overview.history.length})
               </h2>
             </div>
 
             {overview.history.length === 0 ? (
-              <p className="text-xs text-[#64748B] py-4">No download events recorded yet.</p>
+              <p className="text-xs text-[#94A3B8] py-4">No download events recorded yet.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
-                    <tr className="border-b border-[#E5E7EB] text-[#64748B] font-semibold">
+                    <tr className="border-b border-[#E5E7EB] text-[#94A3B8] font-semibold">
                       <th className="py-2.5 pr-4">Product</th>
                       <th className="py-2.5 pr-4">Status</th>
                       <th className="py-2.5 pr-4">Timestamp</th>
@@ -271,13 +271,13 @@ const CustomerDownloadsPage = () => {
                   <tbody className="divide-y divide-[#E5E7EB]">
                     {overview.history.map((h) => (
                       <tr key={h.id}>
-                        <td className="py-2.5 pr-4 font-semibold text-[#263445]">{h.product_name}</td>
+                        <td className="py-2.5 pr-4 font-semibold text-[#F1F5F9]">{h.product_name}</td>
                         <td className="py-2.5 pr-4">
                           <Badge variant={h.status === 'completed' ? 'success' : 'neutral'}>
                             {h.status}
                           </Badge>
                         </td>
-                        <td className="py-2.5 pr-4 text-[#64748B]">
+                        <td className="py-2.5 pr-4 text-[#94A3B8]">
                           {new Date(h.downloaded_at).toLocaleString()}
                         </td>
                       </tr>

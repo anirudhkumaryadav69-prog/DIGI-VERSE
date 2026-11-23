@@ -170,17 +170,17 @@ const SellerOnboardingPage = () => {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold text-[#2563EB]">
+            <p className="text-xs font-semibold text-[#60A5FA]">
               Creator Marketplace
             </p>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#263445] mt-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#F1F5F9] mt-1">
               DIGI-VERSE Seller Onboarding
             </h1>
-            <p className="text-sm text-[#64748B] mt-1">
+            <p className="text-sm text-[#94A3B8] mt-1">
               Open your digital storefront, upload products securely, and reach verified marketplace buyers.
             </p>
           </div>
-          <Link to="/profile" className="text-xs font-semibold text-[#2563EB] hover:underline">
+          <Link to="/profile" className="text-xs font-semibold text-[#60A5FA] hover:underline">
             Back to Profile
           </Link>
         </div>
@@ -191,14 +191,14 @@ const SellerOnboardingPage = () => {
         />
 
         {status === 'approved' && (
-          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="bg-emerald-950/50 border border-emerald-200 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-6 h-6 text-emerald-700 shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-6 h-6 text-emerald-300 shrink-0 mt-0.5" />
               <div>
-                <h2 className="text-base font-bold text-emerald-900">
+                <h2 className="text-base font-bold text-emerald-200">
                   Your seller store &ldquo;{application.store_name}&rdquo; is Approved!
                 </h2>
-                <p className="text-xs text-emerald-800 mt-1">
+                <p className="text-xs text-emerald-300 mt-1">
                   You have full access to Seller Studio while keeping all of your customer purchasing privileges.
                 </p>
               </div>
@@ -218,13 +218,13 @@ const SellerOnboardingPage = () => {
         )}
 
         {status === 'pending' && (
-          <div className="bg-[#EAF4FC] border border-[#BFDBFE] rounded-2xl p-6 flex items-start gap-3.5">
-            <Clock className="w-6 h-6 text-[#2563EB] shrink-0 mt-0.5" />
+          <div className="bg-[#18243A] border border-[#BFDBFE] rounded-2xl p-6 flex items-start gap-3.5">
+            <Clock className="w-6 h-6 text-[#60A5FA] shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <h2 className="text-base font-bold text-[#263445]">
+              <h2 className="text-base font-bold text-[#F1F5F9]">
                 Application Pending Administrator Review
               </h2>
-              <p className="text-xs text-[#263445] leading-relaxed">
+              <p className="text-xs text-[#F1F5F9] leading-relaxed">
                 Storefront <strong>{application.store_name}</strong> (<code>/store/{application.store_slug}</code>) was submitted and is awaiting administrator review. You cannot publish products until approval is granted.
               </p>
             </div>
@@ -232,15 +232,15 @@ const SellerOnboardingPage = () => {
         )}
 
         {status === 'suspended' && (
-          <div className="bg-red-50 border border-red-200 rounded-2xl p-6 flex items-start gap-3.5">
-            <ShieldAlert className="w-6 h-6 text-red-600 shrink-0 mt-0.5" />
+          <div className="bg-red-950/50 border border-red-200 rounded-2xl p-6 flex items-start gap-3.5">
+            <ShieldAlert className="w-6 h-6 text-red-300 shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <h2 className="text-base font-bold text-red-900">Seller Account Suspended</h2>
-              <p className="text-xs text-red-800 leading-relaxed">
+              <h2 className="text-base font-bold text-red-200">Seller Account Suspended</h2>
+              <p className="text-xs text-red-300 leading-relaxed">
                 {application.suspension_reason ||
                   'Your seller storefront has been suspended by marketplace administrators.'}
               </p>
-              <p className="text-xs text-red-700">
+              <p className="text-xs text-red-300">
                 Creating, modifying, or publishing seller products is currently disabled. Existing buyer downloads remain unaffected unless explicitly revoked.
               </p>
             </div>
@@ -248,14 +248,14 @@ const SellerOnboardingPage = () => {
         )}
 
         {status === 'rejected' && (
-          <div className="bg-red-50 border border-red-200 rounded-2xl p-6 flex items-start gap-3.5">
-            <AlertCircle className="w-6 h-6 text-red-600 shrink-0 mt-0.5" />
+          <div className="bg-red-950/50 border border-red-200 rounded-2xl p-6 flex items-start gap-3.5">
+            <AlertCircle className="w-6 h-6 text-red-300 shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <h2 className="text-base font-bold text-red-900">Previous Application Rejected</h2>
-              <p className="text-xs text-red-800 leading-relaxed">
+              <h2 className="text-base font-bold text-red-200">Previous Application Rejected</h2>
+              <p className="text-xs text-red-300 leading-relaxed">
                 <strong>Reason:</strong> {application.rejection_reason}
               </p>
-              <p className="text-xs text-[#64748B]">
+              <p className="text-xs text-[#94A3B8]">
                 Update your store profile details below and resubmit for administrator review.
               </p>
             </div>
@@ -265,18 +265,18 @@ const SellerOnboardingPage = () => {
         {(!status || status === 'rejected') && (
           <form
             onSubmit={handleSubmit}
-            className="bg-white border border-[#E5E7EB] rounded-2xl p-6 sm:p-8 shadow-xs space-y-5"
+            className="bg-[#111C30] border border-[#E5E7EB] rounded-2xl p-6 sm:p-8 shadow-xs space-y-5"
           >
             <div className="flex items-center gap-2.5 border-b border-[#E5E7EB] pb-4">
-              <Store className="w-5 h-5 text-[#2563EB]" />
-              <h2 className="text-base font-bold text-[#263445]">
+              <Store className="w-5 h-5 text-[#60A5FA]" />
+              <h2 className="text-base font-bold text-[#F1F5F9]">
                 {status === 'rejected' ? 'Update & Resubmit Seller Application' : 'Seller Store Application'}
               </h2>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Store Name *
                 </label>
                 <input
@@ -297,7 +297,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Storefront URL Slug *
                 </label>
                 <input
@@ -311,13 +311,13 @@ const SellerOnboardingPage = () => {
                   placeholder="creative-studio"
                   className="dv-input text-sm font-mono"
                 />
-                <p className="text-[11px] text-[#64748B] mt-1">
+                <p className="text-[11px] text-[#94A3B8] mt-1">
                   Public URL: <code>/store/{form.store_slug || 'your-store'}</code>
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Seller Display Name *
                 </label>
                 <input
@@ -330,7 +330,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Contact Email *
                 </label>
                 <input
@@ -343,7 +343,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Contact Phone / Handle
                 </label>
                 <input
@@ -356,7 +356,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Country *
                 </label>
                 <input
@@ -369,7 +369,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Business / Creator Type *
                 </label>
                 <select
@@ -386,7 +386,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Intended Product Categories (comma separated)
                 </label>
                 <input
@@ -403,7 +403,7 @@ const SellerOnboardingPage = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Store Logo URL (or Upload)
                 </label>
                 <div className="flex gap-2">
@@ -428,7 +428,7 @@ const SellerOnboardingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Store Banner URL (or Upload)
                 </label>
                 <div className="flex gap-2">
@@ -454,7 +454,7 @@ const SellerOnboardingPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                 Public Store Description
               </label>
               <textarea
@@ -467,7 +467,7 @@ const SellerOnboardingPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                 Application Review Notes (For Marketplace Admins) *
               </label>
               <textarea
@@ -484,7 +484,7 @@ const SellerOnboardingPage = () => {
             </div>
 
             <div className="flex items-center justify-between gap-4 pt-2 border-t border-[#E5E7EB]">
-              <p className="text-[11px] text-[#64748B]">
+              <p className="text-[11px] text-[#94A3B8]">
                 No sensitive banking details are collected during onboarding.
               </p>
               <Button type="submit" disabled={submitting}>

@@ -356,8 +356,8 @@ const AdminPayoutPage = () => {
             onClick={() => setTab(item.id)}
             className={`shrink-0 px-4 py-2.5 rounded-xl border text-xs font-semibold transition ${
               tab === item.id
-                ? 'bg-[#EAF4FC] border-[#BFDBFE] text-[#1D4ED8]'
-                : 'bg-white border-[#E5E7EB] text-[#64748B] hover:border-[#93C5FD]'
+                ? 'bg-[#18243A] border-[#BFDBFE] text-[#93C5FD]'
+                : 'bg-[#111C30] border-[#E5E7EB] text-[#94A3B8] hover:border-[#93C5FD]'
             }`}
           >
             {item.label}
@@ -465,40 +465,40 @@ const AdminPayoutPage = () => {
       />
 
       {rejectTarget && (
-        <div role="dialog" aria-modal="true" aria-labelledby="reject-payout-title" className="fixed inset-0 z-50 bg-[#263445]/30 backdrop-blur-[2px] flex items-center justify-center p-4">
-          <div className="bg-white border border-red-200 rounded-2xl max-w-md w-full p-6 space-y-4">
+        <div role="dialog" aria-modal="true" aria-labelledby="reject-payout-title" className="fixed inset-0 z-50 bg-[#080D19]/70 backdrop-blur-[2px] flex items-center justify-center p-4">
+          <div className="bg-[#111C30] border border-red-200 rounded-2xl max-w-md w-full p-6 space-y-4">
             <h3 id="reject-payout-title" className="text-base font-semibold">Reject payout request</h3>
-            <label htmlFor="payout-reject-reason" className="block text-xs font-medium text-[#64748B]">Mandatory rejection reason</label>
+            <label htmlFor="payout-reject-reason" className="block text-xs font-medium text-[#94A3B8]">Mandatory rejection reason</label>
             <textarea id="payout-reject-reason" value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} maxLength={2000} rows={4} className="dv-input px-3 py-2.5 text-sm w-full" />
             <div className="flex justify-end gap-3">
               <button type="button" onClick={() => setRejectTarget(null)} className="dv-btn-secondary text-xs px-4 py-2.5">Cancel</button>
-              <button type="button" disabled={saving || rejectReason.trim().length < 3} onClick={rejectRequest} className="text-xs px-4 py-2.5 rounded-xl border border-red-200 bg-red-50 text-red-700 disabled:opacity-50">Reject payout</button>
+              <button type="button" disabled={saving || rejectReason.trim().length < 3} onClick={rejectRequest} className="text-xs px-4 py-2.5 rounded-xl border border-red-200 bg-red-950/50 text-red-300 disabled:opacity-50">Reject payout</button>
             </div>
           </div>
         </div>
       )}
 
       {accountRejectTarget && (
-        <div role="dialog" aria-modal="true" aria-labelledby="reject-account-title" className="fixed inset-0 z-50 bg-[#263445]/30 backdrop-blur-[2px] flex items-center justify-center p-4">
-          <div className="bg-white border border-red-200 rounded-2xl max-w-md w-full p-6 space-y-4">
+        <div role="dialog" aria-modal="true" aria-labelledby="reject-account-title" className="fixed inset-0 z-50 bg-[#080D19]/70 backdrop-blur-[2px] flex items-center justify-center p-4">
+          <div className="bg-[#111C30] border border-red-200 rounded-2xl max-w-md w-full p-6 space-y-4">
             <h3 id="reject-account-title" className="text-base font-semibold">Reject payout account</h3>
-            <label htmlFor="account-reject-reason" className="block text-xs font-medium text-[#64748B]">Mandatory rejection reason</label>
+            <label htmlFor="account-reject-reason" className="block text-xs font-medium text-[#94A3B8]">Mandatory rejection reason</label>
             <textarea id="account-reject-reason" value={accountRejectReason} onChange={(e) => setAccountRejectReason(e.target.value)} maxLength={2000} rows={4} className="dv-input px-3 py-2.5 text-sm w-full" />
             <div className="flex justify-end gap-3">
               <button type="button" onClick={() => setAccountRejectTarget(null)} className="dv-btn-secondary text-xs px-4 py-2.5">Cancel</button>
-              <button type="button" disabled={saving || accountRejectReason.trim().length < 3} onClick={rejectAccount} className="text-xs px-4 py-2.5 rounded-xl border border-red-200 bg-red-50 text-red-700 disabled:opacity-50">Reject account</button>
+              <button type="button" disabled={saving || accountRejectReason.trim().length < 3} onClick={rejectAccount} className="text-xs px-4 py-2.5 rounded-xl border border-red-200 bg-red-950/50 text-red-300 disabled:opacity-50">Reject account</button>
             </div>
           </div>
         </div>
       )}
 
       {resolutionTarget && (
-        <div role="dialog" aria-modal="true" aria-labelledby="resolution-title" className="fixed inset-0 z-50 bg-[#263445]/30 backdrop-blur-[2px] flex items-center justify-center p-4">
-          <div className="bg-white border border-[#BFDBFE] rounded-2xl max-w-lg w-full p-6 space-y-4">
+        <div role="dialog" aria-modal="true" aria-labelledby="resolution-title" className="fixed inset-0 z-50 bg-[#080D19]/70 backdrop-blur-[2px] flex items-center justify-center p-4">
+          <div className="bg-[#111C30] border border-[#BFDBFE] rounded-2xl max-w-lg w-full p-6 space-y-4">
             <h3 id="resolution-title" className="text-base font-semibold">Record reconciliation resolution</h3>
-            <p className="text-xs text-[#64748B]">Current classification: <strong>{resolutionTarget.classification}</strong>. This records an administrative action only; it does not post or repair accounting entries.</p>
+            <p className="text-xs text-[#94A3B8]">Current classification: <strong>{resolutionTarget.classification}</strong>. This records an administrative action only; it does not post or repair accounting entries.</p>
             <div>
-              <label htmlFor="resolution-action" className="block text-xs font-medium text-[#64748B] mb-1.5">Resolution action</label>
+              <label htmlFor="resolution-action" className="block text-xs font-medium text-[#94A3B8] mb-1.5">Resolution action</label>
               <select id="resolution-action" value={resolutionAction} onChange={(e) => setResolutionAction(e.target.value)} className="dv-input px-3 py-2.5 text-sm w-full">
                 <option value="investigate">Investigate</option>
                 <option value="confirm_evidence">Confirm evidence</option>
@@ -507,11 +507,11 @@ const AdminPayoutPage = () => {
               </select>
             </div>
             <div>
-              <label htmlFor="resolution-reason" className="block text-xs font-medium text-[#64748B] mb-1.5">Mandatory reason</label>
+              <label htmlFor="resolution-reason" className="block text-xs font-medium text-[#94A3B8] mb-1.5">Mandatory reason</label>
               <textarea id="resolution-reason" value={resolutionReason} onChange={(e) => setResolutionReason(e.target.value)} maxLength={5000} rows={4} className="dv-input px-3 py-2.5 text-sm w-full" />
             </div>
             <div>
-              <label htmlFor="resolution-evidence" className="block text-xs font-medium text-[#64748B] mb-1.5">Evidence reference (optional)</label>
+              <label htmlFor="resolution-evidence" className="block text-xs font-medium text-[#94A3B8] mb-1.5">Evidence reference (optional)</label>
               <input id="resolution-evidence" value={evidenceReference} onChange={(e) => setEvidenceReference(e.target.value)} maxLength={255} className="dv-input px-3 py-2.5 text-sm w-full" />
             </div>
             <div className="flex justify-end gap-3">
@@ -548,14 +548,14 @@ const OverviewTab = ({ report, reconciliationSummary, loading }) => {
     <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
       {cards.map(([label, value, Icon]) => (
         <div key={label} className="dv-card p-5">
-          <p className="text-[12px] font-medium text-[#64748B] flex justify-between gap-2">
-            {label}<Icon className="w-4 h-4 text-[#2563EB]" />
+          <p className="text-[12px] font-medium text-[#94A3B8] flex justify-between gap-2">
+            {label}<Icon className="w-4 h-4 text-[#60A5FA]" />
           </p>
           {typeof value === 'number' && label === 'Unresolved exceptions'
-            ? <p className="text-2xl font-bold text-[#263445] mt-2">{value}</p>
+            ? <p className="text-2xl font-bold text-[#F1F5F9] mt-2">{value}</p>
             : typeof value === 'number' && label === 'Total requests'
-              ? <p className="text-2xl font-bold text-[#263445] mt-2">{value}</p>
-              : <p className="text-xl font-bold font-mono text-[#1D4ED8] mt-2">{formatINR(value)}</p>}
+              ? <p className="text-2xl font-bold text-[#F1F5F9] mt-2">{value}</p>
+              : <p className="text-xl font-bold font-mono text-[#93C5FD] mt-2">{formatINR(value)}</p>}
         </div>
       ))}
     </section>
@@ -583,7 +583,7 @@ const RequestsTab = ({
 }) => (
   <>
     <section className="dv-card p-5 mb-6">
-      <h2 className="text-sm font-bold mb-4 flex items-center gap-2"><Search className="w-4 h-4 text-[#2563EB]" />Payout filters</h2>
+      <h2 className="text-sm font-bold mb-4 flex items-center gap-2"><Search className="w-4 h-4 text-[#60A5FA]" />Payout filters</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <select aria-label="Payout status" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="dv-input px-3 py-2.5 text-xs">
           <option value="">All statuses</option>
@@ -597,17 +597,17 @@ const RequestsTab = ({
     </section>
     <section className="dv-card overflow-hidden">
       {loading ? <LoadingState label="Loading payout requests..." /> : !payouts.items.length ? (
-        <p className="p-8 text-center text-xs text-[#64748B]">No payout requests match the filters.</p>
+        <p className="p-8 text-center text-xs text-[#94A3B8]">No payout requests match the filters.</p>
       ) : (
         <>
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left">
-              <thead><tr className="bg-[#F8FAFC] text-[#64748B] border-b border-[#E5E7EB]">
+              <thead><tr className="bg-[#18243A] text-[#94A3B8] border-b border-[#E5E7EB]">
                 <th className="px-4 py-3">Reference</th><th className="px-4 py-3">Seller</th><th className="px-4 py-3">Destination</th><th className="px-4 py-3 text-right">Amount</th><th className="px-4 py-3">Status</th><th className="px-4 py-3 text-right">Actions</th>
               </tr></thead>
               <tbody className="divide-y divide-[#E5E7EB]">{payouts.items.map((payout) => (
-                <tr key={payout.id} className="hover:bg-[#EAF4FC]">
-                  <td className="px-4 py-3"><button type="button" onClick={() => openDetail(payout)} className="font-mono text-[#1D4ED8] hover:underline">{payout.id}</button></td>
+                <tr key={payout.id} className="hover:bg-[#18243A]">
+                  <td className="px-4 py-3"><button type="button" onClick={() => openDetail(payout)} className="font-mono text-[#93C5FD] hover:underline">{payout.id}</button></td>
                   <td className="px-4 py-3 font-mono">{payout.seller_id}</td>
                   <td className="px-4 py-3">{payout.destination_masked_snapshot}</td>
                   <td className="px-4 py-3 text-right font-mono font-bold">{formatINR(payout.amount)}</td>
@@ -616,7 +616,7 @@ const RequestsTab = ({
                     {payout.status === 'requested' && <button type="button" disabled={saving} onClick={() => reviewRequest(payout.id)} className="dv-btn-secondary text-[11px] px-3 py-1.5">Review</button>}
                     {['requested','under_review'].includes(payout.status) && <>
                       <button type="button" disabled={saving} onClick={() => setApproveTarget(payout)} className="dv-btn-primary text-[11px] px-3 py-1.5">Approve</button>
-                      <button type="button" disabled={saving} onClick={() => setRejectTarget(payout)} className="text-[11px] px-3 py-1.5 rounded-xl border border-red-200 text-red-700">Reject</button>
+                      <button type="button" disabled={saving} onClick={() => setRejectTarget(payout)} className="text-[11px] px-3 py-1.5 rounded-xl border border-red-200 text-red-300">Reject</button>
                     </>}
                   </div></td>
                 </tr>
@@ -654,23 +654,23 @@ const ReconciliationTab = ({
             {classifications.map((classification) => <option key={classification} value={classification}>{classification}</option>)}
           </select>
           <input aria-label="Reconciliation seller" value={sellerFilter} onChange={(e) => setSellerFilter(e.target.value)} placeholder="Seller UUID" className="dv-input px-3 py-2.5 text-xs" />
-          <label className="flex items-center gap-2 text-xs text-[#64748B]"><input type="checkbox" checked={unresolvedOnly} onChange={(e) => setUnresolvedOnly(e.target.checked)} /> Unresolved only</label>
+          <label className="flex items-center gap-2 text-xs text-[#94A3B8]"><input type="checkbox" checked={unresolvedOnly} onChange={(e) => setUnresolvedOnly(e.target.checked)} /> Unresolved only</label>
         </div>
         <button type="button" onClick={applyFilters} className="dv-btn-primary text-xs px-4 py-2.5 mt-3">Apply filters</button>
       </section>
       <section className="dv-card overflow-hidden">
         {loading ? <LoadingState label="Loading reconciliation queue..." /> : !reconciliation.items.length ? (
-          <p className="p-8 text-center text-xs text-[#64748B]">No reconciliation records match the filters.</p>
+          <p className="p-8 text-center text-xs text-[#94A3B8]">No reconciliation records match the filters.</p>
         ) : (
           <>
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
-                <thead><tr className="bg-[#F8FAFC] text-[#64748B] border-b border-[#E5E7EB]"><th className="px-4 py-3">Payout</th><th className="px-4 py-3">Primary classification</th><th className="px-4 py-3">Secondary issues</th><th className="px-4 py-3">Execution</th><th className="px-4 py-3">Settlement</th></tr></thead>
+                <thead><tr className="bg-[#18243A] text-[#94A3B8] border-b border-[#E5E7EB]"><th className="px-4 py-3">Payout</th><th className="px-4 py-3">Primary classification</th><th className="px-4 py-3">Secondary issues</th><th className="px-4 py-3">Execution</th><th className="px-4 py-3">Settlement</th></tr></thead>
                 <tbody className="divide-y divide-[#E5E7EB]">{reconciliation.items.map((item) => (
-                  <tr key={item.payout_id} className="hover:bg-[#EAF4FC]">
-                    <td className="px-4 py-3"><button type="button" onClick={() => openPayout({ id: item.payout_id })} className="font-mono text-[#1D4ED8] hover:underline">{item.payout_id}</button></td>
+                  <tr key={item.payout_id} className="hover:bg-[#18243A]">
+                    <td className="px-4 py-3"><button type="button" onClick={() => openPayout({ id: item.payout_id })} className="font-mono text-[#93C5FD] hover:underline">{item.payout_id}</button></td>
                     <td className="px-4 py-3"><Badge variant={classificationVariant[item.classification] || 'neutral'}>{item.classification}</Badge></td>
-                    <td className="px-4 py-3 text-[#64748B]">{item.secondary_issues?.length ? item.secondary_issues.join(', ') : 'None'}</td>
+                    <td className="px-4 py-3 text-[#94A3B8]">{item.secondary_issues?.length ? item.secondary_issues.join(', ') : 'None'}</td>
                     <td className="px-4 py-3">{item.latest_attempt?.status || item.payout_status}</td>
                     <td className="px-4 py-3">{item.settlement_count > 0 ? 'Settlement found' : 'No settlement'}</td>
                   </tr>
@@ -725,18 +725,18 @@ const VerificationTab = ({
         <button type="button" onClick={applyFilters} className="dv-btn-primary text-xs px-4 py-2.5 mt-3">Apply filters</button>
       </section>
       <section className="dv-card overflow-hidden">
-        {loading ? <LoadingState label="Loading payout accounts..." /> : !accounts.items.length ? <p className="p-8 text-center text-xs text-[#64748B]">No payout accounts match the filters.</p> : (
+        {loading ? <LoadingState label="Loading payout accounts..." /> : !accounts.items.length ? <p className="p-8 text-center text-xs text-[#94A3B8]">No payout accounts match the filters.</p> : (
           <>
-            <div className="overflow-x-auto"><table className="w-full text-xs text-left"><thead><tr className="bg-[#F8FAFC] text-[#64748B] border-b border-[#E5E7EB]"><th className="px-4 py-3">Seller</th><th className="px-4 py-3">Account</th><th className="px-4 py-3">Type</th><th className="px-4 py-3">Status</th><th className="px-4 py-3 text-right">Actions</th></tr></thead><tbody className="divide-y divide-[#E5E7EB]">{accounts.items.map((account) => (
-              <tr key={account.id} className="hover:bg-[#EAF4FC]">
-                <td className="px-4 py-3"><p className="font-semibold">{account.store_name || 'Unknown seller'}</p><p className="font-mono text-[10px] text-[#64748B]">{account.seller_id}</p></td>
-                <td className="px-4 py-3"><p>{account.display_name}</p><p className="text-[#64748B]">{account.masked_identifier}</p></td>
-                <td className="px-4 py-3 font-medium text-[#263445]">{String(account.account_type || '').toUpperCase()}</td>
-                <td className="px-4 py-3"><Badge variant={statusVariant[account.verification_status] || 'neutral'}>{account.verification_status}</Badge>{account.verification_reason && <p className="text-[10px] text-red-700 mt-1">{account.verification_reason}</p>}</td>
+            <div className="overflow-x-auto"><table className="w-full text-xs text-left"><thead><tr className="bg-[#18243A] text-[#94A3B8] border-b border-[#E5E7EB]"><th className="px-4 py-3">Seller</th><th className="px-4 py-3">Account</th><th className="px-4 py-3">Type</th><th className="px-4 py-3">Status</th><th className="px-4 py-3 text-right">Actions</th></tr></thead><tbody className="divide-y divide-[#E5E7EB]">{accounts.items.map((account) => (
+              <tr key={account.id} className="hover:bg-[#18243A]">
+                <td className="px-4 py-3"><p className="font-semibold">{account.store_name || 'Unknown seller'}</p><p className="font-mono text-[10px] text-[#94A3B8]">{account.seller_id}</p></td>
+                <td className="px-4 py-3"><p>{account.display_name}</p><p className="text-[#94A3B8]">{account.masked_identifier}</p></td>
+                <td className="px-4 py-3 font-medium text-[#F1F5F9]">{String(account.account_type || '').toUpperCase()}</td>
+                <td className="px-4 py-3"><Badge variant={statusVariant[account.verification_status] || 'neutral'}>{account.verification_status}</Badge>{account.verification_reason && <p className="text-[10px] text-red-300 mt-1">{account.verification_reason}</p>}</td>
                 <td className="px-4 py-3"><div className="flex justify-end gap-2">
                   <button type="button" onClick={() => openHistory(account)} className="dv-btn-secondary text-[11px] px-3 py-1.5">History</button>
                   {account.verification_status !== 'verified' && <button type="button" disabled={saving} onClick={() => approveAccount(account.id)} className="dv-btn-primary text-[11px] px-3 py-1.5">Approve</button>}
-                  {account.verification_status !== 'rejected' && <button type="button" disabled={saving} onClick={() => setRejectTarget(account)} className="text-[11px] px-3 py-1.5 rounded-xl border border-red-200 text-red-700">Reject</button>}
+                  {account.verification_status !== 'rejected' && <button type="button" disabled={saving} onClick={() => setRejectTarget(account)} className="text-[11px] px-3 py-1.5 rounded-xl border border-red-200 text-red-300">Reject</button>}
                 </div></td>
               </tr>
             ))}</tbody></table></div>
@@ -744,7 +744,7 @@ const VerificationTab = ({
           </>
         )}
       </section>
-      {historyAccount && <div className="dv-card p-5 mt-6"><h3 className="text-sm font-bold mb-3">Verification history: {historyAccount.masked_identifier}</h3>{history.length ? <div className="space-y-2">{history.map((row) => <div key={row.id} className="border border-[#E5E7EB] rounded-xl p-3 text-xs"><p><strong>{row.previous_status}</strong> → <strong>{row.new_status}</strong></p>{row.rejection_reason && <p className="text-red-700 mt-1">{row.rejection_reason}</p>}<p className="text-[#64748B] mt-1">{new Date(row.created_at).toLocaleString()}</p></div>)}</div> : <p className="text-xs text-[#64748B]">No verification history.</p>}</div>}
+      {historyAccount && <div className="dv-card p-5 mt-6"><h3 className="text-sm font-bold mb-3">Verification history: {historyAccount.masked_identifier}</h3>{history.length ? <div className="space-y-2">{history.map((row) => <div key={row.id} className="border border-[#E5E7EB] rounded-xl p-3 text-xs"><p><strong>{row.previous_status}</strong> → <strong>{row.new_status}</strong></p>{row.rejection_reason && <p className="text-red-300 mt-1">{row.rejection_reason}</p>}<p className="text-[#94A3B8] mt-1">{new Date(row.created_at).toLocaleString()}</p></div>)}</div> : <p className="text-xs text-[#94A3B8]">No verification history.</p>}</div>}
     </>
   );
 };
@@ -767,14 +767,14 @@ const ReportsTab = ({ report, reconciliationSummary }) => {
       <div className="dv-card p-5">
         <h2 className="text-sm font-bold mb-4">Financial report</h2>
         <div className="divide-y divide-[#E5E7EB]">{rows.map(([label, value]) => (
-          <div key={label} className="py-3 flex justify-between gap-4 text-xs"><span className="text-[#64748B]">{label}</span><strong className="font-mono text-[#263445]">{value == null ? '-' : formatINR(value)}</strong></div>
+          <div key={label} className="py-3 flex justify-between gap-4 text-xs"><span className="text-[#94A3B8]">{label}</span><strong className="font-mono text-[#F1F5F9]">{value == null ? '-' : formatINR(value)}</strong></div>
         ))}</div>
       </div>
       <div className="dv-card p-5">
         <h2 className="text-sm font-bold mb-4">Reconciliation report</h2>
         <div className="space-y-3 text-xs">
-          <div className="flex justify-between"><span className="text-[#64748B]">Exception count</span><strong>{reconciliationSummary?.reconciliation_exception_count ?? 0}</strong></div>
-          <div className="flex justify-between"><span className="text-[#64748B]">Unresolved discrepancies</span><strong>{reconciliationSummary?.unresolved_discrepancy_count ?? 0}</strong></div>
+          <div className="flex justify-between"><span className="text-[#94A3B8]">Exception count</span><strong>{reconciliationSummary?.reconciliation_exception_count ?? 0}</strong></div>
+          <div className="flex justify-between"><span className="text-[#94A3B8]">Unresolved discrepancies</span><strong>{reconciliationSummary?.unresolved_discrepancy_count ?? 0}</strong></div>
         </div>
         {reconciliationSummary?.classification_counts && (
           <div className="mt-5 divide-y divide-[#E5E7EB]">{Object.entries(reconciliationSummary.classification_counts).map(([classification, count]) => (
@@ -799,10 +799,10 @@ const PayoutDetailDrawer = ({
 }) => {
   const payout = payoutDetail?.payout || selectedPayout;
   return (
-    <div role="dialog" aria-modal="true" aria-labelledby="payout-detail-title" className="fixed inset-0 z-50 bg-[#263445]/30 backdrop-blur-[2px] flex justify-end">
-      <div className="w-full max-w-2xl h-full overflow-y-auto bg-white border-l border-[#E5E7EB] p-6">
+    <div role="dialog" aria-modal="true" aria-labelledby="payout-detail-title" className="fixed inset-0 z-50 bg-[#080D19]/70 backdrop-blur-[2px] flex justify-end">
+      <div className="w-full max-w-2xl h-full overflow-y-auto bg-[#111C30] border-l border-[#E5E7EB] p-6">
         <div className="flex items-start justify-between gap-4 mb-6">
-          <div><p className="text-[12px] text-[#2563EB] font-semibold">Payout detail</p><h2 id="payout-detail-title" className="text-[17px] font-semibold text-[#263445] mt-1 font-mono">{payout?.id}</h2></div>
+          <div><p className="text-[12px] text-[#60A5FA] font-semibold">Payout detail</p><h2 id="payout-detail-title" className="text-[17px] font-semibold text-[#F1F5F9] mt-1 font-mono">{payout?.id}</h2></div>
           <button type="button" onClick={onClose} aria-label="Close payout detail" className="p-2 rounded-xl border border-[#E5E7EB]">×</button>
         </div>
         {!payoutDetail ? <LoadingState label="Loading payout detail..." /> : (
@@ -810,19 +810,19 @@ const PayoutDetailDrawer = ({
             <section className="dv-card p-5">
               <h3 className="text-sm font-bold mb-3">Payout information</h3>
               <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                <div><dt className="text-[#64748B]">Seller</dt><dd className="font-mono mt-1">{payoutDetail.seller?.store_name || payoutDetail.seller?.id}</dd></div>
-                <div><dt className="text-[#64748B]">Amount</dt><dd className="font-mono font-bold mt-1">{formatINR(payoutDetail.payout?.amount)}</dd></div>
-                <div><dt className="text-[#64748B]">Masked destination</dt><dd className="mt-1">{payoutDetail.destination?.masked_identifier}</dd></div>
-                <div><dt className="text-[#64748B]">Status</dt><dd className="mt-1"><Badge variant={statusVariant[payoutDetail.payout?.status] || 'neutral'}>{payoutDetail.payout?.status}</Badge></dd></div>
+                <div><dt className="text-[#94A3B8]">Seller</dt><dd className="font-mono mt-1">{payoutDetail.seller?.store_name || payoutDetail.seller?.id}</dd></div>
+                <div><dt className="text-[#94A3B8]">Amount</dt><dd className="font-mono font-bold mt-1">{formatINR(payoutDetail.payout?.amount)}</dd></div>
+                <div><dt className="text-[#94A3B8]">Masked destination</dt><dd className="mt-1">{payoutDetail.destination?.masked_identifier}</dd></div>
+                <div><dt className="text-[#94A3B8]">Status</dt><dd className="mt-1"><Badge variant={statusVariant[payoutDetail.payout?.status] || 'neutral'}>{payoutDetail.payout?.status}</Badge></dd></div>
               </dl>
             </section>
             <section className="dv-card p-5">
               <div className="flex items-center justify-between mb-3"><h3 className="text-sm font-bold">Execution timeline</h3>{payoutDetail.payout?.status === 'approved' && <div className="flex gap-2"><button type="button" disabled={saving} onClick={() => onExecute(payoutDetail.payout.id, 'success')} className="dv-btn-primary text-[11px] px-3 py-1.5">Simulate success</button><button type="button" disabled={saving} onClick={() => onExecute(payoutDetail.payout.id, 'failure')} className="dv-btn-secondary text-[11px] px-3 py-1.5">Simulate failure</button></div>}</div>
-              {!attempts.length ? <p className="text-xs text-[#64748B]">No execution attempts.</p> : <div className="space-y-3">{attempts.map((attempt) => (
+              {!attempts.length ? <p className="text-xs text-[#94A3B8]">No execution attempts.</p> : <div className="space-y-3">{attempts.map((attempt) => (
                 <div key={attempt.id} className="border border-[#E5E7EB] rounded-xl p-3 text-xs">
                   <div className="flex justify-between gap-3"><strong>Attempt {attempt.attempt_no}</strong><Badge variant={attempt.outcome === 'success' ? 'success' : attempt.outcome === 'uncertain' ? 'warning' : attempt.outcome === 'failed' ? 'danger' : 'neutral'}>{attempt.outcome}</Badge></div>
-                  <p className="text-[#64748B] mt-1">{attempt.simulated ? 'Simulated execution — no real transfer occurred.' : 'Provider-confirmed execution.'}</p>
-                  {attempt.sanitized_error && <p className="text-red-700 mt-1">{attempt.sanitized_error}</p>}
+                  <p className="text-[#94A3B8] mt-1">{attempt.simulated ? 'Simulated execution — no real transfer occurred.' : 'Provider-confirmed execution.'}</p>
+                  {attempt.sanitized_error && <p className="text-red-300 mt-1">{attempt.sanitized_error}</p>}
                 </div>
               ))}</div>}
               {payoutDetail.payout?.status === 'failed' && <button type="button" disabled={saving} onClick={() => onRetry(payoutDetail.payout.id)} className="dv-btn-secondary text-[11px] px-3 py-1.5 mt-3">Retry failed payout</button>}
@@ -831,14 +831,14 @@ const PayoutDetailDrawer = ({
               <h3 className="text-sm font-bold mb-3">Reconciliation</h3>
               {reconciliationDetail ? <>
                 <div className="flex items-center gap-2 mb-3"><Badge variant={classificationVariant[reconciliationDetail.classification] || 'neutral'}>{reconciliationDetail.classification}</Badge></div>
-                {reconciliationDetail.secondary_issues?.length ? <ul className="list-disc pl-5 text-xs text-[#64748B] space-y-1">{reconciliationDetail.secondary_issues.map((issue) => <li key={issue}>{issue}</li>)}</ul> : <p className="text-xs text-[#64748B]">No secondary reconciliation issues detected.</p>}
+                {reconciliationDetail.secondary_issues?.length ? <ul className="list-disc pl-5 text-xs text-[#94A3B8] space-y-1">{reconciliationDetail.secondary_issues.map((issue) => <li key={issue}>{issue}</li>)}</ul> : <p className="text-xs text-[#94A3B8]">No secondary reconciliation issues detected.</p>}
                 {reconciliationDetail.settlement && <p className="text-xs mt-3">Settlement: <strong>{formatINR(reconciliationDetail.settlement.amount)}</strong> · {reconciliationDetail.settlement.mock_execution ? 'Simulated' : 'Provider execution'}</p>}
                 <button type="button" onClick={() => onResolve(reconciliationDetail)} className="dv-btn-secondary text-xs px-4 py-2.5 mt-4">Record resolution</button>
               </> : <LoadingState label="Loading reconciliation..." />}
             </section>
             <section className="dv-card p-5">
               <h3 className="text-sm font-bold mb-3">Administrative audit</h3>
-              {!payoutDetail.audit_history?.length ? <p className="text-xs text-[#64748B]">No audit entries.</p> : <div className="space-y-2">{payoutDetail.audit_history.map((row) => <div key={row.id} className="border border-[#E5E7EB] rounded-xl p-3 text-xs"><p className="font-mono text-[#1D4ED8]">{row.action}</p><p className="text-[#64748B] mt-1">{new Date(row.created_at).toLocaleString()}</p></div>)}</div>}
+              {!payoutDetail.audit_history?.length ? <p className="text-xs text-[#94A3B8]">No audit entries.</p> : <div className="space-y-2">{payoutDetail.audit_history.map((row) => <div key={row.id} className="border border-[#E5E7EB] rounded-xl p-3 text-xs"><p className="font-mono text-[#93C5FD]">{row.action}</p><p className="text-[#94A3B8] mt-1">{new Date(row.created_at).toLocaleString()}</p></div>)}</div>}
             </section>
           </div>
         )}

@@ -222,7 +222,7 @@ const ProductsCatalogPage = () => {
         subtitle="Explore verified digital assets with instant download delivery."
         action={
           !loading && (
-            <span className="text-xs font-mono font-medium px-3 py-1 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8]">
+            <span className="text-xs font-mono font-medium px-3 py-1 rounded-full bg-[#18243A] border border-[#BFDBFE] text-[#93C5FD]">
               {data.total} {data.total === 1 ? 'product' : 'products'} found
             </span>
           )
@@ -244,7 +244,7 @@ const ProductsCatalogPage = () => {
             className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap transition shrink-0 ${
               !selectedCategory
                 ? 'bg-[#2563EB] text-white border-[#2563EB] shadow-xs'
-                : 'bg-white text-[#263445] border-[#D5DEE8] hover:border-[#93C5FD] hover:bg-[#EDF5FC]'
+                : 'bg-[#111C30] text-[#F1F5F9] border-[#D5DEE8] hover:border-[#93C5FD] hover:bg-[#18243A]'
             }`}
           >
             All Categories
@@ -264,14 +264,14 @@ const ProductsCatalogPage = () => {
                 className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap transition shrink-0 ${
                   active
                     ? 'bg-[#2563EB] text-white border-[#2563EB] shadow-xs'
-                    : 'bg-white text-[#263445] border-[#D5DEE8] hover:border-[#93C5FD] hover:bg-[#EDF5FC]'
+                    : 'bg-[#111C30] text-[#F1F5F9] border-[#D5DEE8] hover:border-[#93C5FD] hover:bg-[#18243A]'
                 }`}
               >
                 {CatIcon && <CatIcon className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />}
                 <span>{c.name}</span>
                 <span
                   className={`text-[10px] px-1.5 py-0.2 rounded-full tabular-nums ${
-                    active ? 'bg-white/20 text-white' : 'bg-[#EAF4FC] text-[#1D4ED8]'
+                    active ? 'bg-white/20 text-white' : 'bg-[#18243A] text-[#93C5FD]'
                   }`}
                 >
                   {c.product_count}
@@ -293,7 +293,7 @@ const ProductsCatalogPage = () => {
               Search digital products
             </label>
             <Search
-              className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
               aria-hidden="true"
             />
             <input
@@ -390,7 +390,7 @@ const ProductsCatalogPage = () => {
 
         <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#E5E7EB]">
           <div className="flex flex-wrap items-center gap-3">
-            <label className="inline-flex items-center gap-2 text-xs font-medium text-[#263445] cursor-pointer select-none">
+            <label className="inline-flex items-center gap-2 text-xs font-medium text-[#F1F5F9] cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={onSaleOnly}
@@ -439,7 +439,7 @@ const ProductsCatalogPage = () => {
             <button
               type="button"
               onClick={handleClearFilters}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8]"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#60A5FA] hover:text-[#93C5FD]"
             >
               <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Clear All Filters</span>

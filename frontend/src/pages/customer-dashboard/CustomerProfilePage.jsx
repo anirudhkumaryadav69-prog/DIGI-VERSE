@@ -143,28 +143,28 @@ const CustomerProfilePage = () => {
         {/* Account Overview Banner */}
         <section className="dv-card-warm p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <p className="text-xs text-[#2563EB] font-semibold mb-1">
+            <p className="text-xs text-[#60A5FA] font-semibold mb-1">
               Customer Account
             </p>
-            <h1 className="text-2xl font-bold tracking-tight text-[#263445]">
+            <h1 className="text-2xl font-bold tracking-tight text-[#F1F5F9]">
               {customer?.full_name}
             </h1>
-            <p className="text-xs text-[#64748B] mt-1">{customer?.email}</p>
+            <p className="text-xs text-[#94A3B8] mt-1">{customer?.email}</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             {customer?.is_phone_verified ? (
-              <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
+              <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-950/50 border border-emerald-200 text-emerald-300 text-xs">
                 <ShieldCheck className="w-4 h-4" aria-hidden="true" />
                 <span>Phone Verified ({customer.phone_number})</span>
               </div>
             ) : (
-              <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8] text-xs">
-                <ShieldAlert className="w-4 h-4 shrink-0 text-[#2563EB]" aria-hidden="true" />
+              <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#18243A] border border-[#BFDBFE] text-[#93C5FD] text-xs">
+                <ShieldAlert className="w-4 h-4 shrink-0 text-[#60A5FA]" aria-hidden="true" />
                 <span>Phone verification required for sensitive operations.</span>
                 <Link
                   to="/verify-phone"
-                  className="font-semibold underline text-[#263445] ml-1"
+                  className="font-semibold underline text-[#F1F5F9] ml-1"
                 >
                   Verify Now
                 </Link>
@@ -196,12 +196,12 @@ const CustomerProfilePage = () => {
             className="dv-card-interactive p-5 flex items-center justify-between"
           >
             <div>
-              <p className="text-xs text-[#2563EB] font-semibold">
+              <p className="text-xs text-[#60A5FA] font-semibold">
                 Purchase History
               </p>
-              <p className="text-base font-semibold text-[#263445] mt-1">Orders &amp; Invoices</p>
+              <p className="text-base font-semibold text-[#F1F5F9] mt-1">Orders &amp; Invoices</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-[#EAF4FC] border border-[#BFDBFE] flex items-center justify-center text-[#2563EB]">
+            <div className="w-10 h-10 rounded-xl bg-[#18243A] border border-[#BFDBFE] flex items-center justify-center text-[#60A5FA]">
               <Package className="w-5 h-5" aria-hidden="true" />
             </div>
           </Link>
@@ -211,12 +211,12 @@ const CustomerProfilePage = () => {
             className="dv-card-interactive p-5 flex items-center justify-between"
           >
             <div>
-              <p className="text-xs text-[#2563EB] font-semibold">
+              <p className="text-xs text-[#60A5FA] font-semibold">
                 Digital Library
               </p>
-              <p className="text-base font-semibold text-[#263445] mt-1">Purchased Downloads</p>
+              <p className="text-base font-semibold text-[#F1F5F9] mt-1">Purchased Downloads</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-[#EAF4FC] border border-[#BFDBFE] flex items-center justify-center text-[#2563EB]">
+            <div className="w-10 h-10 rounded-xl bg-[#18243A] border border-[#BFDBFE] flex items-center justify-center text-[#60A5FA]">
               <Download className="w-5 h-5" aria-hidden="true" />
             </div>
           </Link>
@@ -226,22 +226,22 @@ const CustomerProfilePage = () => {
             className="dv-card-interactive p-5 flex items-center justify-between"
           >
             <div>
-              <p className="text-xs text-[#2563EB] font-semibold">
+              <p className="text-xs text-[#60A5FA] font-semibold">
                 Saved Items ({wishlistCount})
               </p>
-              <p className="text-base font-semibold text-[#263445] mt-1">Your Wishlist</p>
+              <p className="text-base font-semibold text-[#F1F5F9] mt-1">Your Wishlist</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-[#EAF4FC] border border-[#BFDBFE] flex items-center justify-center text-[#2563EB]">
+            <div className="w-10 h-10 rounded-xl bg-[#18243A] border border-[#BFDBFE] flex items-center justify-center text-[#60A5FA]">
               <Heart className="w-5 h-5" aria-hidden="true" />
             </div>
           </Link>
 
           <Link
             to={customer?.is_seller ? '/seller' : '/seller/apply'}
-            className="dv-card-interactive p-5 flex items-center justify-between sm:col-span-3 bg-linear-to-r from-white to-[#F8FAFC]"
+            className="dv-card-interactive p-5 flex items-center justify-between sm:col-span-3 bg-linear-to-r from-[#111C30] to-[#18243A]"
           >
             <div>
-              <p className="text-xs text-[#2563EB] font-semibold">
+              <p className="text-xs text-[#60A5FA] font-semibold">
                 {customer?.is_seller
                   ? 'Approved Creator Store'
                   : customer?.seller_status === 'pending'
@@ -252,7 +252,7 @@ const CustomerProfilePage = () => {
                         ? 'Seller Account Suspended'
                         : 'Creator Marketplace'}
               </p>
-              <p className="text-base font-semibold text-[#263445] mt-1">
+              <p className="text-base font-semibold text-[#F1F5F9] mt-1">
                 {customer?.is_seller
                   ? 'Open Seller Studio & Manage Your Storefront'
                   : customer?.seller_status
@@ -270,8 +270,8 @@ const CustomerProfilePage = () => {
           {/* Permitted Profile Update */}
           <section className="dv-card p-6 md:p-8">
             <div className="flex items-center gap-2.5 mb-5">
-              <UserCheck className="w-4 h-4 text-[#2563EB]" aria-hidden="true" />
-              <h2 className="text-base font-semibold text-[#263445]">
+              <UserCheck className="w-4 h-4 text-[#60A5FA]" aria-hidden="true" />
+              <h2 className="text-base font-semibold text-[#F1F5F9]">
                 Profile &amp; Communication Preferences
               </h2>
             </div>
@@ -279,7 +279,7 @@ const CustomerProfilePage = () => {
             {profileStatus.error && (
               <div
                 role="alert"
-                className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2"
+                className="mb-4 p-3 rounded-xl bg-red-950/50 border border-red-200 text-red-300 text-xs flex items-center gap-2"
               >
                 <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
                 <span>{profileStatus.error}</span>
@@ -288,7 +288,7 @@ const CustomerProfilePage = () => {
             {profileStatus.success && (
               <div
                 role="status"
-                className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2"
+                className="mb-4 p-3 rounded-xl bg-emerald-950/50 border border-emerald-200 text-emerald-300 text-xs flex items-center gap-2"
               >
                 <CheckCircle2 className="w-4 h-4 shrink-0" aria-hidden="true" />
                 <span>{profileStatus.success}</span>
@@ -299,7 +299,7 @@ const CustomerProfilePage = () => {
               <div>
                 <label
                   htmlFor="profile-full-name"
-                  className="block text-xs font-medium text-[#263445] mb-1.5"
+                  className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
                 >
                   Full Name
                 </label>
@@ -316,7 +316,7 @@ const CustomerProfilePage = () => {
               <div>
                 <label
                   htmlFor="profile-email-readonly"
-                  className="block text-xs font-medium text-[#263445] mb-1.5"
+                  className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
                 >
                   Registered Email (Read-Only)
                 </label>
@@ -325,12 +325,12 @@ const CustomerProfilePage = () => {
                   type="email"
                   disabled
                   value={customer?.email || ''}
-                  className="dv-input bg-[#F8FAFC] px-3.5 py-2.5 text-sm text-[#64748B] cursor-not-allowed"
+                  className="dv-input bg-[#18243A] px-3.5 py-2.5 text-sm text-[#94A3B8] cursor-not-allowed"
                 />
               </div>
 
-              <div className="pt-2 space-y-2 text-xs text-[#64748B]">
-                <label className="flex items-center gap-2 cursor-pointer text-[#263445]">
+              <div className="pt-2 space-y-2 text-xs text-[#94A3B8]">
+                <label className="flex items-center gap-2 cursor-pointer text-[#F1F5F9]">
                   <input
                     type="checkbox"
                     checked={emailConsent}
@@ -339,7 +339,7 @@ const CustomerProfilePage = () => {
                   />
                   <span>Email marketing notifications</span>
                 </label>
-                <label className="flex items-center gap-2 cursor-pointer text-[#263445]">
+                <label className="flex items-center gap-2 cursor-pointer text-[#F1F5F9]">
                   <input
                     type="checkbox"
                     checked={whatsappConsent}
@@ -363,21 +363,21 @@ const CustomerProfilePage = () => {
           {/* Phone Number Update with OTP Re-verification */}
           <section className="dv-card p-6 md:p-8">
             <div className="flex items-center gap-2.5 mb-5">
-              <Smartphone className="w-4 h-4 text-[#2563EB]" aria-hidden="true" />
-              <h2 className="text-base font-semibold text-[#263445]">
+              <Smartphone className="w-4 h-4 text-[#60A5FA]" aria-hidden="true" />
+              <h2 className="text-base font-semibold text-[#F1F5F9]">
                 Phone Number &amp; OTP Re-Verification
               </h2>
             </div>
 
-            <p className="text-xs text-[#64748B] mb-4 leading-relaxed">
-              Current phone: <strong className="text-[#263445]">{customer?.phone_number}</strong>.
+            <p className="text-xs text-[#94A3B8] mb-4 leading-relaxed">
+              Current phone: <strong className="text-[#F1F5F9]">{customer?.phone_number}</strong>.
               Updating your phone number sends a new 6-digit OTP before activating the change.
             </p>
 
             {phoneStatus.error && (
               <div
                 role="alert"
-                className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2"
+                className="mb-4 p-3 rounded-xl bg-red-950/50 border border-red-200 text-red-300 text-xs flex items-center gap-2"
               >
                 <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
                 <span>{phoneStatus.error}</span>
@@ -386,7 +386,7 @@ const CustomerProfilePage = () => {
             {phoneStatus.success && (
               <div
                 role="status"
-                className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2"
+                className="mb-4 p-3 rounded-xl bg-emerald-950/50 border border-emerald-200 text-emerald-300 text-xs flex items-center gap-2"
               >
                 <CheckCircle2 className="w-4 h-4 shrink-0" aria-hidden="true" />
                 <span>{phoneStatus.success}</span>
@@ -397,7 +397,7 @@ const CustomerProfilePage = () => {
               <div>
                 <label
                   htmlFor="profile-new-phone"
-                  className="block text-xs font-medium text-[#263445] mb-1.5"
+                  className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
                 >
                   New Phone Number (E.164)
                 </label>
@@ -426,8 +426,8 @@ const CustomerProfilePage = () => {
         {/* Change Password Section */}
         <section className="dv-card p-6 md:p-8">
           <div className="flex items-center gap-2.5 mb-5">
-            <KeyRound className="w-4 h-4 text-[#2563EB]" aria-hidden="true" />
-            <h2 className="text-base font-semibold text-[#263445]">
+            <KeyRound className="w-4 h-4 text-[#60A5FA]" aria-hidden="true" />
+            <h2 className="text-base font-semibold text-[#F1F5F9]">
               Change Password
             </h2>
           </div>
@@ -435,7 +435,7 @@ const CustomerProfilePage = () => {
           {pwStatus.error && (
             <div
               role="alert"
-              className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2"
+              className="mb-4 p-3 rounded-xl bg-red-950/50 border border-red-200 text-red-300 text-xs flex items-center gap-2"
             >
               <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
               <span>{pwStatus.error}</span>
@@ -444,7 +444,7 @@ const CustomerProfilePage = () => {
           {pwStatus.success && (
             <div
               role="status"
-              className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2"
+              className="mb-4 p-3 rounded-xl bg-emerald-950/50 border border-emerald-200 text-emerald-300 text-xs flex items-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4 shrink-0" aria-hidden="true" />
               <span>{pwStatus.success}</span>
@@ -458,7 +458,7 @@ const CustomerProfilePage = () => {
             <div>
               <label
                 htmlFor="profile-current-password"
-                className="block text-xs font-medium text-[#263445] mb-1.5"
+                className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
               >
                 Current Password
               </label>
@@ -477,7 +477,7 @@ const CustomerProfilePage = () => {
             <div>
               <label
                 htmlFor="profile-new-password"
-                className="block text-xs font-medium text-[#263445] mb-1.5"
+                className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
               >
                 New Password
               </label>
@@ -494,7 +494,7 @@ const CustomerProfilePage = () => {
             <div>
               <label
                 htmlFor="profile-confirm-password"
-                className="block text-xs font-medium text-[#263445] mb-1.5"
+                className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
               >
                 Confirm New Password
               </label>

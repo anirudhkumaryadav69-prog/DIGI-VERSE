@@ -3,47 +3,47 @@ import { ArrowUpRight, X } from 'lucide-react';
 
 const STATUS_STYLE_MAP = {
   // Emerald: positive, verified, completed
-  active: 'bg-emerald-50 text-[#15803D] border-emerald-200',
-  approved: 'bg-emerald-50 text-[#15803D] border-emerald-200',
-  paid: 'bg-emerald-50 text-[#15803D] border-emerald-200',
-  captured: 'bg-emerald-50 text-[#15803D] border-emerald-200',
-  completed: 'bg-emerald-50 text-[#15803D] border-emerald-200',
-  verified: 'bg-emerald-50 text-[#15803D] border-emerald-200',
-  published: 'bg-emerald-50 text-[#15803D] border-emerald-200',
-  confirmed: 'bg-emerald-50 text-[#15803D] border-emerald-200',
-  fulfilled: 'bg-emerald-50 text-[#15803D] border-emerald-200',
-  delivered: 'bg-emerald-50 text-[#15803D] border-emerald-200',
-  consistent: 'bg-emerald-50 text-[#15803D] border-emerald-200',
-  resolved: 'bg-emerald-50 text-[#15803D] border-emerald-200',
+  active: 'bg-emerald-950/50 text-emerald-300 border-emerald-200',
+  approved: 'bg-emerald-950/50 text-emerald-300 border-emerald-200',
+  paid: 'bg-emerald-950/50 text-emerald-300 border-emerald-200',
+  captured: 'bg-emerald-950/50 text-emerald-300 border-emerald-200',
+  completed: 'bg-emerald-950/50 text-emerald-300 border-emerald-200',
+  verified: 'bg-emerald-950/50 text-emerald-300 border-emerald-200',
+  published: 'bg-emerald-950/50 text-emerald-300 border-emerald-200',
+  confirmed: 'bg-emerald-950/50 text-emerald-300 border-emerald-200',
+  fulfilled: 'bg-emerald-950/50 text-emerald-300 border-emerald-200',
+  delivered: 'bg-emerald-950/50 text-emerald-300 border-emerald-200',
+  consistent: 'bg-emerald-950/50 text-emerald-300 border-emerald-200',
+  resolved: 'bg-emerald-950/50 text-emerald-300 border-emerald-200',
 
   // Amber: awaiting review, warning, retrying
-  pending: 'bg-amber-50 text-[#B45309] border-amber-200',
-  requested: 'bg-amber-50 text-[#B45309] border-amber-200',
-  under_review: 'bg-amber-50 text-[#B45309] border-amber-200',
-  submitted: 'bg-amber-50 text-[#B45309] border-amber-200',
-  retrying: 'bg-amber-50 text-[#B45309] border-amber-200',
-  requires_manual_review: 'bg-amber-50 text-[#B45309] border-amber-200',
-  investigating: 'bg-amber-50 text-[#B45309] border-amber-200',
+  pending: 'bg-amber-950/50 text-amber-300 border-amber-200',
+  requested: 'bg-amber-950/50 text-amber-300 border-amber-200',
+  under_review: 'bg-amber-950/50 text-amber-300 border-amber-200',
+  submitted: 'bg-amber-950/50 text-amber-300 border-amber-200',
+  retrying: 'bg-amber-950/50 text-amber-300 border-amber-200',
+  requires_manual_review: 'bg-amber-950/50 text-amber-300 border-amber-200',
+  investigating: 'bg-amber-950/50 text-amber-300 border-amber-200',
 
   // Red: error, rejected, failed, suspended
-  rejected: 'bg-red-50 text-[#DC2626] border-red-200',
-  failed: 'bg-red-50 text-[#DC2626] border-red-200',
-  uncertain: 'bg-red-50 text-[#DC2626] border-red-200',
-  suspended: 'bg-red-50 text-[#DC2626] border-red-200',
-  deactivated: 'bg-red-50 text-[#DC2626] border-red-200',
-  cancelled: 'bg-red-50 text-[#DC2626] border-red-200',
-  refunded: 'bg-red-50 text-[#DC2626] border-red-200',
-  settlement_missing: 'bg-red-50 text-[#DC2626] border-red-200',
-  unexpected_settlement: 'bg-red-50 text-[#DC2626] border-red-200',
-  duplicate_settlement: 'bg-red-50 text-[#DC2626] border-red-200',
-  ledger_mismatch: 'bg-red-50 text-[#DC2626] border-red-200',
-  status_mismatch: 'bg-red-50 text-[#DC2626] border-red-200',
+  rejected: 'bg-red-950/50 text-red-300 border-red-200',
+  failed: 'bg-red-950/50 text-red-300 border-red-200',
+  uncertain: 'bg-red-950/50 text-red-300 border-red-200',
+  suspended: 'bg-red-950/50 text-red-300 border-red-200',
+  deactivated: 'bg-red-950/50 text-red-300 border-red-200',
+  cancelled: 'bg-red-950/50 text-red-300 border-red-200',
+  refunded: 'bg-red-950/50 text-red-300 border-red-200',
+  settlement_missing: 'bg-red-950/50 text-red-300 border-red-200',
+  unexpected_settlement: 'bg-red-950/50 text-red-300 border-red-200',
+  duplicate_settlement: 'bg-red-950/50 text-red-300 border-red-200',
+  ledger_mismatch: 'bg-red-950/50 text-red-300 border-red-200',
+  status_mismatch: 'bg-red-950/50 text-red-300 border-red-200',
 
   // Blue: active processing, informational
-  processing: 'bg-[#EAF4FC] text-[#1D4ED8] border-[#BFDBFE]',
-  accepted: 'bg-[#EAF4FC] text-[#1D4ED8] border-[#BFDBFE]',
-  queued: 'bg-[#EAF4FC] text-[#1D4ED8] border-[#BFDBFE]',
-  draft: 'bg-[#EAF4FC] text-[#1D4ED8] border-[#BFDBFE]',
+  processing: 'bg-[#18243A] text-[#93C5FD] border-[#BFDBFE]',
+  accepted: 'bg-[#18243A] text-[#93C5FD] border-[#BFDBFE]',
+  queued: 'bg-[#18243A] text-[#93C5FD] border-[#BFDBFE]',
+  draft: 'bg-[#18243A] text-[#93C5FD] border-[#BFDBFE]',
 };
 
 export const formatAdminStatusLabel = (status) => {
@@ -66,7 +66,7 @@ export const formatAdminDateTime = (value) => {
 export const AdminStatusBadge = ({ status, label, className = '' }) => {
   const key = String(status || '').toLowerCase();
   const styles =
-    STATUS_STYLE_MAP[key] || 'bg-[#F8FAFC] text-[#475569] border-[#D5DEE8]';
+    STATUS_STYLE_MAP[key] || 'bg-[#18243A] text-[#CBD5E1] border-[#D5DEE8]';
   return (
     <span
       className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium leading-tight whitespace-nowrap ${styles} ${className}`}
@@ -80,16 +80,16 @@ export const AdminSectionHeader = ({ icon: Icon, title, subtitle, badge, action 
   <div className="flex flex-wrap items-center justify-between gap-3">
     <div className="flex items-center gap-2.5 min-w-0">
       {Icon && (
-        <div className="w-8 h-8 rounded-lg bg-[#EAF4FC] border border-[#BFDBFE] text-[#2563EB] flex items-center justify-center shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-[#18243A] border border-[#BFDBFE] text-[#60A5FA] flex items-center justify-center shrink-0">
           <Icon className="w-4 h-4" aria-hidden="true" />
         </div>
       )}
       <div className="min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-[#263445]">{title}</h2>
+          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-[#F1F5F9]">{title}</h2>
           {badge}
         </div>
-        {subtitle && <p className="text-[12px] text-[#64748B] mt-0.5">{subtitle}</p>}
+        {subtitle && <p className="text-[12px] text-[#94A3B8] mt-0.5">{subtitle}</p>}
       </div>
     </div>
     {action && <div className="shrink-0">{action}</div>}
@@ -106,29 +106,29 @@ export const AdminKpiCard = ({
   compact = false,
 }) => {
   const toneClasses = {
-    blue: 'bg-[#EAF4FC] border-[#BFDBFE] text-[#2563EB]',
-    success: 'bg-emerald-50 border-emerald-200 text-[#16A34A]',
-    warning: 'bg-amber-50 border-amber-200 text-[#D97706]',
-    neutral: 'bg-[#F8FAFC] border-[#D5DEE8] text-[#475569]',
+    blue: 'bg-[#18243A] border-[#BFDBFE] text-[#60A5FA]',
+    success: 'bg-emerald-950/50 border-emerald-200 text-emerald-300',
+    warning: 'bg-amber-950/50 border-amber-200 text-amber-300',
+    neutral: 'bg-[#18243A] border-[#D5DEE8] text-[#CBD5E1]',
   };
 
   const inner = (
     <div
-      className={`bg-white border border-[#D5DEE8] rounded-xl shadow-2xs transition ${
-        to ? 'hover:border-[#93C5FD] hover:bg-[#EDF5FC]/35' : ''
+      className={`bg-[#111C30] border border-[#D5DEE8] rounded-xl shadow-2xs transition ${
+        to ? 'hover:border-[#93C5FD] hover:bg-[#18243A]/70' : ''
       } ${compact ? 'p-4' : 'p-5'}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[12px] font-medium text-[#64748B] truncate">{label}</p>
+          <p className="text-[12px] font-medium text-[#94A3B8] truncate">{label}</p>
           <p
-            className={`font-bold tracking-tight text-[#263445] tabular-nums mt-1.5 ${
+            className={`font-bold tracking-tight text-[#F1F5F9] tabular-nums mt-1.5 ${
               compact ? 'text-[20px] leading-snug' : 'text-[24px] leading-tight'
             }`}
           >
             {value}
           </p>
-          {hint && <p className="text-[11.5px] text-[#64748B] mt-1">{hint}</p>}
+          {hint && <p className="text-[11.5px] text-[#94A3B8] mt-1">{hint}</p>}
         </div>
         {Icon && (
           <div
@@ -141,7 +141,7 @@ export const AdminKpiCard = ({
         )}
       </div>
       {to && (
-        <div className="mt-3 pt-2.5 border-t border-[#E5E7EB] flex items-center justify-between text-[11.5px] font-medium text-[#2563EB]">
+        <div className="mt-3 pt-2.5 border-t border-[#E5E7EB] flex items-center justify-between text-[11.5px] font-medium text-[#60A5FA]">
           <span>Review queue</span>
           <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
         </div>
@@ -180,26 +180,26 @@ export const AdminReasonModal = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="admin-reason-modal-title"
-      className="fixed inset-0 z-50 bg-[#263445]/35 backdrop-blur-[2px] flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-[#080D19]/70 backdrop-blur-[2px] flex items-center justify-center p-4"
     >
-      <div className="bg-white border border-[#D5DEE8] rounded-xl max-w-md w-full p-6 space-y-4 shadow-lg">
+      <div className="bg-[#111C30] border border-[#D5DEE8] rounded-xl max-w-md w-full p-6 space-y-4 shadow-lg">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h3
               id="admin-reason-modal-title"
-              className="text-[15px] font-semibold text-[#263445]"
+              className="text-[15px] font-semibold text-[#F1F5F9]"
             >
               {title}
             </h3>
             {description && (
-              <p className="text-[12.5px] text-[#64748B] mt-1 leading-relaxed">{description}</p>
+              <p className="text-[12.5px] text-[#94A3B8] mt-1 leading-relaxed">{description}</p>
             )}
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close modal"
-            className="p-1 rounded-lg text-[#64748B] hover:text-[#263445] hover:bg-[#EDF5FC]"
+            className="p-1 rounded-lg text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#18243A]"
           >
             <X className="w-4 h-4" />
           </button>
@@ -208,7 +208,7 @@ export const AdminReasonModal = ({
         <div>
           <label
             htmlFor="admin-reason-textarea"
-            className="block text-[12px] font-medium text-[#263445] mb-1.5"
+            className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
           >
             {label}
           </label>

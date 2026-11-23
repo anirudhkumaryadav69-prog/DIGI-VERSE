@@ -298,8 +298,8 @@ const CheckoutPage = () => {
                   isActive
                     ? 'bg-[#2563EB] text-white border-[#2563EB] font-semibold shadow-xs'
                     : isCompleted
-                    ? 'bg-[#EAF4FC] text-[#1D4ED8] border-[#BFDBFE]'
-                    : 'bg-white text-[#64748B] border-[#E5E7EB]'
+                    ? 'bg-[#18243A] text-[#93C5FD] border-[#BFDBFE]'
+                    : 'bg-[#111C30] text-[#94A3B8] border-[#E5E7EB]'
                 }`}
               >
                 {s.label}
@@ -312,7 +312,7 @@ const CheckoutPage = () => {
       {error && (
         <div
           role="alert"
-          className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-start gap-2.5"
+          className="mb-6 p-4 rounded-xl bg-red-950/50 border border-red-200 text-red-300 text-xs flex items-start gap-2.5"
         >
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
           <span>{error}</span>
@@ -327,34 +327,34 @@ const CheckoutPage = () => {
           aria-label="Payment Verified"
           className="dv-card-warm p-8 md:p-10 space-y-6 max-w-3xl mx-auto"
         >
-          <div className="flex items-center gap-3 text-emerald-700">
+          <div className="flex items-center gap-3 text-emerald-300">
             <CheckCircle2 className="w-7 h-7 shrink-0" aria-hidden="true" />
             <div>
-              <p className="text-xs text-[#2563EB] font-semibold">
+              <p className="text-xs text-[#60A5FA] font-semibold">
                 Backend Signature Verified
               </p>
-              <h2 className="text-2xl font-bold text-[#263445]">
+              <h2 className="text-2xl font-bold text-[#F1F5F9]">
                 Payment Confirmed &amp; Digital Downloads Unlocked
               </h2>
             </div>
           </div>
 
-          <div className="bg-[#F8FAFC] border border-[#BFDBFE] rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div className="bg-[#18243A] border border-[#BFDBFE] rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
             <div>
-              <p className="text-[#64748B] text-[11px] font-medium">Order Number</p>
-              <p className="font-mono font-bold text-[#263445] text-sm mt-1">
+              <p className="text-[#94A3B8] text-[11px] font-medium">Order Number</p>
+              <p className="font-mono font-bold text-[#F1F5F9] text-sm mt-1">
                 {verifiedOrder.order_number}
               </p>
             </div>
             <div>
-              <p className="text-[#64748B] text-[11px] font-medium">Payment Status</p>
-              <p className="capitalize font-semibold text-emerald-700 mt-1">
+              <p className="text-[#94A3B8] text-[11px] font-medium">Payment Status</p>
+              <p className="capitalize font-semibold text-emerald-300 mt-1">
                 {verifiedOrder.payment_status} ({verifiedOrder.status})
               </p>
             </div>
             <div>
-              <p className="text-[#64748B] text-[11px] font-medium">Amount Paid</p>
-              <p className="font-mono font-bold text-[#1D4ED8] text-sm mt-1">
+              <p className="text-[#94A3B8] text-[11px] font-medium">Amount Paid</p>
+              <p className="font-mono font-bold text-[#93C5FD] text-sm mt-1">
                 {formatINR(verifiedOrder.total_amount)}
               </p>
             </div>
@@ -381,36 +381,36 @@ const CheckoutPage = () => {
         /* STAGE 6B: PAYMENT FAILURE / CANCELLATION VIEW WITH RETRY */
         <section
           aria-label="Payment Incomplete"
-          className="bg-white border border-red-200 rounded-2xl p-8 md:p-10 space-y-6 max-w-3xl mx-auto shadow-xs"
+          className="bg-[#111C30] border border-red-200 rounded-2xl p-8 md:p-10 space-y-6 max-w-3xl mx-auto shadow-xs"
         >
-          <div className="flex items-center gap-3 text-red-700">
+          <div className="flex items-center gap-3 text-red-300">
             <XCircle className="w-7 h-7 shrink-0" aria-hidden="true" />
             <div>
               <p className="text-xs font-semibold">
                 {outcome === 'cancelled' ? 'Payment Cancelled' : 'Payment Verification Failed'}
               </p>
-              <h2 className="text-2xl font-bold text-[#263445]">
+              <h2 className="text-2xl font-bold text-[#F1F5F9]">
                 Your order is saved and awaiting verified payment
               </h2>
             </div>
           </div>
 
-          <div className="bg-[#F8FAFC] border border-[#E5E7EB] rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div className="bg-[#18243A] border border-[#E5E7EB] rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
             <div>
-              <p className="text-[#64748B] text-[11px] font-medium">Order Reference</p>
-              <p className="font-mono font-semibold text-sm text-[#263445] mt-1">
+              <p className="text-[#94A3B8] text-[11px] font-medium">Order Reference</p>
+              <p className="font-mono font-semibold text-sm text-[#F1F5F9] mt-1">
                 {checkoutSession.order_number}
               </p>
             </div>
             <div>
-              <p className="text-[#64748B] text-[11px] font-medium">Gateway Order ID</p>
-              <p className="font-mono text-xs text-[#263445] mt-1">
+              <p className="text-[#94A3B8] text-[11px] font-medium">Gateway Order ID</p>
+              <p className="font-mono text-xs text-[#F1F5F9] mt-1">
                 {checkoutSession.payment.gateway_order_id}
               </p>
             </div>
             <div>
-              <p className="text-[#64748B] text-[11px] font-medium">Total Payable</p>
-              <p className="font-mono font-bold text-[#1D4ED8] text-sm mt-1">
+              <p className="text-[#94A3B8] text-[11px] font-medium">Total Payable</p>
+              <p className="font-mono font-bold text-[#93C5FD] text-sm mt-1">
                 {formatINR(checkoutSession.total_amount)}
               </p>
             </div>
@@ -426,7 +426,7 @@ const CheckoutPage = () => {
             </Button>
             <Link
               to={`/orders/${checkoutSession.order_id}`}
-              className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] underline px-3 py-2"
+              className="text-xs font-semibold text-[#60A5FA] hover:text-[#93C5FD] underline px-3 py-2"
             >
               View Pending Order →
             </Link>
@@ -453,10 +453,10 @@ const CheckoutPage = () => {
             {/* Stage 1: Order Items Review */}
             <section className="dv-card p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
-                <h2 className="text-sm font-semibold text-[#263445]">
+                <h2 className="text-sm font-semibold text-[#F1F5F9]">
                   1. Review Digital Order Items
                 </h2>
-                <Link to="/cart" className="text-xs font-semibold text-[#2563EB] hover:underline">
+                <Link to="/cart" className="text-xs font-semibold text-[#60A5FA] hover:underline">
                   Edit Cart
                 </Link>
               </div>
@@ -466,12 +466,12 @@ const CheckoutPage = () => {
                   {cart.items.map((item) => (
                     <div key={item.id} className="py-3 flex items-center justify-between gap-4">
                       <div>
-                        <p className="font-semibold text-[#263445]">{item.product_name}</p>
-                        <p className="text-[#64748B]">
+                        <p className="font-semibold text-[#F1F5F9]">{item.product_name}</p>
+                        <p className="text-[#94A3B8]">
                           Qty: {item.quantity} × {formatINR(item.effective_unit_price)}
                         </p>
                       </div>
-                      <span className="font-mono font-bold text-[#263445]">
+                      <span className="font-mono font-bold text-[#F1F5F9]">
                         {formatINR(item.line_total)}
                       </span>
                     </div>
@@ -479,9 +479,9 @@ const CheckoutPage = () => {
                 </div>
               ) : (
                 checkoutSession && (
-                  <p className="text-xs text-[#64748B]">
+                  <p className="text-xs text-[#94A3B8]">
                     Resuming payment for pending order{' '}
-                    <strong className="font-mono text-[#263445]">
+                    <strong className="font-mono text-[#F1F5F9]">
                       {checkoutSession.order_number}
                     </strong>
                     .
@@ -492,42 +492,42 @@ const CheckoutPage = () => {
 
             {/* Stage 2: Billing & Delivery Recipient Details */}
             <section className="dv-card p-6 space-y-4">
-              <h2 className="text-sm font-semibold text-[#263445] border-b border-[#E5E7EB] pb-3">
+              <h2 className="text-sm font-semibold text-[#F1F5F9] border-b border-[#E5E7EB] pb-3">
                 2. Confirm Customer &amp; Delivery Details
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div>
-                  <p className="text-[11px] font-medium text-[#64748B]">
+                  <p className="text-[11px] font-medium text-[#94A3B8]">
                     Customer Name
                   </p>
-                  <p className="font-semibold text-[#263445] mt-0.5">{customer?.full_name}</p>
+                  <p className="font-semibold text-[#F1F5F9] mt-0.5">{customer?.full_name}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] font-medium text-[#64748B]">
+                  <p className="text-[11px] font-medium text-[#94A3B8]">
                     Receipt &amp; Delivery Email
                   </p>
-                  <p className="font-semibold text-[#263445] mt-0.5">{customer?.email}</p>
+                  <p className="font-semibold text-[#F1F5F9] mt-0.5">{customer?.email}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] font-medium text-[#64748B]">
+                  <p className="text-[11px] font-medium text-[#94A3B8]">
                     Phone Number
                   </p>
-                  <p className="font-mono text-[#263445] mt-0.5">
+                  <p className="font-mono text-[#F1F5F9] mt-0.5">
                     {customer?.phone_number || 'Not provided'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[11px] font-medium text-[#64748B]">
+                  <p className="text-[11px] font-medium text-[#94A3B8]">
                     Fulfillment Method
                   </p>
-                  <p className="text-emerald-700 font-semibold mt-0.5">
+                  <p className="text-emerald-300 font-semibold mt-0.5">
                     Instant Signed Digital Download
                   </p>
                 </div>
               </div>
 
-              <label className="pt-2 flex items-center gap-2 text-xs text-[#263445] cursor-pointer">
+              <label className="pt-2 flex items-center gap-2 text-xs text-[#F1F5F9] cursor-pointer">
                 <input
                   type="checkbox"
                   checked={billingConfirmed}
@@ -545,18 +545,18 @@ const CheckoutPage = () => {
 
             {/* Active Checkout Session Status Card */}
             {checkoutSession && (
-              <section className="dv-card-warm p-6 space-y-4 bg-[#F8FAFC]/50">
+              <section className="dv-card-warm p-6 space-y-4 bg-[#111C30]/80">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-[#1D4ED8] font-semibold">
+                  <span className="text-xs text-[#93C5FD] font-semibold">
                     Payment Session Initialized
                   </span>
-                  <span className="font-mono text-xs rounded-lg bg-[#EAF4FC] text-[#1D4ED8] px-2.5 py-1 font-semibold">
+                  <span className="font-mono text-xs rounded-lg bg-[#18243A] text-[#93C5FD] px-2.5 py-1 font-semibold">
                     {checkoutSession.order_number}
                   </span>
                 </div>
-                <p className="text-xs text-[#64748B] leading-relaxed">
+                <p className="text-xs text-[#94A3B8] leading-relaxed">
                   Gateway Reference:{' '}
-                  <strong className="font-mono text-[#263445]">
+                  <strong className="font-mono text-[#F1F5F9]">
                     {checkoutSession.payment.gateway_order_id}
                   </strong>{' '}
                   ({checkoutSession.payment.gateway_name.toUpperCase()}). Your shopping cart remains
@@ -574,7 +574,7 @@ const CheckoutPage = () => {
                   </Button>
                   <Link
                     to={`/orders/${checkoutSession.order_id}`}
-                    className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] underline"
+                    className="text-xs font-semibold text-[#60A5FA] hover:text-[#93C5FD] underline"
                   >
                     View Pending Order Details →
                   </Link>
@@ -585,27 +585,27 @@ const CheckoutPage = () => {
 
           {/* Right Column: Payment Summary & Initialization */}
           <aside className="lg:col-span-5 dv-card-warm p-6 space-y-5">
-            <div className="flex items-center gap-2 text-sm font-semibold text-[#263445] border-b border-[#E5E7EB] pb-3">
-              <Lock className="w-3.5 h-3.5 text-[#2563EB]" aria-hidden="true" />
+            <div className="flex items-center gap-2 text-sm font-semibold text-[#F1F5F9] border-b border-[#E5E7EB] pb-3">
+              <Lock className="w-3.5 h-3.5 text-[#60A5FA]" aria-hidden="true" />
               <span>Payment Summary</span>
             </div>
 
             <div className="space-y-2.5 text-xs">
-              <div className="flex justify-between text-[#64748B]">
+              <div className="flex justify-between text-[#94A3B8]">
                 <span>Subtotal</span>
-                <span className="font-mono font-medium text-[#263445]">
+                <span className="font-mono font-medium text-[#F1F5F9]">
                   {formatINR(checkoutSession?.subtotal_amount ?? cart?.subtotal)}
                 </span>
               </div>
-              <div className="flex justify-between text-emerald-700">
+              <div className="flex justify-between text-emerald-300">
                 <span>Promotional Discount</span>
                 <span className="font-mono">
                   -{formatINR(checkoutSession?.discount_amount ?? cart?.total_discount)}
                 </span>
               </div>
-              <div className="pt-3 border-t border-[#E5E7EB] flex justify-between items-baseline text-sm font-semibold text-[#263445]">
+              <div className="pt-3 border-t border-[#E5E7EB] flex justify-between items-baseline text-sm font-semibold text-[#F1F5F9]">
                 <span>Total Payable</span>
-                <span className="font-mono text-xl font-bold text-[#1D4ED8]">
+                <span className="font-mono text-xl font-bold text-[#93C5FD]">
                   {formatINR(checkoutSession?.total_amount ?? cart?.final_payable_amount)}
                 </span>
               </div>
@@ -627,9 +627,9 @@ const CheckoutPage = () => {
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </button>
 
-            <div className="flex items-start gap-2 text-[11px] text-[#64748B] leading-relaxed">
+            <div className="flex items-start gap-2 text-[11px] text-[#94A3B8] leading-relaxed">
               <ShieldCheck
-                className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5"
+                className="w-4 h-4 text-[#60A5FA] shrink-0 mt-0.5"
                 aria-hidden="true"
               />
               <span>

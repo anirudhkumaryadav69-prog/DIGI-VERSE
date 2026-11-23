@@ -47,41 +47,41 @@ const AdminChangePasswordPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#EAF4FC] text-[#263445] flex flex-col justify-between p-6 md:p-10">
+    <div className="min-h-screen bg-[#080D19] text-[#F1F5F9] flex flex-col justify-between p-6 md:p-10">
       <header className="max-w-5xl w-full mx-auto flex items-center justify-between border-b border-[#D5DEE8] pb-4">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-lg bg-[#2563EB] text-white flex items-center justify-center shadow-xs">
             <Shield className="w-4 h-4" />
           </div>
           <div>
-            <span className="font-bold tracking-tight text-[14px] text-[#263445] block leading-tight">
+            <span className="font-bold tracking-tight text-[14px] text-[#F1F5F9] block leading-tight">
               DIGI-VERSE Admin
             </span>
-            <span className="text-[11.5px] text-[#64748B]">{admin?.username}</span>
+            <span className="text-[11.5px] text-[#94A3B8]">{admin?.username}</span>
           </div>
         </div>
         <button
           type="button"
           onClick={handleLogout}
-          className="text-[12.5px] font-semibold text-[#64748B] hover:text-[#2563EB] inline-flex items-center gap-1.5"
+          className="text-[12.5px] font-semibold text-[#94A3B8] hover:text-[#60A5FA] inline-flex items-center gap-1.5"
         >
           <LogOut className="w-3.5 h-3.5" />
           <span>Sign Out</span>
         </button>
       </header>
 
-      <main className="w-full max-w-md mx-auto my-10 bg-white border border-[#D5DEE8] rounded-xl p-7 sm:p-8 shadow-sm">
-        <div className="w-10 h-10 rounded-lg bg-[#EAF4FC] border border-[#BFDBFE] text-[#2563EB] flex items-center justify-center mb-4">
+      <main className="w-full max-w-md mx-auto my-10 bg-[#111C30] border border-[#D5DEE8] rounded-xl p-7 sm:p-8 shadow-sm">
+        <div className="w-10 h-10 rounded-lg bg-[#18243A] border border-[#BFDBFE] text-[#60A5FA] flex items-center justify-center mb-4">
           <KeyRound className="w-5 h-5" />
         </div>
-        <p className="text-[12px] font-semibold text-[#2563EB] mb-1">
+        <p className="text-[12px] font-semibold text-[#60A5FA] mb-1">
           {adminMustChangePassword ? 'Mandatory Security Action' : 'Administrator Security'}
         </p>
-        <h1 className="text-[22px] font-semibold tracking-tight text-[#263445] mb-3">
+        <h1 className="text-[22px] font-semibold tracking-tight text-[#F1F5F9] mb-3">
           {adminMustChangePassword ? 'Change Initial Password' : 'Change Administrator Password'}
         </h1>
         {adminMustChangePassword && (
-          <p className="text-[12.5px] text-[#1D4ED8] bg-[#EAF4FC] border border-[#BFDBFE] rounded-lg p-3 mb-5 leading-relaxed">
+          <p className="text-[12.5px] text-[#93C5FD] bg-[#18243A] border border-[#BFDBFE] rounded-lg p-3 mb-5 leading-relaxed">
             For security, all administrative operations remain locked until the one-time provisioned
             password is changed.
           </p>
@@ -90,7 +90,7 @@ const AdminChangePasswordPage = () => {
         {error && (
           <div
             role="alert"
-            className="mb-5 p-3.5 rounded-lg bg-red-50 border border-red-200 text-[#DC2626] text-[12.5px] flex items-start gap-2.5"
+            className="mb-5 p-3.5 rounded-lg bg-red-950/50 border border-red-200 text-red-300 text-[12.5px] flex items-start gap-2.5"
           >
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{error}</span>
@@ -100,7 +100,7 @@ const AdminChangePasswordPage = () => {
         {success && (
           <div
             role="status"
-            className="mb-5 p-3.5 rounded-lg bg-emerald-50 border border-emerald-200 text-[#15803D] text-[12.5px] flex items-start gap-2.5"
+            className="mb-5 p-3.5 rounded-lg bg-emerald-950/50 border border-emerald-200 text-emerald-300 text-[12.5px] flex items-start gap-2.5"
           >
             <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{success}</span>
@@ -111,7 +111,7 @@ const AdminChangePasswordPage = () => {
           <div>
             <label
               htmlFor="admin-current-pw"
-              className="block text-[12.5px] font-medium text-[#263445] mb-1.5"
+              className="block text-[12.5px] font-medium text-[#F1F5F9] mb-1.5"
             >
               Current Password
             </label>
@@ -128,7 +128,7 @@ const AdminChangePasswordPage = () => {
           <div>
             <label
               htmlFor="admin-new-pw"
-              className="block text-[12.5px] font-medium text-[#263445] mb-1.5"
+              className="block text-[12.5px] font-medium text-[#F1F5F9] mb-1.5"
             >
               New Strong Password
             </label>
@@ -146,7 +146,7 @@ const AdminChangePasswordPage = () => {
           <div>
             <label
               htmlFor="admin-confirm-pw"
-              className="block text-[12.5px] font-medium text-[#263445] mb-1.5"
+              className="block text-[12.5px] font-medium text-[#F1F5F9] mb-1.5"
             >
               Confirm New Password
             </label>
@@ -170,7 +170,7 @@ const AdminChangePasswordPage = () => {
         </form>
       </main>
 
-      <footer className="max-w-5xl w-full mx-auto border-t border-[#D5DEE8] pt-4 text-[12px] text-[#64748B]">
+      <footer className="max-w-5xl w-full mx-auto border-t border-[#D5DEE8] pt-4 text-[12px] text-[#94A3B8]">
         <span>Password rotation revokes all prior administrator sessions.</span>
       </footer>
     </div>

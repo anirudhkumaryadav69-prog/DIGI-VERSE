@@ -160,7 +160,7 @@ const WishlistPage = () => {
               <div>
                 <Link
                   to={`/products/${item.product_slug}`}
-                  className="block aspect-16/10 bg-[#F8FAFC] relative border-b border-[#E5E7EB]"
+                  className="block aspect-16/10 bg-[#18243A] relative border-b border-[#E5E7EB]"
                 >
                   <img
                     src={resolveProductThumbnailUrl(
@@ -185,12 +185,12 @@ const WishlistPage = () => {
 
                 <div className="p-5 space-y-2">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-[11px] text-[#2563EB] font-semibold">
+                    <p className="text-[11px] text-[#60A5FA] font-semibold">
                       {item.category_name}
                     </p>
                     <span
                       className={`inline-flex items-center gap-1 text-[11px] font-medium ${
-                        item.is_available ? 'text-emerald-700' : 'text-red-700'
+                        item.is_available ? 'text-emerald-300' : 'text-red-300'
                       }`}
                     >
                       {item.is_available ? (
@@ -209,17 +209,17 @@ const WishlistPage = () => {
 
                   <Link
                     to={`/products/${item.product_slug}`}
-                    className="text-lg font-semibold text-[#263445] hover:text-[#2563EB] transition block"
+                    className="text-lg font-semibold text-[#F1F5F9] hover:text-[#60A5FA] transition block"
                   >
                     {item.product_name}
                   </Link>
 
                   <div className="font-mono pt-1">
-                    <span className="text-base font-bold text-[#1D4ED8]">
+                    <span className="text-base font-bold text-[#93C5FD]">
                       {formatINR(item.effective_price)}
                     </span>
                     {item.is_on_sale && (
-                      <span className="text-xs text-[#64748B] line-through ml-2">
+                      <span className="text-xs text-[#94A3B8] line-through ml-2">
                         {formatINR(item.original_price)}
                       </span>
                     )}
@@ -227,7 +227,7 @@ const WishlistPage = () => {
                 </div>
               </div>
 
-              <div className="p-4 border-t border-[#E5E7EB] bg-[#F8FAFC] flex items-center justify-between gap-2">
+              <div className="p-4 border-t border-[#E5E7EB] bg-[#18243A] flex items-center justify-between gap-2">
                 <button
                   type="button"
                   disabled={!item.is_available}
@@ -243,7 +243,7 @@ const WishlistPage = () => {
                   onClick={() => handleRemove(item.product_id, item.product_name)}
                   aria-label={`Remove ${item.product_name} from wishlist`}
                   title="Remove from Wishlist"
-                  className="p-2.5 rounded-xl border border-[#E5E7EB] bg-white hover:border-red-500 hover:bg-red-50 text-red-600 transition"
+                  className="p-2.5 rounded-xl border border-[#E5E7EB] bg-[#111C30] hover:border-red-500 hover:bg-red-950/60 text-red-300 transition"
                 >
                   <Trash2 className="w-4 h-4" aria-hidden="true" />
                 </button>

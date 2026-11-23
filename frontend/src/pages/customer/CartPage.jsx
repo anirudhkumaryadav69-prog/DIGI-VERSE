@@ -143,7 +143,7 @@ const CartPage = () => {
       {hasUnavailableItems && (
         <div
           role="alert"
-          className="mb-6 p-4 rounded-xl bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8] text-xs flex items-center gap-2.5"
+          className="mb-6 p-4 rounded-xl bg-[#18243A] border border-[#BFDBFE] text-[#93C5FD] text-xs flex items-center gap-2.5"
         >
           <AlertTriangle className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>
@@ -177,12 +177,12 @@ const CartPage = () => {
             {cart.items.map((item) => (
               <div
                 key={item.id}
-                className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#EDF5FC]/40 transition"
+                className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#18243A]/60 transition"
               >
                 <div className="flex items-center gap-4">
                   <Link
                     to={`/products/${item.product_slug}`}
-                    className="w-20 h-16 rounded-xl bg-[#F8FAFC] border border-[#E5E7EB] shrink-0 overflow-hidden flex items-center justify-center"
+                    className="w-20 h-16 rounded-xl bg-[#18243A] border border-[#E5E7EB] shrink-0 overflow-hidden flex items-center justify-center"
                   >
                     <img
                       src={resolveProductThumbnailUrl(
@@ -202,31 +202,31 @@ const CartPage = () => {
 
                   <div>
                     <div className="flex items-center gap-2">
-                      <p className="text-[11px] text-[#2563EB] font-semibold">
+                      <p className="text-[11px] text-[#60A5FA] font-semibold">
                         {item.category_name}
                       </p>
                       {item.is_available === false && (
-                        <span className="text-[11px] font-medium rounded-full px-2 py-0.5 bg-red-50 text-red-700 border border-red-200">
+                        <span className="text-[11px] font-medium rounded-full px-2 py-0.5 bg-red-950/50 text-red-300 border border-red-200">
                           Unavailable
                         </span>
                       )}
                     </div>
                     <Link
                       to={`/products/${item.product_slug}`}
-                      className="text-sm font-semibold text-[#263445] hover:text-[#2563EB] transition"
+                      className="text-sm font-semibold text-[#F1F5F9] hover:text-[#60A5FA] transition"
                     >
                       {item.product_name}
                     </Link>
                     <div className="font-mono text-xs mt-1">
-                      <span className="font-bold text-[#1D4ED8]">
+                      <span className="font-bold text-[#93C5FD]">
                         {formatINR(item.effective_unit_price)}
                       </span>
                       {item.active_discount && (
                         <>
-                          <span className="line-through text-[#64748B] ml-2">
+                          <span className="line-through text-[#94A3B8] ml-2">
                             {formatINR(item.unit_price)}
                           </span>
-                          <span className="text-emerald-700 ml-2 font-medium">
+                          <span className="text-emerald-300 ml-2 font-medium">
                             (-{item.active_discount.discount_percentage}%)
                           </span>
                         </>
@@ -237,17 +237,17 @@ const CartPage = () => {
 
                 <div className="flex items-center justify-between sm:justify-end gap-5">
                   {/* Quantity Controls */}
-                  <div className="inline-flex items-center rounded-xl border border-[#E5E7EB] bg-[#EAF4FC] overflow-hidden">
+                  <div className="inline-flex items-center rounded-xl border border-[#E5E7EB] bg-[#18243A] overflow-hidden">
                     <button
                       type="button"
                       disabled={item.quantity <= 1 || item.is_available === false}
                       onClick={() => handleQuantityChange(item, item.quantity - 1)}
                       aria-label={`Decrease quantity for ${item.product_name}`}
-                      className="p-2 text-[#263445] hover:bg-[#EDF5FC] hover:text-[#1D4ED8] disabled:opacity-40 transition"
+                      className="p-2 text-[#F1F5F9] hover:bg-[#18243A] hover:text-[#93C5FD] disabled:opacity-40 transition"
                     >
                       <Minus className="w-3 h-3" aria-hidden="true" />
                     </button>
-                    <span className="px-3 text-xs font-mono font-semibold text-[#263445]" aria-label="Quantity">
+                    <span className="px-3 text-xs font-mono font-semibold text-[#F1F5F9]" aria-label="Quantity">
                       {item.quantity}
                     </span>
                     <button
@@ -255,18 +255,18 @@ const CartPage = () => {
                       disabled={item.is_available === false}
                       onClick={() => handleQuantityChange(item, item.quantity + 1)}
                       aria-label={`Increase quantity for ${item.product_name}`}
-                      className="p-2 text-[#263445] hover:bg-[#EDF5FC] hover:text-[#1D4ED8] disabled:opacity-40 transition"
+                      className="p-2 text-[#F1F5F9] hover:bg-[#18243A] hover:text-[#93C5FD] disabled:opacity-40 transition"
                     >
                       <Plus className="w-3 h-3" aria-hidden="true" />
                     </button>
                   </div>
 
                   <div className="text-right font-mono min-w-[90px]">
-                    <p className="text-sm font-bold text-[#263445]">
+                    <p className="text-sm font-bold text-[#F1F5F9]">
                       {formatINR(item.line_total)}
                     </p>
                     {Number(item.line_discount) > 0 && (
-                      <p className="text-[11px] text-emerald-700">
+                      <p className="text-[11px] text-emerald-300">
                         Saved {formatINR(item.line_discount)}
                       </p>
                     )}
@@ -277,7 +277,7 @@ const CartPage = () => {
                     onClick={() => handleRemoveItem(item)}
                     aria-label={`Remove ${item.product_name} from cart`}
                     title="Remove item"
-                    className="p-2 rounded-lg text-[#64748B] hover:text-red-600 hover:bg-red-50 transition"
+                    className="p-2 rounded-lg text-[#94A3B8] hover:text-red-300 hover:bg-red-950/60 transition"
                   >
                     <Trash2 className="w-4 h-4" aria-hidden="true" />
                   </button>
@@ -288,24 +288,24 @@ const CartPage = () => {
 
           {/* Order Summary Sidebar */}
           <aside className="lg:col-span-4 dv-card-warm p-6 space-y-5">
-            <h2 className="text-sm font-semibold text-[#263445] border-b border-[#E5E7EB] pb-3">
+            <h2 className="text-sm font-semibold text-[#F1F5F9] border-b border-[#E5E7EB] pb-3">
               Order Summary
             </h2>
 
             <div className="space-y-3 text-xs">
-              <div className="flex justify-between text-[#64748B]">
+              <div className="flex justify-between text-[#94A3B8]">
                 <span>Subtotal ({cart.total_quantity} items)</span>
-                <span className="font-mono font-medium text-[#263445]">{formatINR(cart.subtotal)}</span>
+                <span className="font-mono font-medium text-[#F1F5F9]">{formatINR(cart.subtotal)}</span>
               </div>
 
-              <div className="flex justify-between text-emerald-700">
+              <div className="flex justify-between text-emerald-300">
                 <span>Promotional Discount</span>
                 <span className="font-mono">-{formatINR(cart.total_discount)}</span>
               </div>
 
-              <div className="pt-3 border-t border-[#E5E7EB] flex justify-between items-baseline text-sm font-semibold text-[#263445]">
+              <div className="pt-3 border-t border-[#E5E7EB] flex justify-between items-baseline text-sm font-semibold text-[#F1F5F9]">
                 <span>Final Payable</span>
-                <span className="font-mono text-xl font-bold text-[#1D4ED8]">
+                <span className="font-mono text-xl font-bold text-[#93C5FD]">
                   {formatINR(cart.final_payable_amount)}
                 </span>
               </div>
@@ -323,7 +323,7 @@ const CartPage = () => {
 
             <Link
               to="/products"
-              className="block text-center text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] hover:underline"
+              className="block text-center text-xs font-semibold text-[#60A5FA] hover:text-[#93C5FD] hover:underline"
             >
               ← Continue Shopping
             </Link>

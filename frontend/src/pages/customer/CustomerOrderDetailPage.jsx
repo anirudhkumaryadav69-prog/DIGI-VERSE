@@ -87,7 +87,7 @@ const CustomerOrderDetailPage = () => {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Link
             to="/orders"
-            className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] hover:underline inline-flex items-center gap-1.5"
+            className="text-xs font-semibold text-[#60A5FA] hover:text-[#93C5FD] hover:underline inline-flex items-center gap-1.5"
           >
             <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Back to Orders</span>
@@ -132,13 +132,13 @@ const CustomerOrderDetailPage = () => {
               {/* Order Header Summary */}
               <section className="dv-card p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                  <p className="text-xs text-[#2563EB] font-semibold mb-1">
+                  <p className="text-xs text-[#60A5FA] font-semibold mb-1">
                     Order Reference
                   </p>
-                  <h1 className="text-2xl font-mono font-bold text-[#263445]">
+                  <h1 className="text-2xl font-mono font-bold text-[#F1F5F9]">
                     {order.order_number}
                   </h1>
-                  <p className="text-xs text-[#64748B] mt-1">
+                  <p className="text-xs text-[#94A3B8] mt-1">
                     Placed on {new Date(order.created_at).toLocaleString()}
                   </p>
                 </div>
@@ -163,18 +163,18 @@ const CustomerOrderDetailPage = () => {
               {showInvoice && invoice && (
                 <section
                   aria-label="Official Purchase Invoice"
-                  className="dv-card-warm p-6 md:p-8 space-y-6 bg-[#F8FAFC]/40"
+                  className="dv-card-warm p-6 md:p-8 space-y-6 bg-[#111C30]/80"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#BFDBFE] pb-4">
                     <div>
-                      <p className="text-xs text-[#2563EB] font-semibold">
+                      <p className="text-xs text-[#60A5FA] font-semibold">
                         Official Purchase Invoice
                       </p>
-                      <h2 className="text-xl font-mono font-bold text-[#263445] mt-1">
+                      <h2 className="text-xl font-mono font-bold text-[#F1F5F9] mt-1">
                         {invoice.invoice_number}
                       </h2>
                     </div>
-                    <div className="text-right text-xs text-[#64748B]">
+                    <div className="text-right text-xs text-[#94A3B8]">
                       <p>Issued: {new Date(invoice.issued_at).toLocaleString()}</p>
                       <p>
                         Billed To: {invoice.customer_name} ({invoice.customer_email})
@@ -185,18 +185,18 @@ const CustomerOrderDetailPage = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-2 text-xs text-[#263445]">
+                  <div className="space-y-2 text-xs text-[#F1F5F9]">
                     <div className="flex justify-between">
                       <span>Subtotal</span>
                       <span className="font-mono">{formatINR(invoice.subtotal_amount)}</span>
                     </div>
-                    <div className="flex justify-between text-emerald-700">
+                    <div className="flex justify-between text-emerald-300">
                       <span>Discount</span>
                       <span className="font-mono">-{formatINR(invoice.discount_amount)}</span>
                     </div>
                     <div className="flex justify-between font-bold text-sm pt-2 border-t border-[#BFDBFE]">
                       <span>Total Paid</span>
-                      <span className="font-mono text-[#1D4ED8]">
+                      <span className="font-mono text-[#93C5FD]">
                         {formatINR(invoice.total_amount)}
                       </span>
                     </div>
@@ -206,7 +206,7 @@ const CustomerOrderDetailPage = () => {
 
               {/* Purchased Items & Digital Downloads */}
               <section className="dv-card p-6 md:p-8 space-y-4">
-                <h2 className="text-sm font-semibold text-[#263445] border-b border-[#E5E7EB] pb-3">
+                <h2 className="text-sm font-semibold text-[#F1F5F9] border-b border-[#E5E7EB] pb-3">
                   Purchased Products &amp; Digital Delivery
                 </h2>
 
@@ -219,21 +219,21 @@ const CustomerOrderDetailPage = () => {
                         className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                       >
                         <div>
-                          <p className="text-base font-semibold text-[#263445]">
+                          <p className="text-base font-semibold text-[#F1F5F9]">
                             {item.product_name_snapshot}
                           </p>
-                          <p className="text-xs text-[#64748B] font-mono mt-0.5">
+                          <p className="text-xs text-[#94A3B8] font-mono mt-0.5">
                             Qty: {item.quantity} × {formatINR(item.purchase_price)} (Original:{' '}
                             {formatINR(item.original_price_snapshot)})
                           </p>
-                          <p className="text-[11px] font-medium text-[#1D4ED8] mt-1">
+                          <p className="text-[11px] font-medium text-[#93C5FD] mt-1">
                             Downloads used: {item.downloads_used} / {item.max_downloads} ({remaining}{' '}
                             remaining)
                           </p>
                         </div>
 
                         <div className="flex items-center justify-between sm:justify-end gap-4">
-                          <span className="font-mono text-sm font-bold text-[#1D4ED8]">
+                          <span className="font-mono text-sm font-bold text-[#93C5FD]">
                             {formatINR(item.line_total)}
                           </span>
 

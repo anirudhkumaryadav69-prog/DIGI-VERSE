@@ -413,8 +413,8 @@ const AdminProductFormPage = () => {
         <div
           className={`mb-6 p-4 rounded-xl border text-xs flex items-center gap-2.5 ${
             toast.type === 'error'
-              ? 'bg-red-50 border-red-200 text-red-700'
-              : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+              ? 'bg-red-950/50 border-red-200 text-red-300'
+              : 'bg-emerald-950/50 border-emerald-200 text-emerald-300'
           }`}
         >
           {toast.type === 'error' ? (
@@ -427,7 +427,7 @@ const AdminProductFormPage = () => {
       )}
 
       {loading ? (
-        <p className="text-xs text-[#64748B]">Loading product configuration...</p>
+        <p className="text-xs text-[#94A3B8]">Loading product configuration...</p>
       ) : (
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           {/* Core Product Form (2 cols) */}
@@ -435,13 +435,13 @@ const AdminProductFormPage = () => {
             onSubmit={handleSubmit}
             className="xl:col-span-2 dv-card p-6 md:p-8 space-y-5"
           >
-            <h2 className="text-[14.5px] font-semibold text-[#263445] border-b border-[#E5E7EB] pb-3">
+            <h2 className="text-[14.5px] font-semibold text-[#F1F5F9] border-b border-[#E5E7EB] pb-3">
               1. Core Product Information
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
+                <label className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5">
                   Product Name *
                 </label>
                 <input
@@ -456,10 +456,10 @@ const AdminProductFormPage = () => {
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-[12px] font-medium text-[#263445]">
+                  <label className="block text-[12px] font-medium text-[#F1F5F9]">
                     URL Slug
                   </label>
-                  <label className="text-[12px] text-[#64748B] flex items-center gap-1.5 cursor-pointer">
+                  <label className="text-[12px] text-[#94A3B8] flex items-center gap-1.5 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={autoSlug}
@@ -484,7 +484,7 @@ const AdminProductFormPage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
+                <label className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5">
                   Category *
                 </label>
                 <select
@@ -503,7 +503,7 @@ const AdminProductFormPage = () => {
               </div>
 
               <div>
-                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
+                <label className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5">
                   Original Price (INR) *
                 </label>
                 <input
@@ -519,7 +519,7 @@ const AdminProductFormPage = () => {
               </div>
 
               <div>
-                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
+                <label className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5">
                   Product Type
                 </label>
                 <input
@@ -533,7 +533,7 @@ const AdminProductFormPage = () => {
             </div>
 
             <div>
-              <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
+              <label className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5">
                 Short Summary Description
               </label>
               <input
@@ -547,7 +547,7 @@ const AdminProductFormPage = () => {
             </div>
 
             <div>
-              <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
+              <label className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5">
                 Main Description
               </label>
               <textarea
@@ -560,7 +560,7 @@ const AdminProductFormPage = () => {
             </div>
 
             <div>
-              <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
+              <label className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5">
                 Detailed Technical Specifications &amp; Included Contents
               </label>
               <textarea
@@ -576,7 +576,7 @@ const AdminProductFormPage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
+                <label className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5">
                   Deliverable Format (Metadata)
                 </label>
                 <input
@@ -588,7 +588,7 @@ const AdminProductFormPage = () => {
                 />
               </div>
               <div>
-                <label className="block text-[12px] font-medium text-[#263445] mb-1.5">
+                <label className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5">
                   Version (Metadata)
                 </label>
                 <input
@@ -602,25 +602,25 @@ const AdminProductFormPage = () => {
             </div>
 
             {/* Private Asset Delivery Info */}
-            <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#BFDBFE] space-y-2">
+            <div className="p-4 rounded-xl bg-[#18243A] border border-[#BFDBFE] space-y-2">
               <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 text-[12.5px] text-[#1D4ED8] font-semibold">
+                <div className="flex items-center gap-2 text-[12.5px] text-[#93C5FD] font-semibold">
                   <Lock className="w-3.5 h-3.5" />
                   <span>Private Digital Delivery Asset</span>
                 </div>
                 {product?.asset?.has_asset && (
-                  <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#15803D] border border-emerald-200">
+                  <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-950/50 text-emerald-300 border border-emerald-200">
                     Managed Private File Active
                   </span>
                 )}
               </div>
-              <p className="text-[12px] text-[#64748B]">
+              <p className="text-[12px] text-[#94A3B8]">
                 Upload the actual downloadable digital product in the Private Digital Asset panel.
                 Never exposed in public catalog responses or audit logs; streamed only via single-use
                 signed tokens after payment verification.
               </p>
               {!product?.asset?.has_asset && (
-                <p className="text-[12px] font-mono text-[#263445]">
+                <p className="text-[12px] font-mono text-[#F1F5F9]">
                   {pendingAssetFile
                     ? `Staged file: ${pendingAssetFile.name} (${formatFileBytes(pendingAssetFile.size)})`
                     : 'No private binary asset attached yet. Upload one in the Digital Asset panel on the right.'}
@@ -636,7 +636,7 @@ const AdminProductFormPage = () => {
                   onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
                   className="accent-[#2563EB]"
                 />
-                <span className="text-[#263445]">
+                <span className="text-[#F1F5F9]">
                   Product is active and available in the public catalog
                 </span>
               </label>
@@ -665,8 +665,8 @@ const AdminProductFormPage = () => {
             <section className="dv-card p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
                 <div className="flex items-center gap-2">
-                  <FileArchive className="w-4 h-4 text-[#2563EB]" />
-                  <h2 className="text-[14px] font-semibold text-[#263445]">
+                  <FileArchive className="w-4 h-4 text-[#60A5FA]" />
+                  <h2 className="text-[14px] font-semibold text-[#F1F5F9]">
                     2. Digital Asset File
                   </h2>
                 </div>
@@ -690,18 +690,18 @@ const AdminProductFormPage = () => {
                 </label>
               </div>
 
-              <p className="text-[11px] text-[#64748B]">
+              <p className="text-[11px] text-[#94A3B8]">
                 Stored privately outside public web directories. Validated by extension, MIME type,
                 and binary file signature up to 100 MB (ZIP, FIG, PDF, EPUB, 7Z, PNG/JPG/WEBP, MP3/WAV/MP4, WOFF2/TTF/OTF, JSON/TXT/MD/CSV).
               </p>
 
               {uploadingAsset && (
                 <div className="space-y-1">
-                  <div className="flex justify-between text-[11px] font-mono text-[#263445]">
+                  <div className="flex justify-between text-[11px] font-mono text-[#F1F5F9]">
                     <span>Uploading &amp; verifying signature...</span>
                     <span>{assetProgress}%</span>
                   </div>
-                  <div className="w-full h-1.5 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] overflow-hidden">
+                  <div className="w-full h-1.5 rounded-full bg-[#18243A] border border-[#BFDBFE] overflow-hidden">
                     <div
                       className="h-full bg-[#2563EB] transition-all"
                       style={{ width: `${assetProgress}%` }}
@@ -714,8 +714,8 @@ const AdminProductFormPage = () => {
                 <div
                   className={`p-3 rounded-xl border text-xs flex items-start gap-2 ${
                     assetStatus.type === 'error'
-                      ? 'bg-red-50 border-red-200 text-red-700'
-                      : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                      ? 'bg-red-950/50 border-red-200 text-red-300'
+                      : 'bg-emerald-950/50 border-emerald-200 text-emerald-300'
                   }`}
                 >
                   {assetStatus.type === 'error' ? (
@@ -729,10 +729,10 @@ const AdminProductFormPage = () => {
 
               {!isEditing ? (
                 pendingAssetFile ? (
-                  <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#BFDBFE] flex items-center justify-between gap-2 text-xs">
+                  <div className="p-3 rounded-xl bg-[#18243A] border border-[#BFDBFE] flex items-center justify-between gap-2 text-xs">
                     <div className="min-w-0">
-                      <p className="font-mono text-[#263445] truncate">{pendingAssetFile.name}</p>
-                      <p className="text-[11px] text-[#64748B]">
+                      <p className="font-mono text-[#F1F5F9] truncate">{pendingAssetFile.name}</p>
+                      <p className="text-[11px] text-[#94A3B8]">
                         {formatFileBytes(pendingAssetFile.size)} · Will upload on Create Product
                       </p>
                     </div>
@@ -742,24 +742,24 @@ const AdminProductFormPage = () => {
                         setPendingAssetFile(null);
                         setAssetStatus({ type: '', message: '' });
                       }}
-                      className="text-red-600 font-medium text-[11px] shrink-0 hover:underline"
+                      className="text-red-300 font-medium text-[11px] shrink-0 hover:underline"
                     >
                       Remove
                     </button>
                   </div>
                 ) : (
-                  <p className="text-xs text-[#64748B] py-2">
+                  <p className="text-xs text-[#94A3B8] py-2">
                     Optionally select a digital asset file now, or upload it after creating the product.
                   </p>
                 )
               ) : product?.asset?.has_asset ? (
-                <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#BFDBFE] space-y-2 text-xs">
+                <div className="p-3.5 rounded-xl bg-[#18243A] border border-[#BFDBFE] space-y-2 text-xs">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 space-y-0.5">
-                      <p className="font-mono font-medium text-[#263445] truncate" title={product.asset.filename}>
+                      <p className="font-mono font-medium text-[#F1F5F9] truncate" title={product.asset.filename}>
                         {product.asset.filename}
                       </p>
-                      <p className="text-[11px] text-[#64748B]">
+                      <p className="text-[11px] text-[#94A3B8]">
                         {formatFileBytes(product.asset.size_bytes)} · {product.asset.content_type}
                       </p>
                     </div>
@@ -767,14 +767,14 @@ const AdminProductFormPage = () => {
                       type="button"
                       onClick={handleDeleteDigitalAsset}
                       disabled={deletingAsset}
-                      className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-red-300 hover:bg-red-50 text-red-600 shrink-0 disabled:opacity-50 transition"
+                      className="p-1.5 rounded-lg border border-[#E5E7EB] bg-[#111C30] hover:border-red-300 hover:bg-red-950/60 text-red-300 shrink-0 disabled:opacity-50 transition"
                       title="Remove Digital Asset"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
-                  <div className="pt-2 border-t border-[#BFDBFE]/70 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-[#64748B]">
-                    <span className="inline-flex items-center gap-1 text-emerald-700 font-medium">
+                  <div className="pt-2 border-t border-[#BFDBFE]/70 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-[#94A3B8]">
+                    <span className="inline-flex items-center gap-1 text-emerald-300 font-medium">
                       <ShieldCheck className="w-3 h-3" />
                       Backend: {(product.asset.storage_backend || 'local').toUpperCase()}
                     </span>
@@ -786,7 +786,7 @@ const AdminProductFormPage = () => {
                   </div>
                 </div>
               ) : (
-                <p className="text-xs text-[#64748B] py-2">
+                <p className="text-xs text-[#94A3B8] py-2">
                   No digital asset file uploaded yet. Purchasers cannot download until a verified file
                   is attached.
                 </p>
@@ -796,7 +796,7 @@ const AdminProductFormPage = () => {
             {/* Multi-Image Gallery Management */}
             <section className="dv-card p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
-                <h2 className="text-[14px] font-semibold text-[#263445]">
+                <h2 className="text-[14px] font-semibold text-[#F1F5F9]">
                   3. Product Images
                 </h2>
                 <label className="dv-btn-primary cursor-pointer px-3 py-1.5 text-[12px] font-semibold inline-flex items-center gap-1.5">
@@ -812,29 +812,29 @@ const AdminProductFormPage = () => {
                 </label>
               </div>
 
-              <p className="text-[11px] text-[#64748B]">
+              <p className="text-[11px] text-[#94A3B8]">
                 Allowed: PNG, JPG, WEBP up to 5 MB. Validated by extension and binary signature.
               </p>
 
               {!isEditing ? (
                 <div className="space-y-2 text-xs">
                   {pendingFiles.length === 0 ? (
-                    <p className="text-[#64748B] py-3">
+                    <p className="text-[#94A3B8] py-3">
                       Select image files above to upload automatically when the product is created.
                     </p>
                   ) : (
                     pendingFiles.map((f, idx) => (
                       <div
                         key={`${f.name}-${idx}`}
-                        className="flex items-center justify-between p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E5E7EB]"
+                        className="flex items-center justify-between p-2.5 rounded-xl bg-[#18243A] border border-[#E5E7EB]"
                       >
-                        <span className="truncate max-w-[180px] text-[#263445]">{f.name}</span>
+                        <span className="truncate max-w-[180px] text-[#F1F5F9]">{f.name}</span>
                         <button
                           type="button"
                           onClick={() =>
                             setPendingFiles((prev) => prev.filter((_, i) => i !== idx))
                           }
-                          className="text-red-600 font-medium text-[11px] hover:underline"
+                          className="text-red-300 font-medium text-[11px] hover:underline"
                         >
                           Remove
                         </button>
@@ -843,45 +843,45 @@ const AdminProductFormPage = () => {
                   )}
                 </div>
               ) : !product?.images?.length ? (
-                <p className="text-xs text-[#64748B] py-4">No images uploaded for this product.</p>
+                <p className="text-xs text-[#94A3B8] py-4">No images uploaded for this product.</p>
               ) : (
                 <div className="space-y-3">
                   {product.images.map((img) => (
                     <div
                       key={img.id}
-                      className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E5E7EB] flex items-center justify-between gap-3"
+                      className="p-3 rounded-xl bg-[#18243A] border border-[#E5E7EB] flex items-center justify-between gap-3"
                     >
                       <div className="flex items-center gap-3">
                         <img
                           src={img.image_url}
                           alt="Product gallery"
-                          className="w-14 h-14 object-cover rounded-lg border border-[#E5E7EB] bg-white"
+                          className="w-14 h-14 object-cover rounded-lg border border-[#E5E7EB] bg-[#111C30]"
                         />
                         <div className="space-y-1 text-xs">
                           <div className="flex items-center gap-2">
                             {img.is_primary ? (
-                              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-950/50 text-emerald-300 border border-emerald-200">
                                 Primary
                               </span>
                             ) : (
                               <button
                                 type="button"
                                 onClick={() => handleSetPrimaryImage(img)}
-                                className="text-[11px] font-medium text-[#2563EB] hover:text-[#1D4ED8] hover:underline flex items-center gap-1"
+                                className="text-[11px] font-medium text-[#60A5FA] hover:text-[#93C5FD] hover:underline flex items-center gap-1"
                               >
                                 <Star className="w-3 h-3" />
                                 <span>Set Primary</span>
                               </button>
                             )}
                           </div>
-                          <div className="flex items-center gap-1.5 text-[11px] text-[#64748B]">
+                          <div className="flex items-center gap-1.5 text-[11px] text-[#94A3B8]">
                             <span>Order:</span>
                             <input
                               type="number"
                               min="0"
                               value={img.display_order}
                               onChange={(e) => handleReorderImage(img, e.target.value)}
-                              className="w-12 rounded-md bg-white border border-[#E5E7EB] px-1.5 py-0.5 text-center text-[#263445]"
+                              className="w-12 rounded-md bg-[#111C30] border border-[#E5E7EB] px-1.5 py-0.5 text-center text-[#F1F5F9]"
                             />
                           </div>
                         </div>
@@ -889,7 +889,7 @@ const AdminProductFormPage = () => {
 
                       <div className="flex items-center gap-1.5">
                         <label
-                          className="cursor-pointer p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#93C5FD] hover:text-[#2563EB] text-[#263445] transition"
+                          className="cursor-pointer p-1.5 rounded-lg border border-[#E5E7EB] bg-[#111C30] hover:border-[#93C5FD] hover:text-[#60A5FA] text-[#F1F5F9] transition"
                           title="Replace Image File"
                         >
                           <RefreshCw className="w-3.5 h-3.5" />
@@ -903,7 +903,7 @@ const AdminProductFormPage = () => {
                         <button
                           type="button"
                           onClick={() => handleDeleteImage(img)}
-                          className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-red-300 hover:bg-red-50 text-red-600 transition"
+                          className="p-1.5 rounded-lg border border-[#E5E7EB] bg-[#111C30] hover:border-red-300 hover:bg-red-950/60 text-red-300 transition"
                           title="Delete Image"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -920,12 +920,12 @@ const AdminProductFormPage = () => {
               <section className="dv-card p-6 space-y-4">
                 <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
                   <div className="flex items-center gap-2">
-                    <Percent className="w-4 h-4 text-[#2563EB]" />
-                    <h2 className="text-[14px] font-semibold text-[#263445]">
+                    <Percent className="w-4 h-4 text-[#60A5FA]" />
+                    <h2 className="text-[14px] font-semibold text-[#F1F5F9]">
                       4. Sales &amp; Discounts
                     </h2>
                   </div>
-                  <span className="text-[12px] font-semibold font-mono text-[#1D4ED8]">
+                  <span className="text-[12px] font-semibold font-mono text-[#93C5FD]">
                     Effective: {formatINR(product?.effective_price)}
                   </span>
                 </div>
@@ -933,7 +933,7 @@ const AdminProductFormPage = () => {
                 {/* Create New Discount Form */}
                 <form onSubmit={handleCreateSale} className="space-y-3 text-[13px]">
                   <div>
-                    <label className="block text-[12px] font-medium text-[#263445] mb-1">
+                    <label className="block text-[12px] font-medium text-[#F1F5F9] mb-1">
                       Discounted Price (must be &lt; {formatINR(product?.original_price)})
                     </label>
                     <input
@@ -952,7 +952,7 @@ const AdminProductFormPage = () => {
 
                   <div className="grid grid-cols-1 gap-2">
                     <div>
-                      <label className="block text-[12px] font-medium text-[#263445] mb-1">
+                      <label className="block text-[12px] font-medium text-[#F1F5F9] mb-1">
                         Starts At (UTC/Local)
                       </label>
                       <input
@@ -964,7 +964,7 @@ const AdminProductFormPage = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-[12px] font-medium text-[#263445] mb-1">
+                      <label className="block text-[12px] font-medium text-[#F1F5F9] mb-1">
                         Expires At
                       </label>
                       <input
@@ -989,20 +989,20 @@ const AdminProductFormPage = () => {
                 {/* Existing Sales History */}
                 {product?.sales?.length > 0 && (
                   <div className="pt-3 border-t border-[#E5E7EB] space-y-2">
-                    <p className="text-[12px] font-medium text-[#64748B]">
+                    <p className="text-[12px] font-medium text-[#94A3B8]">
                       Discount History
                     </p>
                     {product.sales.map((s) => (
                       <div
                         key={s.id}
-                        className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E5E7EB] text-[12px] flex items-center justify-between gap-2"
+                        className="p-3 rounded-xl bg-[#18243A] border border-[#E5E7EB] text-[12px] flex items-center justify-between gap-2"
                       >
                         <div>
-                          <p className="font-mono font-semibold text-[#263445]">
+                          <p className="font-mono font-semibold text-[#F1F5F9]">
                             {formatINR(s.discounted_price)}{' '}
-                            <span className="text-[#15803D]">(-{s.discount_percentage}%)</span>
+                            <span className="text-emerald-300">(-{s.discount_percentage}%)</span>
                           </p>
-                          <p className="text-[11px] text-[#64748B]">
+                          <p className="text-[11px] text-[#94A3B8]">
                             {new Date(s.starts_at).toLocaleDateString()} →{' '}
                             {new Date(s.expires_at).toLocaleDateString()}
                           </p>
@@ -1012,8 +1012,8 @@ const AdminProductFormPage = () => {
                           onClick={() => handleToggleSaleActive(s)}
                           className={`text-[11px] font-medium px-2.5 py-1 rounded-full border ${
                             s.is_active
-                              ? 'bg-emerald-50 text-[#15803D] border-emerald-200'
-                              : 'bg-slate-100 text-[#64748B] border-[#E5E7EB]'
+                              ? 'bg-emerald-950/50 text-emerald-300 border-emerald-200'
+                              : 'bg-[#18243A] text-[#94A3B8] border-[#E5E7EB]'
                           }`}
                         >
                           {s.is_currently_live

@@ -151,13 +151,13 @@ const AdminProductsPage = () => {
       <ToastBanner toast={toast} onDismiss={() => setToast(null)} className="mb-5" />
 
       {/* Search & Filters */}
-      <div className="bg-white border border-[#D5DEE8] rounded-xl p-4 mb-5 grid grid-cols-1 md:grid-cols-6 gap-3 shadow-2xs">
+      <div className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-4 mb-5 grid grid-cols-1 md:grid-cols-6 gap-3 shadow-2xs">
         <div className="relative md:col-span-2">
           <label htmlFor="admin-products-search" className="sr-only">
             Search products
           </label>
           <Search
-            className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2"
+            className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2"
             aria-hidden="true"
           />
           <input
@@ -237,7 +237,7 @@ const AdminProductsPage = () => {
       </div>
 
       {/* Products Table */}
-      <div className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+      <div className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
         {loading ? (
           <LoadingState label="Loading products..." />
         ) : data.items.length === 0 ? (
@@ -261,7 +261,7 @@ const AdminProductsPage = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-[#D5DEE8] bg-[#F8FAFC] text-[#475569] text-[11.5px] font-semibold">
+                <tr className="border-b border-[#D5DEE8] bg-[#18243A] text-[#CBD5E1] text-[11.5px] font-semibold">
                   <th className="py-3 px-4">Product &amp; Owner</th>
                   <th className="py-3 px-4">Category</th>
                   <th className="py-3 px-4">Pricing</th>
@@ -272,23 +272,23 @@ const AdminProductsPage = () => {
               </thead>
               <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                 {data.items.map((prod) => (
-                  <tr key={prod.id} className="hover:bg-[#EDF5FC]/45 transition">
+                  <tr key={prod.id} className="hover:bg-[#18243A]/70 transition">
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
                         <img
                           src={resolveProductThumbnailUrl(prod, prod.image_url, 0)}
                           alt={prod.name}
                           loading="lazy"
-                          className="w-14 h-9 rounded-lg object-cover border border-[#D5DEE8] shrink-0 bg-[#F8FAFC]"
+                          className="w-14 h-9 rounded-lg object-cover border border-[#D5DEE8] shrink-0 bg-[#18243A]"
                         />
                         <div className="min-w-0">
-                          <p className="font-semibold text-[#263445] truncate max-w-[260px]">
+                          <p className="font-semibold text-[#F1F5F9] truncate max-w-[260px]">
                             {prod.name}
                           </p>
-                          <p className="text-[11.5px] font-mono text-[#64748B] truncate max-w-[260px]">
+                          <p className="text-[11.5px] font-mono text-[#94A3B8] truncate max-w-[260px]">
                             {prod.slug}
                           </p>
-                          <span className="inline-block mt-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8]">
+                          <span className="inline-block mt-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-[#18243A] border border-[#BFDBFE] text-[#93C5FD]">
                             {prod.seller?.store_name
                               ? `Seller: ${prod.seller.store_name}`
                               : 'DIGI-VERSE Official'}
@@ -296,25 +296,25 @@ const AdminProductsPage = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-[#263445] whitespace-nowrap">
+                    <td className="py-3.5 px-4 text-[#F1F5F9] whitespace-nowrap">
                       {prod.category?.name || 'Uncategorized'}
                     </td>
                     <td className="py-3.5 px-4 font-mono tabular-nums whitespace-nowrap">
                       {prod.is_on_sale ? (
                         <div>
-                          <span className="text-[#1D4ED8] font-bold">
+                          <span className="text-[#93C5FD] font-bold">
                             {formatINR(prod.effective_price)}
                           </span>
-                          <span className="line-through text-[#64748B] text-[11.5px] ml-2">
+                          <span className="line-through text-[#94A3B8] text-[11.5px] ml-2">
                             {formatINR(prod.original_price)}
                           </span>
-                          <span className="block text-[11px] text-[#15803D] font-sans font-medium mt-0.5">
+                          <span className="block text-[11px] text-emerald-300 font-sans font-medium mt-0.5">
                             -{Math.round(Number(prod.active_discount?.discount_percentage || 0))}%
                             Live Sale
                           </span>
                         </div>
                       ) : (
-                        <span className="text-[#263445] font-semibold">
+                        <span className="text-[#F1F5F9] font-semibold">
                           {formatINR(prod.original_price)}
                         </span>
                       )}
@@ -351,7 +351,7 @@ const AdminProductsPage = () => {
                               onClick={() => handleModerate(prod, 'approve')}
                               title="Approve & Publish Product"
                               aria-label={`Approve ${prod.name}`}
-                              className="p-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-[#15803D] hover:bg-emerald-100 transition disabled:opacity-45"
+                              className="p-1.5 rounded-lg border border-emerald-200 bg-emerald-950/50 text-emerald-300 hover:bg-emerald-950/80 transition disabled:opacity-45"
                             >
                               <CheckCircle2 className="w-3.5 h-3.5" />
                             </button>
@@ -364,7 +364,7 @@ const AdminProductsPage = () => {
                               }}
                               title="Reject Product Submission"
                               aria-label={`Reject ${prod.name}`}
-                              className="p-1.5 rounded-lg border border-red-200 bg-red-50 text-[#DC2626] hover:bg-red-100 transition disabled:opacity-45"
+                              className="p-1.5 rounded-lg border border-red-200 bg-red-950/50 text-red-300 hover:bg-red-950/80 transition disabled:opacity-45"
                             >
                               <XCircle className="w-3.5 h-3.5" />
                             </button>
@@ -373,7 +373,7 @@ const AdminProductsPage = () => {
                         <button
                           type="button"
                           onClick={() => handleToggleStatus(prod)}
-                          className="p-1.5 rounded-lg border border-[#D5DEE8] bg-white hover:border-[#93C5FD] hover:bg-[#EDF5FC] hover:text-[#2563EB] text-[#263445] transition"
+                          className="p-1.5 rounded-lg border border-[#D5DEE8] bg-[#111C30] hover:border-[#93C5FD] hover:bg-[#18243A] hover:text-[#60A5FA] text-[#F1F5F9] transition"
                           title={prod.is_active ? 'Deactivate Product' : 'Activate Product'}
                           aria-label={prod.is_active ? `Deactivate ${prod.name}` : `Activate ${prod.name}`}
                         >
@@ -381,7 +381,7 @@ const AdminProductsPage = () => {
                         </button>
                         <Link
                           to={`/admin/products/${prod.id}/edit`}
-                          className="p-1.5 rounded-lg border border-[#D5DEE8] bg-white hover:border-[#93C5FD] hover:bg-[#EDF5FC] hover:text-[#2563EB] text-[#263445] transition"
+                          className="p-1.5 rounded-lg border border-[#D5DEE8] bg-[#111C30] hover:border-[#93C5FD] hover:bg-[#18243A] hover:text-[#60A5FA] text-[#F1F5F9] transition"
                           title="Edit Product, Images & Discounts"
                           aria-label={`Edit ${prod.name}`}
                         >
@@ -390,7 +390,7 @@ const AdminProductsPage = () => {
                         <button
                           type="button"
                           onClick={() => setConfirmDelete(prod)}
-                          className="p-1.5 rounded-lg border border-[#D5DEE8] bg-white hover:border-red-300 hover:bg-red-50 text-[#DC2626] transition"
+                          className="p-1.5 rounded-lg border border-[#D5DEE8] bg-[#111C30] hover:border-red-300 hover:bg-red-950/60 text-red-300 transition"
                           title="Delete Product"
                           aria-label={`Delete ${prod.name}`}
                         >

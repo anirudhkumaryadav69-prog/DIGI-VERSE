@@ -27,12 +27,12 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
       : 0;
 
   return (
-    <article className="group dv-card-interactive h-full flex flex-col justify-between overflow-hidden rounded-2xl bg-white border border-[#D5DEE8]">
+    <article className="group dv-card-interactive h-full flex flex-col justify-between overflow-hidden rounded-2xl bg-[#111C30] border border-[#D5DEE8]">
       <div className="flex-1 flex flex-col">
         {/* Consistent 16:10 Product Cover Thumbnail */}
         <Link
           to={`/products/${product.slug}`}
-          className="block aspect-16/10 bg-[#F8FAFC] relative overflow-hidden border-b border-[#E5E7EB]"
+          className="block aspect-16/10 bg-[#18243A] relative overflow-hidden border-b border-[#E5E7EB]"
         >
           <img
             src={thumbnailUrl}
@@ -44,7 +44,7 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
           />
 
           {formatLabel && (
-            <span className="absolute bottom-2.5 left-3 rounded-md bg-white/95 backdrop-blur-xs border border-[#D5DEE8] text-[#263445] text-[10px] font-mono font-semibold px-2 py-0.5 shadow-2xs">
+            <span className="absolute bottom-2.5 left-3 rounded-md bg-[#111C30]/95 backdrop-blur-xs border border-[#D5DEE8] text-[#F1F5F9] text-[10px] font-mono font-semibold px-2 py-0.5 shadow-2xs">
               {formatLabel}
             </span>
           )}
@@ -70,13 +70,13 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
               </Link>
             )}
             {product.product_type && (
-              <span className="text-[11px] font-medium text-[#64748B] whitespace-nowrap shrink-0">
+              <span className="text-[11px] font-medium text-[#94A3B8] whitespace-nowrap shrink-0">
                 {product.product_type}
               </span>
             )}
           </div>
 
-          <h3 className="text-[16.5px] leading-[1.35] font-semibold tracking-[-0.01em] text-[#263445] group-hover:text-[#2563EB] transition-colors line-clamp-2 min-h-[2.7em] mb-2">
+          <h3 className="text-[16.5px] leading-[1.35] font-semibold tracking-[-0.01em] text-[#F1F5F9] group-hover:text-[#60A5FA] transition-colors line-clamp-2 min-h-[2.7em] mb-2">
             <Link
               to={`/products/${product.slug}`}
               className="rounded-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB]"
@@ -85,7 +85,7 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
             </Link>
           </h3>
 
-          <div className="mb-2.5 flex items-center justify-between gap-2 text-[12.5px] font-medium text-[#64748B]">
+          <div className="mb-2.5 flex items-center justify-between gap-2 text-[12.5px] font-medium text-[#94A3B8]">
             <div className="flex items-center gap-1.5 min-w-0">
               {product.seller?.logo_url ? (
                 <img
@@ -100,29 +100,29 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
               {product.seller?.store_slug ? (
                 <Link
                   to={`/store/${product.seller.store_slug}`}
-                  className="text-[#263445] hover:text-[#2563EB] hover:underline truncate"
+                  className="text-[#F1F5F9] hover:text-[#60A5FA] hover:underline truncate"
                 >
                   {product.seller.store_name}
                 </Link>
               ) : (
-                <span className="text-[#263445] truncate">DIGI-VERSE Official</span>
+                <span className="text-[#F1F5F9] truncate">DIGI-VERSE Official</span>
               )}
             </div>
 
             {hasGenuineRating && (
               <span
-                className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#263445] shrink-0 tabular-nums"
+                className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#F1F5F9] shrink-0 tabular-nums"
                 title={`${ratingValue.toFixed(1)} out of 5 (${reviewCount} reviews)`}
               >
                 <Star className="w-3.5 h-3.5 fill-[#D97706] text-[#D97706]" aria-hidden="true" />
                 <span>{ratingValue.toFixed(1)}</span>
-                <span className="text-[#64748B] font-normal">({reviewCount})</span>
+                <span className="text-[#94A3B8] font-normal">({reviewCount})</span>
               </span>
             )}
           </div>
 
           {product.short_description && (
-            <p className="text-[13px] leading-[1.5] text-[#64748B] line-clamp-2 mt-auto">
+            <p className="text-[13px] leading-[1.5] text-[#94A3B8] line-clamp-2 mt-auto">
               {product.short_description}
             </p>
           )}
@@ -130,18 +130,18 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
       </div>
 
       {/* Pricing & Primary Actions Footer */}
-      <div className="px-5 py-3.5 border-t border-[#E5E7EB] bg-[#F8FAFC] flex items-center justify-between gap-3">
+      <div className="px-5 py-3.5 border-t border-[#E5E7EB] bg-[#18243A] flex items-center justify-between gap-3">
         <div className="flex flex-col gap-0.5 min-w-0 tabular-nums">
-          <span className="text-[19px] leading-none font-bold text-[#263445]">
+          <span className="text-[19px] leading-none font-bold text-[#F1F5F9]">
             {formatINR(product.effective_price)}
           </span>
           {product.is_on_sale && (
             <div className="flex items-center gap-1.5 text-[11px] leading-none mt-1">
-              <span className="font-medium text-[#64748B] line-through">
+              <span className="font-medium text-[#94A3B8] line-through">
                 {formatINR(product.original_price)}
               </span>
               {discountSavings > 0 && (
-                <span className="font-semibold text-[#16A34A]">
+                <span className="font-semibold text-emerald-400">
                   Save {formatINR(discountSavings)}
                 </span>
               )}
@@ -156,7 +156,7 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
               onClick={(e) => onAddToWishlist(e, product)}
               aria-label={`Save ${product.name} to wishlist`}
               title="Save to wishlist"
-              className="h-9 w-9 inline-flex items-center justify-center rounded-xl border border-[#D5DEE8] bg-white hover:bg-[#EDF5FC] hover:border-[#93C5FD] text-[#64748B] hover:text-[#2563EB] transition focus-visible:outline-2 focus-visible:outline-[#2563EB]"
+              className="h-9 w-9 inline-flex items-center justify-center rounded-xl border border-[#D5DEE8] bg-[#111C30] hover:bg-[#18243A] hover:border-[#93C5FD] text-[#94A3B8] hover:text-[#60A5FA] transition focus-visible:outline-2 focus-visible:outline-[#2563EB]"
             >
               <Heart className="w-4 h-4" aria-hidden="true" />
             </button>

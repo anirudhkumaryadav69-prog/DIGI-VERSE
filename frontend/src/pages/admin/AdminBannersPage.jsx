@@ -112,7 +112,7 @@ const AdminBannersPage = () => {
       {/* Create Banner Form */}
       <form
         onSubmit={handleCreate}
-        className="bg-white border border-[#D5DEE8] rounded-xl p-6 mb-6 space-y-4 shadow-2xs"
+        className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-6 mb-6 space-y-4 shadow-2xs"
       >
         <AdminSectionHeader
           icon={ImageIcon}
@@ -124,7 +124,7 @@ const AdminBannersPage = () => {
           <div>
             <label
               htmlFor="banner-heading"
-              className="block text-[12px] font-medium text-[#263445] mb-1.5"
+              className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
             >
               Banner Heading *
             </label>
@@ -142,7 +142,7 @@ const AdminBannersPage = () => {
           <div>
             <label
               htmlFor="banner-subtitle"
-              className="block text-[12px] font-medium text-[#263445] mb-1.5"
+              className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
             >
               Subtitle
             </label>
@@ -159,7 +159,7 @@ const AdminBannersPage = () => {
           <div>
             <label
               htmlFor="banner-image-url"
-              className="block text-[12px] font-medium text-[#263445] mb-1.5"
+              className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
             >
               Banner Image URL *
             </label>
@@ -178,7 +178,7 @@ const AdminBannersPage = () => {
             <div>
               <label
                 htmlFor="banner-cta-text"
-                className="block text-[12px] font-medium text-[#263445] mb-1.5"
+                className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
               >
                 CTA Text
               </label>
@@ -193,7 +193,7 @@ const AdminBannersPage = () => {
             <div>
               <label
                 htmlFor="banner-cta-link"
-                className="block text-[12px] font-medium text-[#263445] mb-1.5"
+                className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
               >
                 CTA Link
               </label>
@@ -208,7 +208,7 @@ const AdminBannersPage = () => {
             <div>
               <label
                 htmlFor="banner-priority"
-                className="block text-[12px] font-medium text-[#263445] mb-1.5"
+                className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
               >
                 Priority
               </label>
@@ -238,7 +238,7 @@ const AdminBannersPage = () => {
       </form>
 
       {/* Banners List */}
-      <div className="bg-white border border-[#D5DEE8] rounded-xl divide-y divide-[#E5E7EB] shadow-2xs overflow-hidden">
+      <div className="bg-[#111C30] border border-[#D5DEE8] rounded-xl divide-y divide-[#E5E7EB] shadow-2xs overflow-hidden">
         {loading ? (
           <LoadingState label="Loading banners..." />
         ) : banners.length === 0 ? (
@@ -253,16 +253,16 @@ const AdminBannersPage = () => {
           banners.map((b) => (
             <div
               key={b.id}
-              className="p-5 flex flex-wrap items-center justify-between gap-4 hover:bg-[#EDF5FC]/40 transition"
+              className="p-5 flex flex-wrap items-center justify-between gap-4 hover:bg-[#18243A]/60 transition"
             >
               <div className="space-y-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[14px] font-semibold text-[#263445]">{b.heading}</span>
+                  <span className="text-[14px] font-semibold text-[#F1F5F9]">{b.heading}</span>
                   <AdminStatusBadge status="processing" label={`Priority ${b.display_priority}`} />
                   <AdminStatusBadge status={b.is_active ? 'active' : 'inactive'} />
                 </div>
-                {b.subtitle && <p className="text-[12.5px] text-[#64748B]">{b.subtitle}</p>}
-                <p className="text-[11.5px] font-mono text-[#64748B] truncate max-w-xl">
+                {b.subtitle && <p className="text-[12.5px] text-[#94A3B8]">{b.subtitle}</p>}
+                <p className="text-[11.5px] font-mono text-[#94A3B8] truncate max-w-xl">
                   {b.image_url}
                 </p>
               </div>
@@ -271,7 +271,7 @@ const AdminBannersPage = () => {
                 <button
                   type="button"
                   onClick={() => handleToggleActive(b)}
-                  className="inline-flex items-center gap-1.5 rounded-lg text-[12px] font-medium px-3 py-1.5 border border-[#D5DEE8] bg-white text-[#263445] hover:border-[#93C5FD] hover:bg-[#EDF5FC] hover:text-[#2563EB] transition"
+                  className="inline-flex items-center gap-1.5 rounded-lg text-[12px] font-medium px-3 py-1.5 border border-[#D5DEE8] bg-[#111C30] text-[#F1F5F9] hover:border-[#93C5FD] hover:bg-[#18243A] hover:text-[#60A5FA] transition"
                 >
                   {b.is_active ? (
                     <>
@@ -288,7 +288,7 @@ const AdminBannersPage = () => {
                 <button
                   type="button"
                   onClick={() => setConfirmDelete(b)}
-                  className="p-2 rounded-lg border border-red-200 bg-white text-[#DC2626] hover:bg-red-50 transition"
+                  className="p-2 rounded-lg border border-red-200 bg-[#111C30] text-red-300 hover:bg-red-950/60 transition"
                   title="Delete Banner"
                   aria-label={`Delete banner ${b.heading}`}
                 >

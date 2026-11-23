@@ -233,10 +233,10 @@ const SellerPayoutPage = () => {
             ['Settled payout', balance.total_settled, WalletCards],
           ].map(([label, value, Icon]) => (
             <div key={label} className="dv-card p-5">
-              <p className="text-xs font-medium text-[#64748B] flex justify-between gap-2">
-                {label}<Icon className="w-4 h-4 text-[#2563EB]" aria-hidden="true" />
+              <p className="text-xs font-medium text-[#94A3B8] flex justify-between gap-2">
+                {label}<Icon className="w-4 h-4 text-[#60A5FA]" aria-hidden="true" />
               </p>
-              <p className={`text-xl font-bold font-mono mt-2 ${Number(value) < 0 ? 'text-red-700' : 'text-[#1D4ED8]'}`}>
+              <p className={`text-xl font-bold font-mono mt-2 ${Number(value) < 0 ? 'text-red-300' : 'text-[#93C5FD]'}`}>
                 {formatINR(value)}
               </p>
             </div>
@@ -244,7 +244,7 @@ const SellerPayoutPage = () => {
         </section>
       )}
 
-      <div className="bg-[#EAF4FC] border border-[#BFDBFE] rounded-xl p-4 mb-6 text-xs text-[#1D4ED8]">
+      <div className="bg-[#18243A] border border-[#BFDBFE] rounded-xl p-4 mb-6 text-xs text-[#93C5FD]">
         Available withdrawal is calculated by the backend. Approval does not mean funds have been transferred. Live and mock payout execution are not enabled on this dashboard.
       </div>
 
@@ -253,7 +253,7 @@ const SellerPayoutPage = () => {
           <h2 className="text-sm font-bold mb-4">{editingAccountId ? 'Edit masked payout account' : 'Add masked payout account'}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="payout-account-type" className="block text-xs font-medium text-[#64748B] mb-1.5">Account type</label>
+              <label htmlFor="payout-account-type" className="block text-xs font-medium text-[#94A3B8] mb-1.5">Account type</label>
               <select id="payout-account-type" value={accountForm.account_type} onChange={(e) => setAccountForm((v) => ({ ...v, account_type: e.target.value }))} className="dv-input px-3 py-2.5 text-sm">
                 <option value="upi">UPI</option>
                 <option value="bank">Bank account</option>
@@ -275,23 +275,23 @@ const SellerPayoutPage = () => {
       <section className="dv-card overflow-hidden mb-6">
         <div className="px-5 py-4 border-b border-[#E5E7EB]"><h2 className="text-sm font-bold">Payout accounts</h2></div>
         {!accounts.length ? (
-          <p className="p-8 text-center text-xs text-[#64748B]">No payout account has been added.</p>
+          <p className="p-8 text-center text-xs text-[#94A3B8]">No payout account has been added.</p>
         ) : (
           <div className="divide-y divide-[#E5E7EB]">
             {accounts.map((account) => (
               <div key={account.id} className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-sm font-semibold text-[#263445]">{account.display_name}</p>
+                    <p className="text-sm font-semibold text-[#F1F5F9]">{account.display_name}</p>
                     {account.is_default && <Badge variant="accent">Default</Badge>}
                     <Badge variant={account.verification_status === 'verified' ? 'success' : account.verification_status === 'rejected' ? 'danger' : 'warning'}>
                       {account.verification_status}
                     </Badge>
                     {!account.is_active && <Badge variant="neutral">Inactive</Badge>}
                   </div>
-                  <p className="text-xs text-[#64748B] mt-1">{account.account_type.toUpperCase()} · {account.masked_identifier}</p>
+                  <p className="text-xs text-[#94A3B8] mt-1">{account.account_type.toUpperCase()} · {account.masked_identifier}</p>
                   {account.verification_status === 'rejected' && account.verification_reason && (
-                    <p className="text-[11px] text-red-700 mt-1">Reason: {account.verification_reason}</p>
+                    <p className="text-[11px] text-red-300 mt-1">Reason: {account.verification_reason}</p>
                   )}
                 </div>
                 {account.is_active && (
@@ -313,7 +313,7 @@ const SellerPayoutPage = () => {
                       Edit
                     </button>
                     {!account.is_default && <button type="button" onClick={() => setDefault(account.id)} className="dv-btn-secondary text-[11px] px-3 py-2">Make default</button>}
-                    <button type="button" onClick={() => deactivateAccount(account.id)} className="text-[11px] px-3 py-2 rounded-xl border border-red-200 bg-white text-red-700 hover:bg-red-50">Deactivate</button>
+                    <button type="button" onClick={() => deactivateAccount(account.id)} className="text-[11px] px-3 py-2 rounded-xl border border-red-200 bg-[#111C30] text-red-300 hover:bg-red-950/60">Deactivate</button>
                   </div>
                 )}
               </div>
@@ -326,7 +326,7 @@ const SellerPayoutPage = () => {
         <h2 className="text-sm font-bold mb-4">Request withdrawal</h2>
         <div className="grid grid-cols-1 md:grid-cols-[1fr_220px_auto] gap-4 items-end">
           <div>
-            <label htmlFor="payout-account" className="block text-xs font-medium text-[#64748B] mb-1.5">Verified payout account</label>
+            <label htmlFor="payout-account" className="block text-xs font-medium text-[#94A3B8] mb-1.5">Verified payout account</label>
             <select id="payout-account" value={withdrawal.accountId} onChange={(e) => setWithdrawal((v) => ({ ...v, accountId: e.target.value }))} className="dv-input px-3 py-2.5 text-sm" required>
               <option value="">Select account</option>
               {verifiedAccounts.map((account) => <option key={account.id} value={account.id}>{account.display_name} · {account.masked_identifier}</option>)}
@@ -340,19 +340,19 @@ const SellerPayoutPage = () => {
       <section className="dv-card overflow-hidden">
         <div className="px-5 py-4 border-b border-[#E5E7EB]"><h2 className="text-sm font-bold">Payout request history</h2></div>
         {!requests.items.length ? (
-          <p className="p-8 text-center text-xs text-[#64748B]">No payout requests have been submitted.</p>
+          <p className="p-8 text-center text-xs text-[#94A3B8]">No payout requests have been submitted.</p>
         ) : (
           <>
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
-                <thead><tr className="bg-[#F8FAFC] text-[#64748B] border-b border-[#E5E7EB]"><th className="px-4 py-3">Reference</th><th className="px-4 py-3">Destination</th><th className="px-4 py-3 text-right">Amount</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Created</th><th className="px-4 py-3 text-right">Action</th></tr></thead>
+                <thead><tr className="bg-[#18243A] text-[#94A3B8] border-b border-[#E5E7EB]"><th className="px-4 py-3">Reference</th><th className="px-4 py-3">Destination</th><th className="px-4 py-3 text-right">Amount</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Created</th><th className="px-4 py-3 text-right">Action</th></tr></thead>
                 <tbody className="divide-y divide-[#E5E7EB]">{requests.items.map((request) => (
-                  <tr key={request.id} className="hover:bg-[#EAF4FC]">
-                    <td className="px-4 py-3 font-mono"><button type="button" onClick={() => openPayoutDetail(request)} className="text-[#1D4ED8] hover:underline">{request.id}</button></td>
+                  <tr key={request.id} className="hover:bg-[#18243A]">
+                    <td className="px-4 py-3 font-mono"><button type="button" onClick={() => openPayoutDetail(request)} className="text-[#93C5FD] hover:underline">{request.id}</button></td>
                     <td className="px-4 py-3">{request.destination_masked_snapshot}</td>
                     <td className="px-4 py-3 text-right font-mono font-bold">{formatINR(request.amount)}</td>
                     <td className="px-4 py-3"><Badge variant={statusVariant[request.status] || 'neutral'}>{request.status}</Badge></td>
-                    <td className="px-4 py-3 text-[#64748B]">{new Date(request.created_at).toLocaleString()}</td>
+                    <td className="px-4 py-3 text-[#94A3B8]">{new Date(request.created_at).toLocaleString()}</td>
                     <td className="px-4 py-3 text-right">{['requested', 'under_review', 'approved'].includes(request.status) && <button type="button" onClick={() => setCancelTarget(request)} className="dv-btn-secondary text-[11px] px-3 py-1.5">Cancel</button>}</td>
                   </tr>
                 ))}</tbody>
@@ -366,11 +366,11 @@ const SellerPayoutPage = () => {
       <ConfirmDialog open={Boolean(cancelTarget)} title="Cancel payout request?" description="This may release reserved funds if the request is still cancellable." confirmLabel="Cancel request" cancelLabel="Keep request" variant="danger" onConfirm={cancelRequest} onCancel={() => setCancelTarget(null)} />
 
       {detailRequest && (
-        <div role="dialog" aria-modal="true" aria-labelledby="seller-payout-detail-title" className="fixed inset-0 z-50 bg-[#263445]/30 backdrop-blur-[2px] flex justify-end">
-          <div className="w-full max-w-xl h-full overflow-y-auto bg-white border-l border-[#E5E7EB] p-6">
+        <div role="dialog" aria-modal="true" aria-labelledby="seller-payout-detail-title" className="fixed inset-0 z-50 bg-[#080D19]/70 backdrop-blur-[2px] flex justify-end">
+          <div className="w-full max-w-xl h-full overflow-y-auto bg-[#111C30] border-l border-[#E5E7EB] p-6">
             <div className="flex items-start justify-between gap-4 mb-6">
               <div>
-                <p className="text-xs text-[#2563EB] font-semibold">Payout detail</p>
+                <p className="text-xs text-[#60A5FA] font-semibold">Payout detail</p>
                 <h2 id="seller-payout-detail-title" className="text-lg font-bold mt-1 font-mono">{detailRequest.id}</h2>
               </div>
               <button type="button" onClick={() => { setDetailRequest(null); setDetailAttempts([]); }} aria-label="Close payout detail" className="p-2 rounded-xl border border-[#E5E7EB]">×</button>
@@ -380,16 +380,16 @@ const SellerPayoutPage = () => {
                 <section className="dv-card p-5">
                   <h3 className="text-sm font-bold mb-3">Request information</h3>
                   <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div><dt className="text-[#64748B]">Amount</dt><dd className="font-mono font-bold mt-1">{formatINR(detailRequest.amount)}</dd></div>
-                    <div><dt className="text-[#64748B]">Status</dt><dd className="mt-1"><Badge variant={statusVariant[detailRequest.status] || 'neutral'}>{detailRequest.status}</Badge></dd></div>
-                    <div><dt className="text-[#64748B]">Masked destination</dt><dd className="mt-1">{detailRequest.destination_masked_snapshot}</dd></div>
-                    <div><dt className="text-[#64748B]">Settlement</dt><dd className="mt-1">{detailRequest.settlement_status || (detailRequest.status === 'completed' ? 'completed' : 'not_settled')}</dd></div>
+                    <div><dt className="text-[#94A3B8]">Amount</dt><dd className="font-mono font-bold mt-1">{formatINR(detailRequest.amount)}</dd></div>
+                    <div><dt className="text-[#94A3B8]">Status</dt><dd className="mt-1"><Badge variant={statusVariant[detailRequest.status] || 'neutral'}>{detailRequest.status}</Badge></dd></div>
+                    <div><dt className="text-[#94A3B8]">Masked destination</dt><dd className="mt-1">{detailRequest.destination_masked_snapshot}</dd></div>
+                    <div><dt className="text-[#94A3B8]">Settlement</dt><dd className="mt-1">{detailRequest.settlement_status || (detailRequest.status === 'completed' ? 'completed' : 'not_settled')}</dd></div>
                   </dl>
                 </section>
                 <section className="dv-card p-5">
                   <h3 className="text-sm font-bold mb-3">Execution timeline</h3>
                   {!detailAttempts.length ? (
-                    <p className="text-xs text-[#64748B]">No execution attempts have been recorded.</p>
+                    <p className="text-xs text-[#94A3B8]">No execution attempts have been recorded.</p>
                   ) : (
                     <div className="space-y-3">{detailAttempts.map((attempt) => (
                       <div key={attempt.id} className="border border-[#E5E7EB] rounded-xl p-3 text-xs">
@@ -397,9 +397,9 @@ const SellerPayoutPage = () => {
                           <strong>Attempt {attempt.attempt_no}</strong>
                           <Badge variant={attempt.outcome === 'success' ? 'success' : attempt.outcome === 'uncertain' ? 'warning' : attempt.outcome === 'failed' ? 'danger' : 'neutral'}>{attempt.outcome}</Badge>
                         </div>
-                        <p className="text-[#64748B] mt-1">{attempt.simulated ? 'Simulated execution — no real transfer occurred.' : 'Provider execution status.'}</p>
-                        {attempt.sanitized_error && <p className="text-red-700 mt-1">{attempt.sanitized_error}</p>}
-                        {attempt.started_at && <p className="text-[#64748B] mt-1">{new Date(attempt.started_at).toLocaleString()}</p>}
+                        <p className="text-[#94A3B8] mt-1">{attempt.simulated ? 'Simulated execution — no real transfer occurred.' : 'Provider execution status.'}</p>
+                        {attempt.sanitized_error && <p className="text-red-300 mt-1">{attempt.sanitized_error}</p>}
+                        {attempt.started_at && <p className="text-[#94A3B8] mt-1">{new Date(attempt.started_at).toLocaleString()}</p>}
                       </div>
                     ))}</div>
                   )}
@@ -407,7 +407,7 @@ const SellerPayoutPage = () => {
                 {detailRequest.failure_reason && (
                   <section className="dv-card p-5">
                     <h3 className="text-sm font-bold mb-2">Safe status explanation</h3>
-                    <p className="text-xs text-red-700">{detailRequest.failure_reason}</p>
+                    <p className="text-xs text-red-300">{detailRequest.failure_reason}</p>
                   </section>
                 )}
               </div>

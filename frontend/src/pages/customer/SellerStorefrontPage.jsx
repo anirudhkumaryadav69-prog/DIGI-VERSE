@@ -143,7 +143,7 @@ const SellerStorefrontPage = () => {
     <StorefrontLayout>
       <div className="space-y-8">
         {/* Storefront Banner & Header */}
-        <section className="bg-white border border-[#E5E7EB] rounded-3xl overflow-hidden shadow-xs">
+        <section className="bg-[#111C30] border border-[#E5E7EB] rounded-3xl overflow-hidden shadow-xs">
           <div className="h-40 sm:h-52 border-b border-[#E5E7EB] relative overflow-hidden">
             <StorefrontBannerVisual store={seller} theme={storeTheme} showDomainPill={true} />
           </div>
@@ -159,31 +159,31 @@ const SellerStorefrontPage = () => {
                 />
                 <div className="pb-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-[#263445]">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-[#F1F5F9]">
                       {seller.store_name}
                     </h1>
                     <Badge variant="accent">{seller.business_type}</Badge>
                   </div>
-                  <p className="text-xs text-[#64748B] mt-1">
-                    Curated by <strong className="text-[#263445]">{seller.seller_display_name}</strong>
+                  <p className="text-xs text-[#94A3B8] mt-1">
+                    Curated by <strong className="text-[#F1F5F9]">{seller.seller_display_name}</strong>
                   </p>
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-3 text-xs text-[#64748B]">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F8FAFC] border border-[#BFDBFE] text-[#1D4ED8] font-semibold">
+              <div className="flex flex-wrap items-center gap-3 text-xs text-[#94A3B8]">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#18243A] border border-[#BFDBFE] text-[#93C5FD] font-semibold">
                   <Package className="w-3.5 h-3.5" />
                   {seller.published_product_count} Published Products
                 </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#E5E7EB]">
-                  <MapPin className="w-3.5 h-3.5 text-[#2563EB]" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#111C30] border border-[#E5E7EB]">
+                  <MapPin className="w-3.5 h-3.5 text-[#60A5FA]" />
                   {seller.country}
                 </span>
               </div>
             </div>
 
             {seller.store_description && (
-              <p className="text-sm text-[#263445] leading-relaxed max-w-3xl">
+              <p className="text-sm text-[#F1F5F9] leading-relaxed max-w-3xl">
                 {seller.store_description}
               </p>
             )}
@@ -199,7 +199,7 @@ const SellerStorefrontPage = () => {
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${
                     !selectedCategory
                       ? 'bg-[#2563EB] text-white border-[#2563EB]'
-                      : 'bg-white text-[#263445] border-[#E5E7EB] hover:border-[#93C5FD]'
+                      : 'bg-[#111C30] text-[#F1F5F9] border-[#E5E7EB] hover:border-[#93C5FD]'
                   }`}
                 >
                   All Store Categories
@@ -215,7 +215,7 @@ const SellerStorefrontPage = () => {
                     className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${
                       selectedCategory === c.slug
                         ? 'bg-[#2563EB] text-white border-[#2563EB]'
-                        : 'bg-white text-[#263445] border-[#E5E7EB] hover:border-[#93C5FD]'
+                        : 'bg-[#111C30] text-[#F1F5F9] border-[#E5E7EB] hover:border-[#93C5FD]'
                     }`}
                   >
                     {c.name} ({c.product_count})
@@ -232,13 +232,13 @@ const SellerStorefrontPage = () => {
         />
 
         {/* Store Catalog Filter Bar */}
-        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-white border border-[#E5E7EB] rounded-2xl p-4">
+        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-[#111C30] border border-[#E5E7EB] rounded-2xl p-4">
           <div className="relative flex-1 max-w-md">
             <label htmlFor="store-catalog-search" className="sr-only">
               Search products in {seller.store_name}
             </label>
             <Search
-              className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
               aria-hidden="true"
             />
             <input
@@ -268,7 +268,7 @@ const SellerStorefrontPage = () => {
               <option value="price_asc">Price: Low to High</option>
               <option value="price_desc">Price: High to Low</option>
             </select>
-            <Link to="/products" className="text-xs font-semibold text-[#2563EB] hover:underline whitespace-nowrap inline-flex items-center gap-1">
+            <Link to="/products" className="text-xs font-semibold text-[#60A5FA] hover:underline whitespace-nowrap inline-flex items-center gap-1">
               <Globe className="w-3.5 h-3.5" aria-hidden="true" /> Full Catalog
             </Link>
           </div>

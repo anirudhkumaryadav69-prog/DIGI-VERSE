@@ -8,7 +8,7 @@ const SellerRoute = () => {
 
   if (customerLoading) {
     return (
-      <div className="min-h-screen bg-[#EAF4FC] text-[#263445] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[#080D19] text-[#F1F5F9] flex items-center justify-center p-6">
         <LoadingState label="Verifying seller permissions..." />
       </div>
     );

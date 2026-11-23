@@ -74,11 +74,11 @@ const AdminLayout = ({ title, subtitle, actions, children }) => {
     .toUpperCase();
 
   return (
-    <div className="min-h-screen bg-[#E5E7EB] text-[#263445] flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-[#0D1424] text-[#F1F5F9] flex flex-col lg:flex-row">
       {/* Sidebar */}
       <aside
         aria-label="Admin Sidebar"
-        className={`fixed inset-y-0 left-0 z-40 bg-white border-r border-[#D5DEE8] flex flex-col justify-between transition-all duration-200 lg:static lg:translate-x-0 shadow-xs shrink-0 ${
+        className={`fixed inset-y-0 left-0 z-40 bg-[#111C30] border-r border-[#D5DEE8] flex flex-col justify-between transition-all duration-200 lg:static lg:translate-x-0 shadow-xs shrink-0 ${
           collapsed ? 'w-64 lg:w-[76px]' : 'w-64'
         } ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
@@ -98,10 +98,10 @@ const AdminLayout = ({ title, subtitle, actions, children }) => {
                 <Shield className="w-4 h-4" aria-hidden="true" />
               </div>
               <div className={collapsed ? 'lg:hidden' : ''}>
-                <span className="font-bold tracking-tight text-[14px] text-[#263445] block leading-tight">
-                  DIGI-VERSE<span className="text-[#2563EB]">.</span>
+                <span className="font-bold tracking-tight text-[14px] text-[#F1F5F9] block leading-tight">
+                  DIGI-VERSE<span className="text-[#60A5FA]">.</span>
                 </span>
-                <span className="text-[11px] text-[#64748B] font-medium block leading-tight mt-0.5">
+                <span className="text-[11px] text-[#94A3B8] font-medium block leading-tight mt-0.5">
                   Admin Console
                 </span>
               </div>
@@ -111,7 +111,7 @@ const AdminLayout = ({ title, subtitle, actions, children }) => {
               type="button"
               onClick={() => setMobileOpen(false)}
               aria-label="Close navigation menu"
-              className="lg:hidden p-1.5 rounded-lg text-[#64748B] hover:text-[#263445] hover:bg-[#EDF5FC]"
+              className="lg:hidden p-1.5 rounded-lg text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#18243A]"
             >
               <X className="w-4 h-4" />
             </button>
@@ -121,7 +121,7 @@ const AdminLayout = ({ title, subtitle, actions, children }) => {
               onClick={() => setCollapsed((prev) => !prev)}
               aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
               title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-              className={`hidden lg:inline-flex p-1.5 rounded-lg text-[#64748B] hover:text-[#2563EB] hover:bg-[#EDF5FC] transition ${
+              className={`hidden lg:inline-flex p-1.5 rounded-lg text-[#94A3B8] hover:text-[#60A5FA] hover:bg-[#18243A] transition ${
                 collapsed ? 'lg:hidden' : ''
               }`}
             >
@@ -136,7 +136,7 @@ const AdminLayout = ({ title, subtitle, actions, children }) => {
                 onClick={() => setCollapsed(false)}
                 aria-label="Expand sidebar"
                 title="Expand sidebar"
-                className="p-2 rounded-lg border border-[#D5DEE8] bg-[#F8FAFC] text-[#64748B] hover:text-[#2563EB] hover:border-[#93C5FD] transition"
+                className="p-2 rounded-lg border border-[#D5DEE8] bg-[#18243A] text-[#94A3B8] hover:text-[#60A5FA] hover:border-[#93C5FD] transition"
               >
                 <PanelLeftOpen className="w-4 h-4" />
               </button>
@@ -150,7 +150,7 @@ const AdminLayout = ({ title, subtitle, actions, children }) => {
               return (
                 <div key={section}>
                   {!collapsed && (
-                    <p className="px-3 pb-1.5 text-[11px] font-semibold text-[#64748B]">
+                    <p className="px-3 pb-1.5 text-[11px] font-semibold text-[#94A3B8]">
                       {section}
                     </p>
                   )}
@@ -170,8 +170,8 @@ const AdminLayout = ({ title, subtitle, actions, children }) => {
                               collapsed ? 'lg:justify-center lg:px-2' : ''
                             } ${
                               active
-                                ? 'bg-[#EAF4FC] text-[#1D4ED8] border border-[#BFDBFE] font-semibold shadow-2xs'
-                                : 'text-[#263445] font-medium border border-transparent hover:bg-[#EDF5FC] hover:text-[#2563EB]'
+                                ? 'bg-[#18243A] text-[#93C5FD] border border-[#BFDBFE] font-semibold shadow-2xs'
+                                : 'text-[#F1F5F9] font-medium border border-transparent hover:bg-[#18243A] hover:text-[#60A5FA]'
                             }`;
                           }}
                         >
@@ -190,16 +190,16 @@ const AdminLayout = ({ title, subtitle, actions, children }) => {
         </div>
 
         {/* Admin Identity & Session Controls */}
-        <div className="p-3.5 border-t border-[#D5DEE8] space-y-2.5 bg-[#F8FAFC]">
+        <div className="p-3.5 border-t border-[#D5DEE8] space-y-2.5 bg-[#18243A]">
           <div className={`flex items-center gap-2.5 px-1 ${collapsed ? 'lg:justify-center' : ''}`}>
-            <div className="w-8 h-8 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8] text-[11px] font-bold flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-full bg-[#111C30] border border-[#BFDBFE] text-[#93C5FD] text-[11px] font-bold flex items-center justify-center shrink-0">
               {adminInitials}
             </div>
             <div className={`min-w-0 ${collapsed ? 'lg:hidden' : ''}`}>
-              <p className="text-[12.5px] font-semibold text-[#263445] truncate">
+              <p className="text-[12.5px] font-semibold text-[#F1F5F9] truncate">
                 {admin?.username || 'Administrator'}
               </p>
-              <p className="text-[11px] text-[#64748B] truncate">{admin?.email || ''}</p>
+              <p className="text-[11px] text-[#94A3B8] truncate">{admin?.email || ''}</p>
             </div>
           </div>
 
@@ -207,7 +207,7 @@ const AdminLayout = ({ title, subtitle, actions, children }) => {
             <Link
               to="/admin/change-password"
               title="Change Password"
-              className="text-[11.5px] font-medium px-2.5 py-2 rounded-lg border border-[#D5DEE8] bg-white text-[#263445] hover:bg-[#EDF5FC] hover:text-[#2563EB] hover:border-[#93C5FD] transition flex items-center justify-center gap-1.5"
+              className="text-[11.5px] font-medium px-2.5 py-2 rounded-lg border border-[#D5DEE8] bg-[#111C30] text-[#F1F5F9] hover:bg-[#18243A] hover:text-[#60A5FA] hover:border-[#93C5FD] transition flex items-center justify-center gap-1.5"
             >
               <KeyRound className="w-3.5 h-3.5 shrink-0" />
               <span className={collapsed ? 'lg:hidden' : ''}>Password</span>
@@ -216,7 +216,7 @@ const AdminLayout = ({ title, subtitle, actions, children }) => {
               type="button"
               onClick={handleLogout}
               title="Sign Out"
-              className="text-[11.5px] font-medium px-2.5 py-2 rounded-lg border border-[#D5DEE8] bg-white hover:bg-red-50 hover:border-red-200 hover:text-[#DC2626] text-[#263445] transition flex items-center justify-center gap-1.5"
+              className="text-[11.5px] font-medium px-2.5 py-2 rounded-lg border border-[#D5DEE8] bg-[#111C30] hover:bg-red-950/60 hover:border-red-200 hover:text-red-300 text-[#F1F5F9] transition flex items-center justify-center gap-1.5"
             >
               <LogOut className="w-3.5 h-3.5 shrink-0" />
               <span className={collapsed ? 'lg:hidden' : ''}>Logout</span>
@@ -226,7 +226,7 @@ const AdminLayout = ({ title, subtitle, actions, children }) => {
           <Link
             to="/products"
             title="View Public Storefront"
-            className="w-full text-[11.5px] font-semibold text-[#2563EB] hover:text-[#1D4ED8] flex items-center justify-center gap-1.5 pt-0.5"
+            className="w-full text-[11.5px] font-semibold text-[#60A5FA] hover:text-[#93C5FD] flex items-center justify-center gap-1.5 pt-0.5"
           >
             <ExternalLink className="w-3.5 h-3.5 shrink-0" />
             <span className={collapsed ? 'lg:hidden' : ''}>View Storefront</span>
@@ -237,29 +237,29 @@ const AdminLayout = ({ title, subtitle, actions, children }) => {
       {/* Mobile Drawer Backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-30 bg-[#263445]/35 backdrop-blur-[2px] lg:hidden"
+          className="fixed inset-0 z-30 bg-[#080D19]/70 backdrop-blur-[2px] lg:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="bg-white border-b border-[#D5DEE8] px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+        <header className="bg-[#111C30] border-b border-[#D5DEE8] px-6 py-4 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
               aria-label="Open admin menu"
-              className="lg:hidden p-2 rounded-lg border border-[#D5DEE8] text-[#263445] hover:border-[#93C5FD] hover:bg-[#EDF5FC]"
+              className="lg:hidden p-2 rounded-lg border border-[#D5DEE8] text-[#F1F5F9] hover:border-[#93C5FD] hover:bg-[#18243A]"
             >
               <Menu className="w-4 h-4" />
             </button>
             <div className="min-w-0">
-              <h1 className="text-[20px] font-semibold tracking-tight text-[#263445] leading-snug truncate">
+              <h1 className="text-[20px] font-semibold tracking-tight text-[#F1F5F9] leading-snug truncate">
                 {title}
               </h1>
               {subtitle && (
-                <p className="text-[13px] text-[#64748B] mt-0.5 truncate">{subtitle}</p>
+                <p className="text-[13px] text-[#94A3B8] mt-0.5 truncate">{subtitle}</p>
               )}
             </div>
           </div>

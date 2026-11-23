@@ -118,13 +118,13 @@ const AdminOrdersPage = () => {
       )}
 
       {/* Search & Filters */}
-      <div className="bg-white border border-[#D5DEE8] rounded-xl p-4 mb-5 grid grid-cols-1 md:grid-cols-4 gap-3 shadow-2xs">
+      <div className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-4 mb-5 grid grid-cols-1 md:grid-cols-4 gap-3 shadow-2xs">
         <div className="relative md:col-span-2">
           <label htmlFor="admin-orders-search" className="sr-only">
             Search orders
           </label>
           <Search
-            className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2"
+            className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2"
             aria-hidden="true"
           />
           <input
@@ -177,7 +177,7 @@ const AdminOrdersPage = () => {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+      <div className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
         {loading ? (
           <LoadingState label="Loading orders..." />
         ) : data.items.length === 0 ? (
@@ -212,7 +212,7 @@ const AdminOrdersPage = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-[#F8FAFC] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#475569]">
+                <tr className="bg-[#18243A] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#CBD5E1]">
                   <th className="py-3 px-4">Order</th>
                   <th className="py-3 px-4">Customer</th>
                   <th className="py-3 px-4">Total</th>
@@ -224,15 +224,15 @@ const AdminOrdersPage = () => {
               </thead>
               <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                 {data.items.map((ord) => (
-                  <tr key={ord.id} className="hover:bg-[#EDF5FC]/45 transition">
-                    <td className="py-3.5 px-4 font-mono font-semibold text-[#263445] whitespace-nowrap">
+                  <tr key={ord.id} className="hover:bg-[#18243A]/70 transition">
+                    <td className="py-3.5 px-4 font-mono font-semibold text-[#F1F5F9] whitespace-nowrap">
                       {ord.order_number}
                     </td>
                     <td className="py-3.5 px-4">
-                      <p className="font-semibold text-[#263445]">{ord.customer.full_name}</p>
-                      <p className="text-[12px] text-[#64748B]">{ord.customer.email}</p>
+                      <p className="font-semibold text-[#F1F5F9]">{ord.customer.full_name}</p>
+                      <p className="text-[12px] text-[#94A3B8]">{ord.customer.email}</p>
                     </td>
-                    <td className="py-3.5 px-4 font-mono font-semibold text-[#263445] tabular-nums whitespace-nowrap">
+                    <td className="py-3.5 px-4 font-mono font-semibold text-[#F1F5F9] tabular-nums whitespace-nowrap">
                       {formatINR(ord.total_amount)}
                     </td>
                     <td className="py-3.5 px-4">
@@ -241,13 +241,13 @@ const AdminOrdersPage = () => {
                     <td className="py-3.5 px-4">
                       <AdminStatusBadge status={ord.status} />
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-[#475569] tabular-nums">
+                    <td className="py-3.5 px-4 font-mono text-[#CBD5E1] tabular-nums">
                       {ord.downloads?.length || 0}
                     </td>
                     <td className="py-3.5 px-4 text-right">
                       <Link
                         to={`/admin/orders/${ord.id}`}
-                        className="px-3 py-1.5 rounded-lg border border-[#D5DEE8] bg-white hover:border-[#93C5FD] hover:bg-[#EDF5FC] hover:text-[#2563EB] text-[12px] font-medium text-[#263445] inline-flex items-center gap-1 transition"
+                        className="px-3 py-1.5 rounded-lg border border-[#D5DEE8] bg-[#111C30] hover:border-[#93C5FD] hover:bg-[#18243A] hover:text-[#60A5FA] text-[12px] font-medium text-[#F1F5F9] inline-flex items-center gap-1 transition"
                       >
                         <span>Inspect</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />

@@ -59,7 +59,7 @@ const StoresDirectoryPage = () => {
               Search creator stores
             </label>
             <Search
-              className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
               aria-hidden="true"
             />
             <input
@@ -115,25 +115,25 @@ const StoresDirectoryPage = () => {
                         <Badge variant="accent">{store.business_type}</Badge>
                       </div>
 
-                      <h2 className="text-lg font-bold text-[#263445] group-hover:text-[#2563EB] transition">
+                      <h2 className="text-lg font-bold text-[#F1F5F9] group-hover:text-[#60A5FA] transition">
                         {store.store_name}
                       </h2>
-                      <p className="text-xs text-[#64748B] mt-0.5">by {store.seller_display_name}</p>
+                      <p className="text-xs text-[#94A3B8] mt-0.5">by {store.seller_display_name}</p>
 
                       {store.store_description && (
-                        <p className="text-xs text-[#263445] line-clamp-2 mt-3 leading-relaxed">
+                        <p className="text-xs text-[#F1F5F9] line-clamp-2 mt-3 leading-relaxed">
                           {store.store_description}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="px-5 py-3.5 border-t border-[#E5E7EB] bg-[#F8FAFC] flex items-center justify-between text-xs text-[#64748B]">
+                  <div className="px-5 py-3.5 border-t border-[#E5E7EB] bg-[#18243A] flex items-center justify-between text-xs text-[#94A3B8]">
                     <span className="inline-flex items-center gap-1.5">
-                      <Package className="w-3.5 h-3.5 text-[#2563EB]" aria-hidden="true" />
-                      <strong className="text-[#263445]">{store.published_product_count}</strong> products
+                      <Package className="w-3.5 h-3.5 text-[#60A5FA]" aria-hidden="true" />
+                      <strong className="text-[#F1F5F9]">{store.published_product_count}</strong> products
                     </span>
-                    <span className="inline-flex items-center gap-1 text-[#2563EB] font-semibold">
+                    <span className="inline-flex items-center gap-1 text-[#60A5FA] font-semibold">
                       <MapPin className="w-3 h-3" aria-hidden="true" /> {store.country}
                       <ArrowRight className="w-3.5 h-3.5 ml-1" aria-hidden="true" />
                     </span>

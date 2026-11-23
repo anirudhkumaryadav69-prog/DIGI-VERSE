@@ -140,14 +140,14 @@ const AdminDashboardPage = () => {
       ) : (
         <div className="space-y-6">
           {/* Operational Alerts & Pending Approvals */}
-          <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 shadow-2xs">
+          <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-5 shadow-2xs">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div className="flex items-center gap-2.5">
                 <div
                   className={`w-8 h-8 rounded-lg border flex items-center justify-center ${
                     totalAlerts > 0
-                      ? 'bg-amber-50 border-amber-200 text-[#D97706]'
-                      : 'bg-emerald-50 border-emerald-200 text-[#16A34A]'
+                      ? 'bg-amber-950/50 border-amber-200 text-[#D97706]'
+                      : 'bg-emerald-950/50 border-emerald-200 text-[#16A34A]'
                   }`}
                 >
                   {totalAlerts > 0 ? (
@@ -157,10 +157,10 @@ const AdminDashboardPage = () => {
                   )}
                 </div>
                 <div>
-                  <h2 className="text-[14px] font-semibold text-[#263445]">
+                  <h2 className="text-[14px] font-semibold text-[#F1F5F9]">
                     Pending Approvals & Operational Queues
                   </h2>
-                  <p className="text-[12px] text-[#64748B]">
+                  <p className="text-[12px] text-[#94A3B8]">
                     {totalAlerts > 0
                       ? `${totalAlerts} item(s) awaiting administrative review across orders, sellers, catalog, or payouts.`
                       : 'All administrative approval queues are clear.'}
@@ -169,7 +169,7 @@ const AdminDashboardPage = () => {
               </div>
               <Link
                 to="/admin/payouts"
-                className="text-[12px] font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1"
+                className="text-[12px] font-semibold text-[#60A5FA] hover:text-[#93C5FD] inline-flex items-center gap-1"
               >
                 <span>Open Payout Operations</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
@@ -260,7 +260,7 @@ const AdminDashboardPage = () => {
 
           {/* Visual Revenue & Engagement Summaries */}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
-            <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 shadow-2xs">
+            <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-5 shadow-2xs">
               <AdminSectionHeader
                 icon={TrendingUp}
                 title="Best-Selling Products"
@@ -268,7 +268,7 @@ const AdminDashboardPage = () => {
               />
 
               {!analytics?.best_selling_products?.length ? (
-                <p className="text-[12.5px] text-[#64748B] py-8 text-center">
+                <p className="text-[12.5px] text-[#94A3B8] py-8 text-center">
                   No paid product sales recorded in this period.
                 </p>
               ) : (
@@ -279,21 +279,21 @@ const AdminDashboardPage = () => {
                     return (
                       <div key={item.product_id || idx} className="space-y-1.5">
                         <div className="flex items-center justify-between gap-3 text-[12.5px]">
-                          <span className="font-medium text-[#263445] truncate">
+                          <span className="font-medium text-[#F1F5F9] truncate">
                             {item.product_name}
                           </span>
-                          <span className="font-mono font-semibold text-[#1D4ED8] shrink-0 tabular-nums">
+                          <span className="font-mono font-semibold text-[#93C5FD] shrink-0 tabular-nums">
                             {formatINR(rev)}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 h-1.5 rounded-full bg-[#EDF5FC] overflow-hidden">
+                          <div className="flex-1 h-1.5 rounded-full bg-[#18243A] overflow-hidden">
                             <div
                               className="h-full rounded-full bg-[#2563EB]"
                               style={{ width: `${pct}%` }}
                             />
                           </div>
-                          <span className="text-[11px] text-[#64748B] tabular-nums shrink-0">
+                          <span className="text-[11px] text-[#94A3B8] tabular-nums shrink-0">
                             {item.units_sold} sold
                           </span>
                         </div>
@@ -304,7 +304,7 @@ const AdminDashboardPage = () => {
               )}
             </section>
 
-            <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 shadow-2xs">
+            <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-5 shadow-2xs">
               <AdminSectionHeader
                 icon={BarChart3}
                 title="Top Categories"
@@ -312,7 +312,7 @@ const AdminDashboardPage = () => {
               />
 
               {!analytics?.top_categories?.length ? (
-                <p className="text-[12.5px] text-[#64748B] py-8 text-center">
+                <p className="text-[12.5px] text-[#94A3B8] py-8 text-center">
                   No category revenue recorded yet.
                 </p>
               ) : (
@@ -323,21 +323,21 @@ const AdminDashboardPage = () => {
                     return (
                       <div key={cat.category_id} className="space-y-1.5">
                         <div className="flex items-center justify-between gap-3 text-[12.5px]">
-                          <span className="font-medium text-[#263445] truncate">
+                          <span className="font-medium text-[#F1F5F9] truncate">
                             {cat.category_name}
                           </span>
-                          <span className="font-mono font-semibold text-[#15803D] shrink-0 tabular-nums">
+                          <span className="font-mono font-semibold text-emerald-300 shrink-0 tabular-nums">
                             {formatINR(rev)}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 h-1.5 rounded-full bg-[#F8FAFC] overflow-hidden">
+                          <div className="flex-1 h-1.5 rounded-full bg-[#18243A] overflow-hidden">
                             <div
                               className="h-full rounded-full bg-[#16A34A]"
                               style={{ width: `${pct}%` }}
                             />
                           </div>
-                          <span className="text-[11px] text-[#64748B] tabular-nums shrink-0">
+                          <span className="text-[11px] text-[#94A3B8] tabular-nums shrink-0">
                             {cat.units_sold} units
                           </span>
                         </div>
@@ -348,7 +348,7 @@ const AdminDashboardPage = () => {
               )}
             </section>
 
-            <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 shadow-2xs">
+            <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-5 shadow-2xs">
               <AdminSectionHeader
                 icon={Download}
                 title="Most Downloaded Assets"
@@ -356,7 +356,7 @@ const AdminDashboardPage = () => {
               />
 
               {!analytics?.most_downloaded_products?.length ? (
-                <p className="text-[12.5px] text-[#64748B] py-8 text-center">
+                <p className="text-[12.5px] text-[#94A3B8] py-8 text-center">
                   No digital product downloads recorded yet.
                 </p>
               ) : (
@@ -367,14 +367,14 @@ const AdminDashboardPage = () => {
                     return (
                       <div key={dl.product_id || idx} className="space-y-1.5">
                         <div className="flex items-center justify-between gap-3 text-[12.5px]">
-                          <span className="font-medium text-[#263445] truncate">
+                          <span className="font-medium text-[#F1F5F9] truncate">
                             {dl.product_name}
                           </span>
-                          <span className="font-mono font-semibold text-[#0284C7] shrink-0 tabular-nums">
+                          <span className="font-mono font-semibold text-sky-400 shrink-0 tabular-nums">
                             {count}
                           </span>
                         </div>
-                        <div className="h-1.5 rounded-full bg-[#EDF5FC] overflow-hidden">
+                        <div className="h-1.5 rounded-full bg-[#18243A] overflow-hidden">
                           <div
                             className="h-full rounded-full bg-[#0EA5E9]"
                             style={{ width: `${pct}%` }}
@@ -390,14 +390,14 @@ const AdminDashboardPage = () => {
 
           {/* Recent Catalog & Registrations */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
-            <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 shadow-2xs">
+            <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-5 shadow-2xs">
               <AdminSectionHeader
                 icon={Package}
                 title="Recently Added Products"
                 action={
                   <Link
                     to="/admin/products"
-                    className="text-[12px] font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1"
+                    className="text-[12px] font-semibold text-[#60A5FA] hover:text-[#93C5FD] inline-flex items-center gap-1"
                   >
                     <span>Manage All</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
@@ -406,7 +406,7 @@ const AdminDashboardPage = () => {
               />
 
               {!overview?.recent_products?.length ? (
-                <p className="text-[12.5px] text-[#64748B] py-6">No products created yet.</p>
+                <p className="text-[12.5px] text-[#94A3B8] py-6">No products created yet.</p>
               ) : (
                 <div className="divide-y divide-[#E5E7EB] mt-4">
                   {overview.recent_products.map((p) => (
@@ -414,14 +414,14 @@ const AdminDashboardPage = () => {
                       <div className="min-w-0">
                         <Link
                           to={`/admin/products/${p.id}/edit`}
-                          className="text-[13px] font-semibold text-[#263445] hover:text-[#2563EB] truncate block"
+                          className="text-[13px] font-semibold text-[#F1F5F9] hover:text-[#60A5FA] truncate block"
                         >
                           {p.name}
                         </Link>
-                        <span className="text-[12px] text-[#64748B]">{p.category_name}</span>
+                        <span className="text-[12px] text-[#94A3B8]">{p.category_name}</span>
                       </div>
                       <div className="flex items-center gap-3 shrink-0">
-                        <span className="font-mono text-[13px] font-semibold text-[#263445] tabular-nums">
+                        <span className="font-mono text-[13px] font-semibold text-[#F1F5F9] tabular-nums">
                           {formatINR(p.effective_price)}
                         </span>
                         <AdminStatusBadge status={p.is_active ? 'active' : 'inactive'} />
@@ -432,14 +432,14 @@ const AdminDashboardPage = () => {
               )}
             </section>
 
-            <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 shadow-2xs">
+            <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-5 shadow-2xs">
               <AdminSectionHeader
                 icon={Users}
                 title="Recent Customer Registrations"
                 action={
                   <Link
                     to="/admin/customers"
-                    className="text-[12px] font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1"
+                    className="text-[12px] font-semibold text-[#60A5FA] hover:text-[#93C5FD] inline-flex items-center gap-1"
                   >
                     <span>All Customers</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
@@ -448,7 +448,7 @@ const AdminDashboardPage = () => {
               />
 
               {!overview?.recent_registrations?.length ? (
-                <p className="text-[12.5px] text-[#64748B] py-6">
+                <p className="text-[12.5px] text-[#94A3B8] py-6">
                   No customer registrations yet.
                 </p>
               ) : (
@@ -456,10 +456,10 @@ const AdminDashboardPage = () => {
                   {overview.recent_registrations.map((c) => (
                     <div key={c.id} className="py-3 flex items-center justify-between gap-4">
                       <div className="min-w-0">
-                        <p className="text-[13px] font-semibold text-[#263445] truncate">
+                        <p className="text-[13px] font-semibold text-[#F1F5F9] truncate">
                           {c.full_name}
                         </p>
-                        <p className="text-[12px] text-[#64748B] truncate">{c.email}</p>
+                        <p className="text-[12px] text-[#94A3B8] truncate">{c.email}</p>
                       </div>
                       <AdminStatusBadge
                         status={c.is_phone_verified ? 'verified' : 'pending'}
@@ -473,7 +473,7 @@ const AdminDashboardPage = () => {
           </div>
 
           {/* Recent Orders Table */}
-          <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+          <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
             <div className="p-5 border-b border-[#E5E7EB]">
               <AdminSectionHeader
                 icon={ShoppingCart}
@@ -481,7 +481,7 @@ const AdminDashboardPage = () => {
                 action={
                   <Link
                     to="/admin/orders"
-                    className="text-[12px] font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1"
+                    className="text-[12px] font-semibold text-[#60A5FA] hover:text-[#93C5FD] inline-flex items-center gap-1"
                   >
                     <span>Order Ledger</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
@@ -491,12 +491,12 @@ const AdminDashboardPage = () => {
             </div>
 
             {!overview?.recent_orders?.length ? (
-              <p className="text-[12.5px] text-[#64748B] p-6">No orders placed yet.</p>
+              <p className="text-[12.5px] text-[#94A3B8] p-6">No orders placed yet.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-[#F8FAFC] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#475569]">
+                    <tr className="bg-[#18243A] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#CBD5E1]">
                       <th className="py-3 px-4">Order</th>
                       <th className="py-3 px-4">Customer</th>
                       <th className="py-3 px-4">Amount</th>
@@ -506,24 +506,24 @@ const AdminDashboardPage = () => {
                   </thead>
                   <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                     {overview.recent_orders.map((o) => (
-                      <tr key={o.id} className="hover:bg-[#EDF5FC]/45 transition">
-                        <td className="py-3 px-4 font-mono font-semibold text-[#263445]">
+                      <tr key={o.id} className="hover:bg-[#18243A]/70 transition">
+                        <td className="py-3 px-4 font-mono font-semibold text-[#F1F5F9]">
                           <Link
                             to={`/admin/orders/${o.id}`}
-                            className="hover:text-[#2563EB] hover:underline"
+                            className="hover:text-[#60A5FA] hover:underline"
                           >
                             {o.order_number}
                           </Link>
                         </td>
                         <td className="py-3 px-4">
-                          <span className="block font-medium text-[#263445]">
+                          <span className="block font-medium text-[#F1F5F9]">
                             {o.customer_name}
                           </span>
-                          <span className="text-[11.5px] text-[#64748B]">
+                          <span className="text-[11.5px] text-[#94A3B8]">
                             {o.customer_email}
                           </span>
                         </td>
-                        <td className="py-3 px-4 font-mono font-semibold text-[#1D4ED8] tabular-nums">
+                        <td className="py-3 px-4 font-mono font-semibold text-[#93C5FD] tabular-nums">
                           {formatINR(o.total_amount)}
                         </td>
                         <td className="py-3 px-4">
@@ -541,7 +541,7 @@ const AdminDashboardPage = () => {
           </section>
 
           {/* Recent Administrative Audit Logs */}
-          <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+          <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
             <div className="p-5 border-b border-[#E5E7EB]">
               <AdminSectionHeader
                 icon={Activity}
@@ -549,7 +549,7 @@ const AdminDashboardPage = () => {
                 action={
                   <Link
                     to="/admin/settings"
-                    className="text-[12px] font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1"
+                    className="text-[12px] font-semibold text-[#60A5FA] hover:text-[#93C5FD] inline-flex items-center gap-1"
                   >
                     <span>Full Audit Log</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
@@ -559,12 +559,12 @@ const AdminDashboardPage = () => {
             </div>
 
             {!overview?.recent_audit_logs?.length ? (
-              <p className="text-[12.5px] text-[#64748B] p-6">No audit records yet.</p>
+              <p className="text-[12.5px] text-[#94A3B8] p-6">No audit records yet.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-[#F8FAFC] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#475569]">
+                    <tr className="bg-[#18243A] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#CBD5E1]">
                       <th className="py-3 px-4">Action</th>
                       <th className="py-3 px-4">Target Resource</th>
                       <th className="py-3 px-4">Timestamp</th>
@@ -572,14 +572,14 @@ const AdminDashboardPage = () => {
                   </thead>
                   <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                     {overview.recent_audit_logs.map((log) => (
-                      <tr key={log.id} className="hover:bg-[#EDF5FC]/45 transition">
-                        <td className="py-3 px-4 font-mono text-[12px] font-medium text-[#1D4ED8]">
+                      <tr key={log.id} className="hover:bg-[#18243A]/70 transition">
+                        <td className="py-3 px-4 font-mono text-[12px] font-medium text-[#93C5FD]">
                           {log.action}
                         </td>
-                        <td className="py-3 px-4 text-[#475569]">
+                        <td className="py-3 px-4 text-[#CBD5E1]">
                           {log.entity_type} {log.entity_id ? `(${log.entity_id})` : ''}
                         </td>
-                        <td className="py-3 px-4 text-[#64748B] tabular-nums whitespace-nowrap">
+                        <td className="py-3 px-4 text-[#94A3B8] tabular-nums whitespace-nowrap">
                           {formatAdminDateTime(log.created_at)}
                         </td>
                       </tr>

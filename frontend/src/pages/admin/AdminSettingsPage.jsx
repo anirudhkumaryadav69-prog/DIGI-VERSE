@@ -107,7 +107,7 @@ const AdminSettingsPage = () => {
           {/* Store Settings Form */}
           <form
             onSubmit={handleSaveSettings}
-            className="bg-white border border-[#D5DEE8] rounded-xl p-6 space-y-5 shadow-2xs"
+            className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-6 space-y-5 shadow-2xs"
           >
             <div className="border-b border-[#E5E7EB] pb-4">
               <AdminSectionHeader
@@ -122,10 +122,10 @@ const AdminSettingsPage = () => {
                 <div key={item.key}>
                   <label
                     htmlFor={`setting-${item.key}`}
-                    className="block text-[12.5px] font-medium text-[#263445] mb-1.5"
+                    className="block text-[12.5px] font-medium text-[#F1F5F9] mb-1.5"
                   >
                     {item.label}{' '}
-                    <span className="font-mono text-[11px] text-[#64748B]">({item.key})</span>
+                    <span className="font-mono text-[11px] text-[#94A3B8]">({item.key})</span>
                   </label>
                   <input
                     id={`setting-${item.key}`}
@@ -154,7 +154,7 @@ const AdminSettingsPage = () => {
           </form>
 
           {/* Administrative Audit Logs */}
-          <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+          <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
             <div className="p-5 border-b border-[#E5E7EB]">
               <AdminSectionHeader
                 icon={Activity}
@@ -166,7 +166,7 @@ const AdminSettingsPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-[#D5DEE8] bg-[#F8FAFC] text-[#475569] text-[11.5px] font-semibold">
+                  <tr className="border-b border-[#D5DEE8] bg-[#18243A] text-[#CBD5E1] text-[11.5px] font-semibold">
                     <th className="py-3 px-4">Administrator</th>
                     <th className="py-3 px-4">Action</th>
                     <th className="py-3 px-4">Entity</th>
@@ -175,17 +175,17 @@ const AdminSettingsPage = () => {
                 </thead>
                 <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                   {auditLogs.map((log) => (
-                    <tr key={log.id} className="hover:bg-[#EDF5FC]/45 transition">
-                      <td className="py-3 px-4 font-medium text-[#263445]">
+                    <tr key={log.id} className="hover:bg-[#18243A]/70 transition">
+                      <td className="py-3 px-4 font-medium text-[#F1F5F9]">
                         {log.admin_username || 'System'}
                       </td>
-                      <td className="py-3 px-4 font-mono text-[12px] text-[#1D4ED8]">
+                      <td className="py-3 px-4 font-mono text-[12px] text-[#93C5FD]">
                         {log.action}
                       </td>
-                      <td className="py-3 px-4 text-[#64748B]">
+                      <td className="py-3 px-4 text-[#94A3B8]">
                         {log.entity_type} {log.entity_id ? `(${log.entity_id})` : ''}
                       </td>
-                      <td className="py-3 px-4 text-[#64748B] tabular-nums whitespace-nowrap">
+                      <td className="py-3 px-4 text-[#94A3B8] tabular-nums whitespace-nowrap">
                         {formatAdminDateTime(log.created_at)}
                       </td>
                     </tr>

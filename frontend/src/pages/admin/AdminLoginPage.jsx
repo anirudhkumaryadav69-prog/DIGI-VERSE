@@ -31,43 +31,43 @@ const AdminLoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#EAF4FC] text-[#263445] flex flex-col justify-between p-6 md:p-10">
+    <div className="min-h-screen bg-[#080D19] text-[#F1F5F9] flex flex-col justify-between p-6 md:p-10">
       <header className="max-w-5xl w-full mx-auto flex items-center justify-between border-b border-[#D5DEE8] pb-4">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-lg bg-[#2563EB] text-white flex items-center justify-center shadow-xs">
             <Shield className="w-4 h-4" />
           </div>
           <div>
-            <span className="font-bold tracking-tight text-[15px] text-[#263445] block leading-tight">
-              DIGI-VERSE<span className="text-[#2563EB]">.</span>
+            <span className="font-bold tracking-tight text-[15px] text-[#F1F5F9] block leading-tight">
+              DIGI-VERSE<span className="text-[#60A5FA]">.</span>
             </span>
-            <span className="text-[11px] font-medium text-[#64748B]">Admin Console</span>
+            <span className="text-[11px] font-medium text-[#94A3B8]">Admin Console</span>
           </div>
         </div>
         <Link
           to="/"
-          className="text-[13px] font-semibold text-[#2563EB] hover:text-[#1D4ED8] hover:underline"
+          className="text-[13px] font-semibold text-[#60A5FA] hover:text-[#93C5FD] hover:underline"
         >
           Back to Storefront →
         </Link>
       </header>
 
-      <main className="w-full max-w-md mx-auto my-10 bg-white border border-[#D5DEE8] rounded-xl p-7 sm:p-8 shadow-sm">
-        <div className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#1D4ED8] bg-[#EAF4FC] border border-[#BFDBFE] px-2.5 py-1 rounded-full mb-3">
+      <main className="w-full max-w-md mx-auto my-10 bg-[#111C30] border border-[#D5DEE8] rounded-xl p-7 sm:p-8 shadow-sm">
+        <div className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#93C5FD] bg-[#18243A] border border-[#BFDBFE] px-2.5 py-1 rounded-full mb-3">
           <Lock className="w-3.5 h-3.5" />
           <span>Restricted Administrator Access</span>
         </div>
-        <h1 className="text-[22px] font-semibold tracking-tight text-[#263445] mb-1.5">
+        <h1 className="text-[22px] font-semibold tracking-tight text-[#F1F5F9] mb-1.5">
           Administrator Sign In
         </h1>
-        <p className="text-[13px] text-[#64748B] mb-6">
+        <p className="text-[13px] text-[#94A3B8] mb-6">
           Authenticate with your provisioned administrator credentials.
         </p>
 
         {error && (
           <div
             role="alert"
-            className="mb-5 p-3.5 rounded-lg bg-red-50 border border-red-200 text-[#DC2626] text-[12.5px] flex items-start gap-2.5"
+            className="mb-5 p-3.5 rounded-lg bg-red-950/50 border border-red-200 text-red-300 text-[12.5px] flex items-start gap-2.5"
           >
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{error}</span>
@@ -78,7 +78,7 @@ const AdminLoginPage = () => {
           <div>
             <label
               htmlFor="admin-login-username"
-              className="block text-[12.5px] font-medium text-[#263445] mb-1.5"
+              className="block text-[12.5px] font-medium text-[#F1F5F9] mb-1.5"
             >
               Administrator Username
             </label>
@@ -97,7 +97,7 @@ const AdminLoginPage = () => {
           <div>
             <label
               htmlFor="admin-login-password"
-              className="block text-[12.5px] font-medium text-[#263445] mb-1.5"
+              className="block text-[12.5px] font-medium text-[#F1F5F9] mb-1.5"
             >
               Password
             </label>
@@ -124,7 +124,7 @@ const AdminLoginPage = () => {
         </form>
       </main>
 
-      <footer className="max-w-5xl w-full mx-auto border-t border-[#D5DEE8] pt-4 text-[12px] text-[#64748B] flex flex-wrap justify-between gap-2">
+      <footer className="max-w-5xl w-full mx-auto border-t border-[#D5DEE8] pt-4 text-[12px] text-[#94A3B8] flex flex-wrap justify-between gap-2">
         <span>Isolated Administrator Session Authority</span>
         <span>All authentication events are logged in the audit trail</span>
       </footer>

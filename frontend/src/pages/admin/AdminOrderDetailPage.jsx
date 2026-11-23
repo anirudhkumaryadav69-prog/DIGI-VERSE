@@ -96,18 +96,18 @@ const AdminOrderDetailPage = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {/* Customer Card */}
-            <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 space-y-3 shadow-2xs">
-              <div className="flex items-center gap-2 text-[#2563EB]">
+            <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-5 space-y-3 shadow-2xs">
+              <div className="flex items-center gap-2 text-[#60A5FA]">
                 <User className="w-4 h-4" />
-                <h2 className="text-[13px] font-semibold text-[#263445]">Customer Account</h2>
+                <h2 className="text-[13px] font-semibold text-[#F1F5F9]">Customer Account</h2>
               </div>
               <div className="space-y-1 text-[13px]">
-                <p className="text-[16px] font-semibold text-[#263445]">
+                <p className="text-[16px] font-semibold text-[#F1F5F9]">
                   {order.customer.full_name}
                 </p>
-                <p className="text-[#475569]">{order.customer.email}</p>
+                <p className="text-[#CBD5E1]">{order.customer.email}</p>
                 {order.customer.phone_number && (
-                  <p className="font-mono text-[12px] text-[#64748B]">
+                  <p className="font-mono text-[12px] text-[#94A3B8]">
                     {order.customer.phone_number}
                   </p>
                 )}
@@ -115,38 +115,38 @@ const AdminOrderDetailPage = () => {
             </section>
 
             {/* Financial Summary */}
-            <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 space-y-2.5 shadow-2xs">
-              <div className="flex items-center gap-2 text-[#2563EB] mb-1">
+            <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-5 space-y-2.5 shadow-2xs">
+              <div className="flex items-center gap-2 text-[#60A5FA] mb-1">
                 <IndianRupee className="w-4 h-4" />
-                <h2 className="text-[13px] font-semibold text-[#263445]">Financial Breakdown</h2>
+                <h2 className="text-[13px] font-semibold text-[#F1F5F9]">Financial Breakdown</h2>
               </div>
-              <div className="flex justify-between text-[13px] text-[#64748B]">
+              <div className="flex justify-between text-[13px] text-[#94A3B8]">
                 <span>Subtotal</span>
-                <span className="font-mono text-[#263445] tabular-nums">
+                <span className="font-mono text-[#F1F5F9] tabular-nums">
                   {formatINR(order.subtotal_amount)}
                 </span>
               </div>
-              <div className="flex justify-between text-[13px] text-[#15803D]">
+              <div className="flex justify-between text-[13px] text-emerald-300">
                 <span>Discount</span>
                 <span className="font-mono tabular-nums">
                   -{formatINR(order.discount_amount)}
                 </span>
               </div>
-              <div className="flex justify-between text-[15px] font-bold text-[#263445] pt-2.5 border-t border-[#E5E7EB]">
+              <div className="flex justify-between text-[15px] font-bold text-[#F1F5F9] pt-2.5 border-t border-[#E5E7EB]">
                 <span>Total Amount</span>
-                <span className="font-mono text-[#2563EB] tabular-nums">
+                <span className="font-mono text-[#60A5FA] tabular-nums">
                   {formatINR(order.total_amount)}
                 </span>
               </div>
             </section>
 
             {/* Controlled State Transition */}
-            <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 space-y-3 shadow-2xs">
+            <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-5 space-y-3 shadow-2xs">
               <div className="flex items-center justify-between gap-2">
-                <h2 className="text-[13px] font-semibold text-[#263445]">State Management</h2>
+                <h2 className="text-[13px] font-semibold text-[#F1F5F9]">State Management</h2>
                 <AdminStatusBadge status={order.payment_status} />
               </div>
-              <p className="text-[12px] text-[#64748B]">
+              <p className="text-[12px] text-[#94A3B8]">
                 Current Order State: <AdminStatusBadge status={order.status} className="ml-1" />
               </p>
               <form onSubmit={handleStatusUpdate} className="flex items-center gap-2 pt-1">
@@ -175,7 +175,7 @@ const AdminOrderDetailPage = () => {
           </div>
 
           {/* Order Items Table */}
-          <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+          <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
             <div className="p-5 border-b border-[#E5E7EB]">
               <AdminSectionHeader
                 icon={Package}
@@ -186,7 +186,7 @@ const AdminOrderDetailPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#F8FAFC] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#475569]">
+                  <tr className="bg-[#18243A] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#CBD5E1]">
                     <th className="py-3 px-4">Product Snapshot</th>
                     <th className="py-3 px-4">Original Price</th>
                     <th className="py-3 px-4">Purchase Price</th>
@@ -197,23 +197,23 @@ const AdminOrderDetailPage = () => {
                 </thead>
                 <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                   {order.items.map((item) => (
-                    <tr key={item.id} className="hover:bg-[#EDF5FC]/45 transition">
-                      <td className="py-3.5 px-4 font-semibold text-[#263445]">
+                    <tr key={item.id} className="hover:bg-[#18243A]/70 transition">
+                      <td className="py-3.5 px-4 font-semibold text-[#F1F5F9]">
                         {item.product_name_snapshot}
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-[#64748B] tabular-nums">
+                      <td className="py-3.5 px-4 font-mono text-[#94A3B8] tabular-nums">
                         {formatINR(item.original_price_snapshot)}
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-[#263445] tabular-nums">
+                      <td className="py-3.5 px-4 font-mono text-[#F1F5F9] tabular-nums">
                         {formatINR(item.purchase_price)}
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-[#263445] tabular-nums">
+                      <td className="py-3.5 px-4 font-mono text-[#F1F5F9] tabular-nums">
                         {item.quantity}
                       </td>
-                      <td className="py-3.5 px-4 font-mono font-semibold text-[#263445] tabular-nums">
+                      <td className="py-3.5 px-4 font-mono font-semibold text-[#F1F5F9] tabular-nums">
                         {formatINR(item.line_total)}
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-[#475569] tabular-nums">
+                      <td className="py-3.5 px-4 font-mono text-[#CBD5E1] tabular-nums">
                         {item.downloads_used} / {item.max_downloads}
                       </td>
                     </tr>
@@ -224,7 +224,7 @@ const AdminOrderDetailPage = () => {
           </section>
 
           {/* Payment References */}
-          <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+          <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
             <div className="p-5 border-b border-[#E5E7EB]">
               <AdminSectionHeader
                 icon={ShieldCheck}
@@ -234,12 +234,12 @@ const AdminOrderDetailPage = () => {
             </div>
 
             {order.payments.length === 0 ? (
-              <p className="text-[13px] text-[#64748B] p-6">No payment attempts recorded.</p>
+              <p className="text-[13px] text-[#94A3B8] p-6">No payment attempts recorded.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-[#F8FAFC] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#475569]">
+                    <tr className="bg-[#18243A] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#CBD5E1]">
                       <th className="py-3 px-4">Gateway</th>
                       <th className="py-3 px-4">Gateway Order ID</th>
                       <th className="py-3 px-4">Gateway Payment ID</th>
@@ -250,17 +250,17 @@ const AdminOrderDetailPage = () => {
                   </thead>
                   <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                     {order.payments.map((p) => (
-                      <tr key={p.id} className="hover:bg-[#EDF5FC]/45 transition">
-                        <td className="py-3.5 px-4 font-semibold text-[#263445]">
+                      <tr key={p.id} className="hover:bg-[#18243A]/70 transition">
+                        <td className="py-3.5 px-4 font-semibold text-[#F1F5F9]">
                           {String(p.gateway_name || '').toUpperCase()}
                         </td>
-                        <td className="py-3.5 px-4 font-mono text-[12px] text-[#263445]">
+                        <td className="py-3.5 px-4 font-mono text-[12px] text-[#F1F5F9]">
                           {p.gateway_order_id}
                         </td>
-                        <td className="py-3.5 px-4 font-mono text-[12px] text-[#64748B]">
+                        <td className="py-3.5 px-4 font-mono text-[12px] text-[#94A3B8]">
                           {p.gateway_payment_id || '—'}
                         </td>
-                        <td className="py-3.5 px-4 font-mono text-[#263445] tabular-nums">
+                        <td className="py-3.5 px-4 font-mono text-[#F1F5F9] tabular-nums">
                           {formatINR(p.amount)}
                         </td>
                         <td className="py-3.5 px-4">
@@ -281,7 +281,7 @@ const AdminOrderDetailPage = () => {
           </section>
 
           {/* Download Activity */}
-          <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+          <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
             <div className="p-5 border-b border-[#E5E7EB]">
               <AdminSectionHeader
                 icon={Download}
@@ -290,14 +290,14 @@ const AdminOrderDetailPage = () => {
             </div>
 
             {order.downloads.length === 0 ? (
-              <p className="text-[13px] text-[#64748B] p-6">
+              <p className="text-[13px] text-[#94A3B8] p-6">
                 No downloads recorded for this order.
               </p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-[#F8FAFC] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#475569]">
+                    <tr className="bg-[#18243A] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#CBD5E1]">
                       <th className="py-3 px-4">Product</th>
                       <th className="py-3 px-4">Status</th>
                       <th className="py-3 px-4">Client IP</th>
@@ -306,15 +306,15 @@ const AdminOrderDetailPage = () => {
                   </thead>
                   <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                     {order.downloads.map((d) => (
-                      <tr key={d.id} className="hover:bg-[#EDF5FC]/45 transition">
-                        <td className="py-3 px-4 font-medium text-[#263445]">{d.product_name}</td>
+                      <tr key={d.id} className="hover:bg-[#18243A]/70 transition">
+                        <td className="py-3 px-4 font-medium text-[#F1F5F9]">{d.product_name}</td>
                         <td className="py-3 px-4">
                           <AdminStatusBadge status={d.status} />
                         </td>
-                        <td className="py-3 px-4 font-mono text-[12px] text-[#64748B]">
+                        <td className="py-3 px-4 font-mono text-[12px] text-[#94A3B8]">
                           {d.ip_address || '—'}
                         </td>
-                        <td className="py-3 px-4 text-[#64748B] tabular-nums whitespace-nowrap">
+                        <td className="py-3 px-4 text-[#94A3B8] tabular-nums whitespace-nowrap">
                           {formatAdminDateTime(d.downloaded_at)}
                         </td>
                       </tr>

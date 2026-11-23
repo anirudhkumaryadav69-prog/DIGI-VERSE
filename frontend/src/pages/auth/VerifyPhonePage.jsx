@@ -84,24 +84,24 @@ const VerifyPhonePage = () => {
   return (
     <StorefrontLayout>
       <div className="w-full max-w-md mx-auto my-6 dv-card-warm p-6 sm:p-8">
-        <div className="w-11 h-11 rounded-2xl bg-[#EAF4FC] border border-[#BFDBFE] text-[#2563EB] flex items-center justify-center mb-4">
+        <div className="w-11 h-11 rounded-2xl bg-[#18243A] border border-[#BFDBFE] text-[#60A5FA] flex items-center justify-center mb-4">
           <ShieldCheck className="w-5 h-5" aria-hidden="true" />
         </div>
-        <p className="text-xs text-[#2563EB] font-semibold mb-1.5">
+        <p className="text-xs text-[#60A5FA] font-semibold mb-1.5">
           Security Verification
         </p>
-        <h1 className="text-2xl font-bold tracking-tight text-[#263445] mb-2">
+        <h1 className="text-2xl font-bold tracking-tight text-[#F1F5F9] mb-2">
           Verify your phone number
         </h1>
-        <p className="text-xs text-[#64748B] mb-6 leading-relaxed">
+        <p className="text-xs text-[#94A3B8] mb-6 leading-relaxed">
           Enter the 6-digit one-time verification code sent to{' '}
-          <strong className="text-[#263445]">{targetPhone}</strong>. Codes expire after 5 minutes.
+          <strong className="text-[#F1F5F9]">{targetPhone}</strong>. Codes expire after 5 minutes.
         </p>
 
         {error && (
           <div
             role="alert"
-            className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2.5"
+            className="mb-5 p-3.5 rounded-xl bg-red-950/50 border border-red-200 text-red-300 text-xs flex items-start gap-2.5"
           >
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
             <span>{error}</span>
@@ -111,7 +111,7 @@ const VerifyPhonePage = () => {
         {statusMessage && (
           <div
             role="status"
-            className="mb-5 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2.5"
+            className="mb-5 p-3.5 rounded-xl bg-emerald-950/50 border border-emerald-200 text-emerald-300 text-xs flex items-start gap-2.5"
           >
             <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
             <span>{statusMessage}</span>
@@ -122,7 +122,7 @@ const VerifyPhonePage = () => {
           <div>
             <label
               htmlFor="otp-code-input"
-              className="block text-xs font-medium text-[#263445] mb-1.5"
+              className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
             >
               6-Digit Verification Code
             </label>
@@ -149,12 +149,12 @@ const VerifyPhonePage = () => {
         </form>
 
         <div className="mt-6 pt-5 border-t border-[#E5E7EB] flex items-center justify-between text-xs">
-          <span className="text-[#64748B]">Didn&apos;t receive a code?</span>
+          <span className="text-[#94A3B8]">Didn&apos;t receive a code?</span>
           <button
             type="button"
             disabled={resending}
             onClick={handleResend}
-            className="text-[#2563EB] font-semibold hover:text-[#1D4ED8] hover:underline disabled:opacity-50"
+            className="text-[#60A5FA] font-semibold hover:text-[#93C5FD] hover:underline disabled:opacity-50"
           >
             {resending ? 'Sending...' : 'Resend Code'}
           </button>

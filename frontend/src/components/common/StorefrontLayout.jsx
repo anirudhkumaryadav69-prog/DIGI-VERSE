@@ -20,7 +20,7 @@ const StorefrontLayout = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#EAF4FC] text-[#263445] flex flex-col justify-between px-4 py-6 sm:px-6 md:px-10 overflow-x-hidden">
+    <div className="min-h-screen bg-[#080D19] text-[#F1F5F9] flex flex-col justify-between px-4 py-6 sm:px-6 md:px-10 overflow-x-hidden">
       <StorefrontHeader
         announcementText={storeSettings['store.announcement_text']}
         storeName={storeSettings['store.name'] || 'DIGI-VERSE'}

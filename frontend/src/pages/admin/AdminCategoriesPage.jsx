@@ -85,13 +85,13 @@ const AdminCategoriesPage = () => {
       <ToastBanner toast={toast} onDismiss={() => setToast(null)} className="mb-5" />
 
       {/* Search & Status Filters */}
-      <div className="bg-white border border-[#D5DEE8] rounded-xl p-4 mb-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-2xs">
+      <div className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-4 mb-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-2xs">
         <div className="relative flex-1">
           <label htmlFor="admin-categories-search" className="sr-only">
             Search categories
           </label>
           <Search
-            className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2"
+            className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2"
             aria-hidden="true"
           />
           <input
@@ -123,7 +123,7 @@ const AdminCategoriesPage = () => {
       </div>
 
       {/* Categories Table */}
-      <div className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+      <div className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
         {loading ? (
           <LoadingState label="Loading categories..." />
         ) : data.items.length === 0 ? (
@@ -147,7 +147,7 @@ const AdminCategoriesPage = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-[#D5DEE8] bg-[#F8FAFC] text-[#475569] text-[11.5px] font-semibold">
+                <tr className="border-b border-[#D5DEE8] bg-[#18243A] text-[#CBD5E1] text-[11.5px] font-semibold">
                   <th className="py-3 px-4">Category</th>
                   <th className="py-3 px-4">Slug</th>
                   <th className="py-3 px-4">Products</th>
@@ -157,19 +157,19 @@ const AdminCategoriesPage = () => {
               </thead>
               <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                 {data.items.map((cat) => (
-                  <tr key={cat.id} className="hover:bg-[#EDF5FC]/45 transition">
+                  <tr key={cat.id} className="hover:bg-[#18243A]/70 transition">
                     <td className="py-3.5 px-4">
-                      <p className="font-semibold text-[#263445]">{cat.name}</p>
+                      <p className="font-semibold text-[#F1F5F9]">{cat.name}</p>
                       {cat.description && (
-                        <p className="text-[12px] text-[#64748B] truncate max-w-md mt-0.5">
+                        <p className="text-[12px] text-[#94A3B8] truncate max-w-md mt-0.5">
                           {cat.description}
                         </p>
                       )}
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-[12px] text-[#475569]">
+                    <td className="py-3.5 px-4 font-mono text-[12px] text-[#CBD5E1]">
                       {cat.slug}
                     </td>
-                    <td className="py-3.5 px-4 font-mono tabular-nums text-[#263445]">
+                    <td className="py-3.5 px-4 font-mono tabular-nums text-[#F1F5F9]">
                       {cat.product_count}
                     </td>
                     <td className="py-3.5 px-4">
@@ -179,7 +179,7 @@ const AdminCategoriesPage = () => {
                       <div className="inline-flex items-center gap-1.5">
                         <Link
                           to={`/admin/categories/${cat.id}/edit`}
-                          className="p-1.5 rounded-lg border border-[#D5DEE8] bg-white hover:border-[#93C5FD] hover:bg-[#EDF5FC] hover:text-[#2563EB] text-[#263445] transition"
+                          className="p-1.5 rounded-lg border border-[#D5DEE8] bg-[#111C30] hover:border-[#93C5FD] hover:bg-[#18243A] hover:text-[#60A5FA] text-[#F1F5F9] transition"
                           title="Edit Category"
                           aria-label={`Edit ${cat.name}`}
                         >
@@ -188,7 +188,7 @@ const AdminCategoriesPage = () => {
                         <button
                           type="button"
                           onClick={() => setConfirmDelete(cat)}
-                          className="p-1.5 rounded-lg border border-[#D5DEE8] bg-white hover:border-red-300 hover:bg-red-50 text-[#DC2626] transition"
+                          className="p-1.5 rounded-lg border border-[#D5DEE8] bg-[#111C30] hover:border-red-300 hover:bg-red-950/60 text-red-300 transition"
                           title="Delete Category"
                           aria-label={`Delete ${cat.name}`}
                         >

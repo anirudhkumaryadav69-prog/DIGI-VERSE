@@ -113,9 +113,9 @@ const SellerProductsPage = () => {
           onDismiss={() => setToast({ type: '', message: '' })}
         />
 
-        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 flex flex-col sm:flex-row gap-3 justify-between">
+        <div className="bg-[#111C30] border border-[#E5E7EB] rounded-2xl p-4 flex flex-col sm:flex-row gap-3 justify-between">
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
+            <Search className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
             <input
               type="search"
               value={search}
@@ -147,13 +147,13 @@ const SellerProductsPage = () => {
           </select>
         </div>
 
-        <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs">
+        <div className="bg-[#111C30] border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs">
           {loading ? (
             <LoadingState label="Loading your catalog..." />
           ) : !data.items.length ? (
             <div className="p-10 text-center space-y-3">
-              <p className="text-sm font-semibold text-[#263445]">No seller products found</p>
-              <p className="text-xs text-[#64748B]">
+              <p className="text-sm font-semibold text-[#F1F5F9]">No seller products found</p>
+              <p className="text-xs text-[#94A3B8]">
                 Create your first digital asset listing and submit it for administrator approval.
               </p>
               <Link to="/seller/products/new" className="dv-btn-primary px-5 py-2.5 text-xs inline-block">
@@ -164,7 +164,7 @@ const SellerProductsPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-[#F8FAFC] border-b border-[#E5E7EB] text-[#64748B] font-semibold text-[12px]">
+                  <tr className="bg-[#18243A] border-b border-[#E5E7EB] text-[#94A3B8] font-semibold text-[12px]">
                     <th className="py-3.5 px-4">Product</th>
                     <th className="py-3.5 px-4">Price</th>
                     <th className="py-3.5 px-4">Digital Asset</th>
@@ -176,22 +176,22 @@ const SellerProductsPage = () => {
                   {data.items.map((p) => {
                     const st = STATUS_BADGE[p.approval_status] || STATUS_BADGE.draft;
                     return (
-                      <tr key={p.id} className="hover:bg-[#EAF4FC]">
+                      <tr key={p.id} className="hover:bg-[#18243A]">
                         <td className="py-3.5 px-4">
                           <div className="min-w-0">
-                            <p className="font-semibold text-[#263445]">{p.name}</p>
-                            <p className="text-[11px] font-mono text-[#64748B]">{p.slug}</p>
+                            <p className="font-semibold text-[#F1F5F9]">{p.name}</p>
+                            <p className="text-[11px] font-mono text-[#94A3B8]">{p.slug}</p>
                             {p.approval_status === 'rejected' && p.rejection_reason && (
-                              <p className="text-[11px] text-red-600 mt-1">
+                              <p className="text-[11px] text-red-300 mt-1">
                                 Rejection reason: {p.rejection_reason}
                               </p>
                             )}
                           </div>
                         </td>
                         <td className="py-3.5 px-4 font-mono">
-                          <span className="font-bold text-[#1D4ED8]">{formatINR(p.effective_price)}</span>
+                          <span className="font-bold text-[#93C5FD]">{formatINR(p.effective_price)}</span>
                           {p.is_on_sale && (
-                            <span className="text-[#64748B] line-through ml-1.5 text-[11px]">
+                            <span className="text-[#94A3B8] line-through ml-1.5 text-[11px]">
                               {formatINR(p.original_price)}
                             </span>
                           )}
@@ -205,7 +205,7 @@ const SellerProductsPage = () => {
                           <div className="flex flex-col gap-1 items-start">
                             <Badge variant={st.variant}>{st.label}</Badge>
                             {p.approval_status === 'published' && !p.is_active && (
-                              <span className="text-[11px] text-[#64748B]">Unpublished (hidden)</span>
+                              <span className="text-[11px] text-[#94A3B8]">Unpublished (hidden)</span>
                             )}
                           </div>
                         </td>
@@ -219,7 +219,7 @@ const SellerProductsPage = () => {
                                   handleStatusAction(p, 'submit_for_review', 'Submitted for Review')
                                 }
                                 title="Submit for Admin Review"
-                                className="px-2.5 py-1.5 rounded-lg border border-[#BFDBFE] bg-[#EAF4FC] text-[#1D4ED8] hover:bg-[#DCE6EF] font-semibold inline-flex items-center gap-1"
+                                className="px-2.5 py-1.5 rounded-lg border border-[#BFDBFE] bg-[#18243A] text-[#93C5FD] hover:bg-[#0D1424] font-semibold inline-flex items-center gap-1"
                               >
                                 <Send className="w-3 h-3" />
                                 <span>Submit</span>
@@ -231,7 +231,7 @@ const SellerProductsPage = () => {
                                 disabled={busyId === p.id}
                                 onClick={() => handleStatusAction(p, 'unpublish', 'Unpublished')}
                                 title="Unpublish listing"
-                                className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#93C5FD] text-[#263445]"
+                                className="p-1.5 rounded-lg border border-[#E5E7EB] bg-[#111C30] hover:border-[#93C5FD] text-[#F1F5F9]"
                               >
                                 <EyeOff className="w-3.5 h-3.5" />
                               </button>
@@ -242,7 +242,7 @@ const SellerProductsPage = () => {
                                 disabled={busyId === p.id}
                                 onClick={() => handleStatusAction(p, 'archive', 'Archived')}
                                 title="Archive product"
-                                className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#93C5FD] text-[#263445]"
+                                className="p-1.5 rounded-lg border border-[#E5E7EB] bg-[#111C30] hover:border-[#93C5FD] text-[#F1F5F9]"
                               >
                                 <Archive className="w-3.5 h-3.5" />
                               </button>
@@ -250,7 +250,7 @@ const SellerProductsPage = () => {
                             <Link
                               to={`/seller/products/${p.id}/edit`}
                               title="Edit Product & Assets"
-                              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#93C5FD] text-[#263445]"
+                              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-[#111C30] hover:border-[#93C5FD] text-[#F1F5F9]"
                             >
                               <Edit3 className="w-3.5 h-3.5" />
                             </Link>
@@ -258,7 +258,7 @@ const SellerProductsPage = () => {
                               type="button"
                               onClick={() => setConfirmDelete(p)}
                               title="Delete Product"
-                              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-red-400 text-red-600"
+                              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-[#111C30] hover:border-red-400 text-red-300"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -272,16 +272,16 @@ const SellerProductsPage = () => {
             </div>
           )}
 
-          <div className="p-4 border-t border-[#E5E7EB] bg-[#F8FAFC] flex items-center justify-between text-xs text-[#64748B]">
+          <div className="p-4 border-t border-[#E5E7EB] bg-[#18243A] flex items-center justify-between text-xs text-[#94A3B8]">
             <span>
-              Total: <strong className="text-[#263445]">{data.total}</strong> products
+              Total: <strong className="text-[#F1F5F9]">{data.total}</strong> products
             </span>
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 disabled={page <= 1}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white disabled:opacity-40"
+                className="p-1.5 rounded-lg border border-[#E5E7EB] bg-[#111C30] disabled:opacity-40"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
               </button>
@@ -292,7 +292,7 @@ const SellerProductsPage = () => {
                 type="button"
                 disabled={page >= data.total_pages}
                 onClick={() => setPage((p) => p + 1)}
-                className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white disabled:opacity-40"
+                className="p-1.5 rounded-lg border border-[#E5E7EB] bg-[#111C30] disabled:opacity-40"
               >
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>

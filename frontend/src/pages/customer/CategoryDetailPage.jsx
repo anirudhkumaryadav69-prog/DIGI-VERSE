@@ -158,17 +158,17 @@ const CategoryDetailPage = () => {
       {/* Breadcrumb Navigation */}
       <nav
         aria-label="Breadcrumb"
-        className="mb-6 flex flex-wrap items-center gap-1.5 text-[13px] font-medium text-[#64748B]"
+        className="mb-6 flex flex-wrap items-center gap-1.5 text-[13px] font-medium text-[#94A3B8]"
       >
-        <Link to="/" className="hover:text-[#0F172A] transition-colors">
+        <Link to="/" className="hover:text-[#F1F5F9] transition-colors">
           Home
         </Link>
         <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" aria-hidden="true" />
-        <Link to="/categories" className="hover:text-[#0F172A] transition-colors">
+        <Link to="/categories" className="hover:text-[#F1F5F9] transition-colors">
           Categories
         </Link>
         <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" aria-hidden="true" />
-        <span className="text-[#0F172A] font-semibold">
+        <span className="text-[#F1F5F9] font-semibold">
           {category ? category.name : 'Collection'}
         </span>
       </nav>
@@ -194,7 +194,7 @@ const CategoryDetailPage = () => {
       ) : (
         <div className="space-y-8">
           {/* Category Hero Header */}
-          <section className="relative overflow-hidden rounded-2xl bg-white border border-[#E5E7EB] p-6 sm:p-8 shadow-xs">
+          <section className="relative overflow-hidden rounded-2xl bg-[#111C30] border border-[#E5E7EB] p-6 sm:p-8 shadow-xs">
             <div
               className={`absolute inset-x-0 top-0 h-1 ${theme.accentLineClass}`}
               aria-hidden="true"
@@ -215,19 +215,19 @@ const CategoryDetailPage = () => {
                     {category.product_count === 1 ? 'product available' : 'products available'}
                   </span>
                   {theme.disciplineIcons?.length > 0 && (
-                    <span className="inline-flex items-center gap-2 rounded-full border border-[#D5DEE8] bg-[#F8FAFC] px-3 py-1 text-[12px] font-medium text-[#64748B]">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-[#D5DEE8] bg-[#18243A] px-3 py-1 text-[12px] font-medium text-[#94A3B8]">
                       <CategoryDisciplineStrip icons={theme.disciplineIcons} className="w-3.5 h-3.5" />
                       <span>{theme.disciplineLabel}</span>
                     </span>
                   )}
                 </div>
 
-                <h1 className="text-[32px] sm:text-[38px] leading-[1.15] font-bold tracking-tight text-[#0F172A]">
+                <h1 className="text-[32px] sm:text-[38px] leading-[1.15] font-bold tracking-tight text-[#F1F5F9]">
                   {category.name}
                 </h1>
 
                 {category.description && (
-                  <p className="text-[15px] sm:text-[16px] leading-relaxed font-normal text-[#475569]">
+                  <p className="text-[15px] sm:text-[16px] leading-relaxed font-normal text-[#CBD5E1]">
                     {category.description}
                   </p>
                 )}
@@ -269,7 +269,7 @@ const CategoryDetailPage = () => {
                     <option value="popularity">Most Popular</option>
                   </select>
 
-                  <label className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-[#E5E7EB] bg-[#F8FAFC] text-[13px] font-medium text-[#1E293B] cursor-pointer select-none whitespace-nowrap hover:bg-white transition">
+                  <label className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-[#E5E7EB] bg-[#18243A] text-[13px] font-medium text-[#F1F5F9] cursor-pointer select-none whitespace-nowrap hover:bg-[#111C30] transition">
                     <input
                       type="checkbox"
                       checked={onSaleOnly}
@@ -283,15 +283,15 @@ const CategoryDetailPage = () => {
             </div>
 
             {hasFilters && !productsLoading && (
-              <div className="mt-4 pt-3.5 border-t border-[#F1F5F9] flex flex-wrap items-center justify-between gap-2 text-[13px] text-[#64748B]">
+              <div className="mt-4 pt-3.5 border-t border-[#F1F5F9] flex flex-wrap items-center justify-between gap-2 text-[13px] text-[#94A3B8]">
                 <span>
-                  Showing <strong className="text-[#0F172A]">{totalMatching}</strong> matching{' '}
+                  Showing <strong className="text-[#F1F5F9]">{totalMatching}</strong> matching{' '}
                   {totalMatching === 1 ? 'result' : 'results'} in {category.name}
                 </span>
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="inline-flex items-center gap-1.5 font-semibold text-[#2563EB] hover:text-[#1D4ED8]"
+                  className="inline-flex items-center gap-1.5 font-semibold text-[#60A5FA] hover:text-[#93C5FD]"
                 >
                   <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Reset filters</span>

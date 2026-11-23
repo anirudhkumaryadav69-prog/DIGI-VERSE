@@ -50,20 +50,20 @@ const ResetPasswordPage = () => {
   return (
     <StorefrontLayout>
       <div className="w-full max-w-md mx-auto my-6 dv-card-warm p-6 sm:p-8">
-        <div className="w-11 h-11 rounded-2xl bg-[#EAF4FC] border border-[#BFDBFE] text-[#2563EB] flex items-center justify-center mb-4">
+        <div className="w-11 h-11 rounded-2xl bg-[#18243A] border border-[#BFDBFE] text-[#60A5FA] flex items-center justify-center mb-4">
           <KeyRound className="w-5 h-5" aria-hidden="true" />
         </div>
-        <p className="text-xs text-[#2563EB] font-semibold mb-1.5">
+        <p className="text-xs text-[#60A5FA] font-semibold mb-1.5">
           Password Reset
         </p>
-        <h1 className="text-2xl font-bold tracking-tight text-[#263445] mb-6">
+        <h1 className="text-2xl font-bold tracking-tight text-[#F1F5F9] mb-6">
           Set a new password
         </h1>
 
         {error && (
           <div
             role="alert"
-            className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2.5"
+            className="mb-5 p-3.5 rounded-xl bg-red-950/50 border border-red-200 text-red-300 text-xs flex items-start gap-2.5"
           >
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
             <span>{error}</span>
@@ -73,7 +73,7 @@ const ResetPasswordPage = () => {
         {success && (
           <div
             role="status"
-            className="mb-5 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2.5"
+            className="mb-5 p-3.5 rounded-xl bg-emerald-950/50 border border-emerald-200 text-emerald-300 text-xs flex items-start gap-2.5"
           >
             <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
             <span>{success}</span>
@@ -84,7 +84,7 @@ const ResetPasswordPage = () => {
           <div>
             <label
               htmlFor="reset-token"
-              className="block text-xs font-medium text-[#263445] mb-1.5"
+              className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
             >
               Reset Token
             </label>
@@ -102,7 +102,7 @@ const ResetPasswordPage = () => {
           <div>
             <label
               htmlFor="reset-new-password"
-              className="block text-xs font-medium text-[#263445] mb-1.5"
+              className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
             >
               New Password
             </label>
@@ -121,7 +121,7 @@ const ResetPasswordPage = () => {
           <div>
             <label
               htmlFor="reset-confirm-password"
-              className="block text-xs font-medium text-[#263445] mb-1.5"
+              className="block text-xs font-medium text-[#F1F5F9] mb-1.5"
             >
               Confirm New Password
             </label>

@@ -88,14 +88,14 @@ const AdminCustomersPage = () => {
       {/* Search & Status Filter */}
       <form
         onSubmit={handleSearch}
-        className="bg-white border border-[#D5DEE8] rounded-xl p-4 mb-5 flex flex-wrap items-center gap-3 shadow-2xs"
+        className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-4 mb-5 flex flex-wrap items-center gap-3 shadow-2xs"
       >
         <div className="relative flex-1 min-w-[220px]">
           <label htmlFor="admin-customers-search" className="sr-only">
             Search customers
           </label>
           <Search
-            className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2"
+            className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2"
             aria-hidden="true"
           />
           <input
@@ -129,7 +129,7 @@ const AdminCustomersPage = () => {
       </form>
 
       {/* Customer Directory Table */}
-      <div className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+      <div className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
         {loading ? (
           <LoadingState label="Loading customer accounts..." />
         ) : customers.length === 0 ? (
@@ -144,7 +144,7 @@ const AdminCustomersPage = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-[#D5DEE8] text-[#475569] bg-[#F8FAFC] text-[11.5px] font-semibold">
+                <tr className="border-b border-[#D5DEE8] text-[#CBD5E1] bg-[#18243A] text-[11.5px] font-semibold">
                   <th className="py-3 px-4">Customer</th>
                   <th className="py-3 px-4">Verification</th>
                   <th className="py-3 px-4">Marketing Opt-In</th>
@@ -155,12 +155,12 @@ const AdminCustomersPage = () => {
               </thead>
               <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                 {customers.map((c) => (
-                  <tr key={c.id} className="hover:bg-[#EDF5FC]/45 transition">
+                  <tr key={c.id} className="hover:bg-[#18243A]/70 transition">
                     <td className="py-3.5 px-4">
-                      <p className="font-semibold text-[#263445]">{c.full_name}</p>
-                      <p className="text-[12px] text-[#64748B]">{c.email}</p>
+                      <p className="font-semibold text-[#F1F5F9]">{c.full_name}</p>
+                      <p className="text-[12px] text-[#94A3B8]">{c.email}</p>
                       {c.phone_number && (
-                        <p className="text-[11.5px] font-mono text-[#64748B]">{c.phone_number}</p>
+                        <p className="text-[11.5px] font-mono text-[#94A3B8]">{c.phone_number}</p>
                       )}
                     </td>
                     <td className="py-3.5 px-4">
@@ -182,10 +182,10 @@ const AdminCustomersPage = () => {
                       </div>
                     </td>
                     <td className="py-3.5 px-4">
-                      <p className="text-[#263445] font-semibold font-mono tabular-nums">
+                      <p className="text-[#F1F5F9] font-semibold font-mono tabular-nums">
                         {formatINR(c.total_spent)}
                       </p>
-                      <p className="text-[11.5px] text-[#64748B] tabular-nums">
+                      <p className="text-[11.5px] text-[#94A3B8] tabular-nums">
                         {c.order_count} orders
                       </p>
                     </td>
@@ -198,7 +198,7 @@ const AdminCustomersPage = () => {
                           type="button"
                           disabled={actionBusy === c.id}
                           onClick={() => setConfirmSuspend(c)}
-                          className="inline-flex items-center gap-1.5 rounded-lg text-[12px] font-medium px-3 py-1.5 border border-red-200 bg-white text-[#DC2626] hover:bg-red-50 transition disabled:opacity-50"
+                          className="inline-flex items-center gap-1.5 rounded-lg text-[12px] font-medium px-3 py-1.5 border border-red-200 bg-[#111C30] text-red-300 hover:bg-red-950/60 transition disabled:opacity-50"
                         >
                           <ShieldAlert className="w-3.5 h-3.5" />
                           <span>Suspend</span>
@@ -208,7 +208,7 @@ const AdminCustomersPage = () => {
                           type="button"
                           disabled={actionBusy === c.id}
                           onClick={() => handleStatusChange(c, 'active')}
-                          className="inline-flex items-center gap-1.5 rounded-lg text-[12px] font-medium px-3 py-1.5 border border-emerald-200 bg-white text-[#15803D] hover:bg-emerald-50 transition disabled:opacity-50"
+                          className="inline-flex items-center gap-1.5 rounded-lg text-[12px] font-medium px-3 py-1.5 border border-emerald-200 bg-[#111C30] text-emerald-300 hover:bg-emerald-950/60 transition disabled:opacity-50"
                         >
                           <UserCheck className="w-3.5 h-3.5" />
                           <span>Reactivate</span>

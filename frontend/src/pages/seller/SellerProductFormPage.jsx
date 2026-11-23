@@ -281,16 +281,16 @@ const SellerProductFormPage = () => {
         />
 
         {product?.approval_status === 'rejected' && product.rejection_reason && (
-          <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-xs text-red-800">
+          <div className="bg-red-950/50 border border-red-200 rounded-2xl p-4 text-xs text-red-300">
             <strong>Moderation Rejection Reason:</strong> {product.rejection_reason}. Update your listing below and resubmit for review.
           </div>
         )}
 
         <form onSubmit={(e) => handleSave(e, false)} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-5 bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs">
+          <div className="lg:col-span-2 space-y-5 bg-[#111C30] border border-[#E5E7EB] rounded-2xl p-6 shadow-xs">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Product Title *
                 </label>
                 <input
@@ -310,7 +310,7 @@ const SellerProductFormPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   URL Slug *
                 </label>
                 <input
@@ -326,7 +326,7 @@ const SellerProductFormPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Category *
                 </label>
                 <select
@@ -345,7 +345,7 @@ const SellerProductFormPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Price (INR) *
                 </label>
                 <input
@@ -360,7 +360,7 @@ const SellerProductFormPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+                <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                   Product Type
                 </label>
                 <input
@@ -374,7 +374,7 @@ const SellerProductFormPage = () => {
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-[#263445] mb-1.5">Format</label>
+                  <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">Format</label>
                   <input
                     type="text"
                     value={form.metadata_format}
@@ -386,7 +386,7 @@ const SellerProductFormPage = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-[#263445] mb-1.5">Version</label>
+                  <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">Version</label>
                   <input
                     type="text"
                     value={form.metadata_version}
@@ -401,7 +401,7 @@ const SellerProductFormPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                 Short Summary
               </label>
               <input
@@ -416,7 +416,7 @@ const SellerProductFormPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                 Main Overview
               </label>
               <textarea
@@ -430,7 +430,7 @@ const SellerProductFormPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#263445] mb-1.5">
+              <label className="block text-xs font-semibold text-[#F1F5F9] mb-1.5">
                 Detailed Documentation / Whats Included
               </label>
               <textarea
@@ -457,9 +457,9 @@ const SellerProductFormPage = () => {
           {/* Sidebar: Private Asset, Gallery & Workflow */}
           <div className="space-y-5">
             {isEdit && product && (
-              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs space-y-3">
+              <div className="bg-[#111C30] border border-[#E5E7EB] rounded-2xl p-5 shadow-xs space-y-3">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xs font-semibold text-[#64748B]">
+                  <h2 className="text-xs font-semibold text-[#94A3B8]">
                     Publication State
                   </h2>
                   <Badge
@@ -476,7 +476,7 @@ const SellerProductFormPage = () => {
                     {product.approval_status}
                   </Badge>
                 </div>
-                <p className="text-[11px] text-[#64748B]">
+                <p className="text-[11px] text-[#94A3B8]">
                   First-time seller listings require admin review before appearing publicly.
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -514,27 +514,27 @@ const SellerProductFormPage = () => {
             )}
 
             {/* Private Digital Asset Box */}
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs space-y-3">
-              <h2 className="text-xs font-semibold text-[#64748B] flex items-center gap-2">
-                <FileArchive className="w-4 h-4 text-[#2563EB]" aria-hidden="true" />
+            <div className="bg-[#111C30] border border-[#E5E7EB] rounded-2xl p-5 shadow-xs space-y-3">
+              <h2 className="text-xs font-semibold text-[#94A3B8] flex items-center gap-2">
+                <FileArchive className="w-4 h-4 text-[#60A5FA]" aria-hidden="true" />
                 Private Digital Asset
               </h2>
               {isEdit && product?.asset?.has_asset ? (
-                <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#BFDBFE] text-xs space-y-1">
-                  <p className="font-semibold text-[#263445] flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                <div className="p-3 rounded-xl bg-[#18243A] border border-[#BFDBFE] text-xs space-y-1">
+                  <p className="font-semibold text-[#F1F5F9] flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />
                     {product.asset.filename}
                   </p>
-                  <p className="text-[11px] text-[#64748B] font-mono">
+                  <p className="text-[11px] text-[#94A3B8] font-mono">
                     {product.asset.size_bytes} bytes · {product.asset.content_type}
                   </p>
                 </div>
               ) : pendingAsset ? (
-                <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#BFDBFE] text-xs">
+                <div className="p-3 rounded-xl bg-[#18243A] border border-[#BFDBFE] text-xs">
                   Ready to upload on create: <strong>{pendingAsset.name}</strong>
                 </div>
               ) : (
-                <p className="text-[11px] text-[#64748B]">
+                <p className="text-[11px] text-[#94A3B8]">
                   No binary asset attached yet. Supported: ZIP, PDF, PNG/JPEG/WEBP, TXT/MD/JSON.
                 </p>
               )}
@@ -555,7 +555,7 @@ const SellerProductFormPage = () => {
                   <button
                     type="button"
                     onClick={handleRemoveAsset}
-                    className="px-3 py-2 text-xs rounded-xl border border-red-200 text-red-700 hover:bg-red-50"
+                    className="px-3 py-2 text-xs rounded-xl border border-red-200 text-red-300 hover:bg-red-950/60"
                   >
                     Remove
                   </button>
@@ -564,12 +564,12 @@ const SellerProductFormPage = () => {
             </div>
 
             {/* Product Gallery Images */}
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs space-y-3">
+            <div className="bg-[#111C30] border border-[#E5E7EB] rounded-2xl p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
-                <h2 className="text-xs font-semibold text-[#64748B]">
+                <h2 className="text-xs font-semibold text-[#94A3B8]">
                   Storefront Images
                 </h2>
-                <label className="text-xs font-semibold text-[#2563EB] hover:underline cursor-pointer">
+                <label className="text-xs font-semibold text-[#60A5FA] hover:underline cursor-pointer">
                   {uploadingImage ? 'Uploading...' : '+ Upload Image'}
                   <input
                     type="file"
@@ -586,10 +586,10 @@ const SellerProductFormPage = () => {
                   {product.images.map((img) => (
                     <div
                       key={img.id}
-                      className="relative border border-[#E5E7EB] rounded-xl overflow-hidden bg-[#F8FAFC]"
+                      className="relative border border-[#E5E7EB] rounded-xl overflow-hidden bg-[#18243A]"
                     >
                       <img src={img.image_url} alt="" className="w-full h-24 object-cover" />
-                      <div className="p-2 flex items-center justify-between bg-white text-[11px]">
+                      <div className="p-2 flex items-center justify-between bg-[#111C30] text-[11px]">
                         <button
                           type="button"
                           onClick={async () => {
@@ -597,7 +597,7 @@ const SellerProductFormPage = () => {
                             await loadProduct();
                           }}
                           className={`inline-flex items-center gap-1 font-semibold ${
-                            img.is_primary ? 'text-[#2563EB]' : 'text-[#64748B]'
+                            img.is_primary ? 'text-[#60A5FA]' : 'text-[#94A3B8]'
                           }`}
                         >
                           <Star className="w-3 h-3" aria-hidden="true" />
@@ -610,7 +610,7 @@ const SellerProductFormPage = () => {
                             await sellerApi.deleteProductImage(id, img.id);
                             await loadProduct();
                           }}
-                          className="text-red-600 hover:text-red-700"
+                          className="text-red-300 hover:text-red-300"
                         >
                           <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                         </button>
@@ -621,7 +621,7 @@ const SellerProductFormPage = () => {
               )}
 
               {!isEdit && pendingImages.length > 0 && (
-                <p className="text-[11px] text-[#64748B]">
+                <p className="text-[11px] text-[#94A3B8]">
                   {pendingImages.length} image(s) queued for upload when draft is created.
                 </p>
               )}

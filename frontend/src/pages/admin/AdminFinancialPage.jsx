@@ -156,7 +156,7 @@ const AdminFinancialPage = () => {
 
       <form
         onSubmit={saveGlobalRate}
-        className="bg-white border border-[#D5DEE8] rounded-xl p-6 mb-6 shadow-2xs space-y-4"
+        className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-6 mb-6 shadow-2xs space-y-4"
       >
         <AdminSectionHeader
           icon={Percent}
@@ -167,7 +167,7 @@ const AdminFinancialPage = () => {
           <div>
             <label
               htmlFor="global-commission"
-              className="block text-[12px] font-medium text-[#263445] mb-1.5"
+              className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
             >
               Default rate (%)
             </label>
@@ -182,9 +182,9 @@ const AdminFinancialPage = () => {
               className="dv-input px-3.5 py-2 text-[13.5px] w-44 font-mono"
             />
           </div>
-          <div className="text-[12.5px] text-[#64748B] pb-2">
-            Maximum: <strong className="text-[#263445]">{commission?.maximum_rate}%</strong> ·
-            Currency: <strong className="text-[#263445]">{commission?.currency}</strong>
+          <div className="text-[12.5px] text-[#94A3B8] pb-2">
+            Maximum: <strong className="text-[#F1F5F9]">{commission?.maximum_rate}%</strong> ·
+            Currency: <strong className="text-[#F1F5F9]">{commission?.currency}</strong>
           </div>
           <button
             type="submit"
@@ -197,7 +197,7 @@ const AdminFinancialPage = () => {
         </div>
       </form>
 
-      <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden mb-6 shadow-2xs">
+      <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden mb-6 shadow-2xs">
         <div className="px-5 py-4 border-b border-[#E5E7EB] flex flex-wrap items-center justify-between gap-3">
           <AdminSectionHeader
             icon={Landmark}
@@ -205,7 +205,7 @@ const AdminFinancialPage = () => {
             subtitle="Set store-specific commission rates or revert to the global default"
           />
           <div className="relative">
-            <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               aria-label="Search sellers"
               value={search}
@@ -220,13 +220,13 @@ const AdminFinancialPage = () => {
           </div>
         </div>
         {!sellers.items.length ? (
-          <p className="p-8 text-center text-[13px] text-[#64748B]">No sellers found.</p>
+          <p className="p-8 text-center text-[13px] text-[#94A3B8]">No sellers found.</p>
         ) : (
           <>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#F8FAFC] text-[#475569] border-b border-[#D5DEE8] text-[11.5px] font-semibold">
+                  <tr className="bg-[#18243A] text-[#CBD5E1] border-b border-[#D5DEE8] text-[11.5px] font-semibold">
                     <th className="px-4 py-3">Seller</th>
                     <th className="px-4 py-3 text-right">Override (%)</th>
                     <th className="px-4 py-3 text-right">Effective Rate</th>
@@ -267,7 +267,7 @@ const AdminFinancialPage = () => {
         )}
       </section>
 
-      <section className="bg-white border border-[#D5DEE8] rounded-xl p-5 mb-6 shadow-2xs">
+      <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-5 mb-6 shadow-2xs">
         <AdminSectionHeader
           icon={ReceiptText}
           title="Financial ledger filters"
@@ -329,12 +329,12 @@ const AdminFinancialPage = () => {
         </button>
       </section>
 
-      <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden mb-6 shadow-2xs">
+      <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden mb-6 shadow-2xs">
         <div className="px-5 py-4 border-b border-[#E5E7EB]">
           <AdminSectionHeader icon={ReceiptText} title="Financial ledger" />
         </div>
         {!ledger.items.length ? (
-          <p className="p-8 text-center text-[13px] text-[#64748B]">
+          <p className="p-8 text-center text-[13px] text-[#94A3B8]">
             No ledger entries match the filters.
           </p>
         ) : (
@@ -342,7 +342,7 @@ const AdminFinancialPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#F8FAFC] text-[#475569] border-b border-[#D5DEE8] text-[11.5px] font-semibold">
+                  <tr className="bg-[#18243A] text-[#CBD5E1] border-b border-[#D5DEE8] text-[11.5px] font-semibold">
                     <th className="px-4 py-3">Transaction / Order</th>
                     <th className="px-4 py-3">Entry Type</th>
                     <th className="px-4 py-3">Account</th>
@@ -353,12 +353,12 @@ const AdminFinancialPage = () => {
                 </thead>
                 <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                   {ledger.items.map((row) => (
-                    <tr key={row.id} className="hover:bg-[#EDF5FC]/45 transition">
-                      <td className="px-4 py-3 font-mono text-[12px] text-[#263445]">
+                    <tr key={row.id} className="hover:bg-[#18243A]/70 transition">
+                      <td className="px-4 py-3 font-mono text-[12px] text-[#F1F5F9]">
                         {row.order_id || row.transaction_id}
                       </td>
-                      <td className="px-4 py-3 text-[#263445]">{row.entry_type}</td>
-                      <td className="px-4 py-3 font-mono text-[12px] text-[#475569]">
+                      <td className="px-4 py-3 text-[#F1F5F9]">{row.entry_type}</td>
+                      <td className="px-4 py-3 font-mono text-[12px] text-[#CBD5E1]">
                         {row.account_code}
                       </td>
                       <td className="px-4 py-3">
@@ -367,10 +367,10 @@ const AdminFinancialPage = () => {
                           label={row.direction}
                         />
                       </td>
-                      <td className="px-4 py-3 text-right font-mono font-semibold text-[#263445] tabular-nums">
+                      <td className="px-4 py-3 text-right font-mono font-semibold text-[#F1F5F9] tabular-nums">
                         {formatINR(row.amount)}
                       </td>
-                      <td className="px-4 py-3 text-[#64748B] tabular-nums whitespace-nowrap">
+                      <td className="px-4 py-3 text-[#94A3B8] tabular-nums whitespace-nowrap">
                         {formatAdminDateTime(row.posted_at)}
                       </td>
                     </tr>
@@ -404,19 +404,19 @@ const AdminFinancialPage = () => {
       </section>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+        <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
           <div className="px-5 py-4 border-b border-[#E5E7EB]">
             <AdminSectionHeader icon={TrendingUp} title="Commission report" />
           </div>
           {!report?.sellers?.length ? (
-            <p className="p-8 text-center text-[13px] text-[#64748B]">
+            <p className="p-8 text-center text-[13px] text-[#94A3B8]">
               No commission report data.
             </p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#F8FAFC] text-[#475569] border-b border-[#D5DEE8] text-[11.5px] font-semibold">
+                  <tr className="bg-[#18243A] text-[#CBD5E1] border-b border-[#D5DEE8] text-[11.5px] font-semibold">
                     <th className="px-4 py-3">Seller</th>
                     <th className="px-4 py-3 text-right">Gross</th>
                     <th className="px-4 py-3 text-right">Commission</th>
@@ -425,15 +425,15 @@ const AdminFinancialPage = () => {
                 </thead>
                 <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                   {report.sellers.map((row) => (
-                    <tr key={row.seller_id} className="hover:bg-[#EDF5FC]/45 transition">
-                      <td className="px-4 py-3 font-semibold text-[#263445]">{row.store_name}</td>
+                    <tr key={row.seller_id} className="hover:bg-[#18243A]/70 transition">
+                      <td className="px-4 py-3 font-semibold text-[#F1F5F9]">{row.store_name}</td>
                       <td className="px-4 py-3 text-right font-mono tabular-nums">
                         {formatINR(row.gross_sales)}
                       </td>
-                      <td className="px-4 py-3 text-right font-mono tabular-nums text-[#475569]">
+                      <td className="px-4 py-3 text-right font-mono tabular-nums text-[#CBD5E1]">
                         {formatINR(row.commission_amount)}
                       </td>
-                      <td className="px-4 py-3 text-right font-mono font-bold text-[#1D4ED8] tabular-nums">
+                      <td className="px-4 py-3 text-right font-mono font-bold text-[#93C5FD] tabular-nums">
                         {formatINR(row.net_earnings)}
                       </td>
                     </tr>
@@ -444,12 +444,12 @@ const AdminFinancialPage = () => {
           )}
         </section>
 
-        <section className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+        <section className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
           <div className="px-5 py-4 border-b border-[#E5E7EB]">
             <AdminSectionHeader icon={History} title="Commission history" />
           </div>
           {!history.length ? (
-            <p className="p-8 text-center text-[13px] text-[#64748B]">
+            <p className="p-8 text-center text-[13px] text-[#94A3B8]">
               No commission configuration changes recorded.
             </p>
           ) : (
@@ -457,12 +457,12 @@ const AdminFinancialPage = () => {
               {history.map((row) => (
                 <div key={row.id} className="px-5 py-3.5 text-[13px] flex justify-between gap-4">
                   <div className="min-w-0">
-                    <p className="font-mono text-[12px] font-medium text-[#1D4ED8]">{row.action}</p>
-                    <p className="text-[12px] text-[#64748B] mt-0.5 truncate">
+                    <p className="font-mono text-[12px] font-medium text-[#93C5FD]">{row.action}</p>
+                    <p className="text-[12px] text-[#94A3B8] mt-0.5 truncate">
                       {row.entity_type} {row.entity_id ? `· ${row.entity_id}` : ''}
                     </p>
                   </div>
-                  <time className="text-[12px] text-[#64748B] shrink-0 tabular-nums">
+                  <time className="text-[12px] text-[#94A3B8] shrink-0 tabular-nums">
                     {formatAdminDateTime(row.created_at)}
                   </time>
                 </div>
@@ -478,10 +478,10 @@ const AdminFinancialPage = () => {
 const SellerCommissionRow = ({ row, saving, onSave, onRemove }) => {
   const [rate, setRate] = useState(row.override_rate ?? '');
   return (
-    <tr className="hover:bg-[#EDF5FC]/45 transition">
+    <tr className="hover:bg-[#18243A]/70 transition">
       <td className="px-4 py-3.5">
-        <p className="font-semibold text-[#263445]">{row.store_name}</p>
-        <p className="text-[11.5px] font-mono text-[#64748B]">{row.store_slug}</p>
+        <p className="font-semibold text-[#F1F5F9]">{row.store_name}</p>
+        <p className="text-[11.5px] font-mono text-[#94A3B8]">{row.store_slug}</p>
       </td>
       <td className="px-4 py-3.5 text-right">
         <input
@@ -495,7 +495,7 @@ const SellerCommissionRow = ({ row, saving, onSave, onRemove }) => {
           className="dv-input px-2.5 py-1.5 text-[13px] w-28 text-right font-mono inline-block"
         />
       </td>
-      <td className="px-4 py-3.5 text-right font-mono font-semibold text-[#263445] tabular-nums">
+      <td className="px-4 py-3.5 text-right font-mono font-semibold text-[#F1F5F9] tabular-nums">
         {row.effective_rate}%
       </td>
       <td className="px-4 py-3.5">
@@ -514,7 +514,7 @@ const SellerCommissionRow = ({ row, saving, onSave, onRemove }) => {
               disabled={saving}
               aria-label={`Remove override for ${row.store_name}`}
               onClick={() => onRemove(row.seller_id)}
-              className="p-1.5 rounded-lg border border-red-200 bg-white text-[#DC2626] hover:bg-red-50 transition"
+              className="p-1.5 rounded-lg border border-red-200 bg-[#111C30] text-red-300 hover:bg-red-950/60 transition"
               title="Remove Override"
             >
               <Trash2 className="w-3.5 h-3.5" />

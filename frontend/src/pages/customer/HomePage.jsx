@@ -125,7 +125,7 @@ const HomePage = () => {
   const storeName = storeSettings['store.name'] || 'DIGI-VERSE';
 
   return (
-    <div className="min-h-screen bg-[#EAF4FC] text-[#263445] flex flex-col justify-between px-4 py-6 sm:px-6 md:px-10 overflow-x-hidden">
+    <div className="min-h-screen bg-[#080D19] text-[#F1F5F9] flex flex-col justify-between px-4 py-6 sm:px-6 md:px-10 overflow-x-hidden">
       <StorefrontHeader
         announcementText={storeSettings['store.announcement_text']}
         storeName={storeName}
@@ -136,29 +136,36 @@ const HomePage = () => {
           <ToastBanner toast={toast} onDismiss={() => setToast({ type: '', message: '' })} />
         )}
 
+<<<<<<< Updated upstream
         {/* 1. Hero Section (Soft White Elevated Surface) */}
         <section className="relative overflow-hidden rounded-3xl bg-[#F8FAFC] border border-[#D5DEE8] p-6 sm:p-10 md:p-12 shadow-[0_8px_28px_-8px_rgba(38,52,69,0.08)]">
+=======
+        {catalogError && <ErrorAlert message={catalogError} onRetry={loadHomeData} />}
+
+        {/* 1. Hero Section (Dark Secondary Elevated Surface) */}
+        <section className="relative overflow-hidden rounded-3xl bg-[#0D1424] border border-[#D5DEE8] p-6 sm:p-10 md:p-12 shadow-[0_8px_28px_-8px_rgba(38,52,69,0.08)]">
+>>>>>>> Stashed changes
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[#DCE6EF]/70 blur-2xl"
+            className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[#18243A]/70 blur-2xl"
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-20 -left-20 w-56 h-56 rounded-full bg-[#EAF4FC] blur-2xl"
+            className="pointer-events-none absolute -bottom-20 -left-20 w-56 h-56 rounded-full bg-[#080D19]/70 blur-2xl"
           />
 
           <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs font-medium px-3.5 py-1.5 rounded-full border border-[#D5DEE8] bg-white shadow-2xs">
+              <div className="inline-flex items-center gap-2 text-xs font-medium px-3.5 py-1.5 rounded-full border border-[#D5DEE8] bg-[#111C30] shadow-2xs">
                 <Activity className="w-3.5 h-3.5 text-[#0EA5E9]" aria-hidden="true" />
-                <span className="text-[#64748B]">System Status:</span>
+                <span className="text-[#94A3B8]">System Status:</span>
                 <span
                   className={
                     healthStatus === 'online'
-                      ? 'text-[#16A34A] font-semibold'
+                      ? 'text-emerald-400 font-semibold'
                       : healthStatus === 'checking'
-                      ? 'text-[#64748B]'
-                      : 'text-[#DC2626] font-semibold'
+                      ? 'text-[#94A3B8]'
+                      : 'text-red-400 font-semibold'
                   }
                 >
                   {healthStatus}
@@ -166,16 +173,16 @@ const HomePage = () => {
               </div>
 
               <div>
-                <p className="text-xs tracking-[0.02em] text-[#2563EB] font-semibold mb-2.5">
+                <p className="text-xs tracking-[0.02em] text-[#60A5FA] font-semibold mb-2.5">
                   {storeName} — Digital Commerce Platform
                 </p>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#263445] leading-[1.15]">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#F1F5F9] leading-[1.15]">
                   Curated digital products for{' '}
-                  <span className="text-[#2563EB]">modern creators</span>.
+                  <span className="text-[#60A5FA]">modern creators</span>.
                 </h1>
               </div>
 
-              <p className="text-[#64748B] text-sm md:text-base leading-relaxed max-w-2xl">
+              <p className="text-[#94A3B8] text-sm md:text-base leading-relaxed max-w-2xl">
                 Discover professional UI kits, code architectures, and design systems. Save assets
                 to your wishlist, build your cart, checkout with server-verified cryptographic
                 payment signatures, and unlock instant signed digital downloads.
@@ -198,17 +205,17 @@ const HomePage = () => {
               </div>
             </div>
 
-            <div className="lg:col-span-5 bg-white border border-[#D5DEE8] rounded-2xl p-6 md:p-8 space-y-5 shadow-[0_8px_24px_-6px_rgba(38,52,69,0.07)]">
-              <p className="text-xs text-[#2563EB] font-semibold">
+            <div className="lg:col-span-5 bg-[#111C30] border border-[#D5DEE8] rounded-2xl p-6 md:p-8 space-y-5 shadow-[0_8px_24px_-6px_rgba(38,52,69,0.07)]">
+              <p className="text-xs text-[#60A5FA] font-semibold">
                 Verified Digital Delivery Standard
               </p>
-              <div className="space-y-4 text-xs text-[#64748B]">
+              <div className="space-y-4 text-xs text-[#94A3B8]">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-[#EAF4FC] border border-[#D5DEE8] flex items-center justify-center text-[#2563EB] shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-[#18243A] border border-[#D5DEE8] flex items-center justify-center text-[#60A5FA] shrink-0">
                     <Lock className="w-4 h-4" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#263445]">Authoritative Backend Pricing</p>
+                    <p className="font-semibold text-[#F1F5F9]">Authoritative Backend Pricing</p>
                     <p className="mt-0.5 leading-relaxed">
                       Every price, active discount, and line total is computed and snapshotted on
                       the server at checkout.
@@ -216,11 +223,11 @@ const HomePage = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-[#EAF4FC] border border-[#D5DEE8] flex items-center justify-center text-[#0EA5E9] shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-[#18243A] border border-[#D5DEE8] flex items-center justify-center text-[#0EA5E9] shrink-0">
                     <Zap className="w-4 h-4" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#263445]">Short-Lived Signed Download Grants</p>
+                    <p className="font-semibold text-[#F1F5F9]">Short-Lived Signed Download Grants</p>
                     <p className="mt-0.5 leading-relaxed">
                       Private storage paths are never exposed. Downloads use authenticated,
                       time-limited cryptographic tokens.
@@ -228,11 +235,11 @@ const HomePage = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-[#EAF4FC] border border-[#D5DEE8] flex items-center justify-center text-[#16A34A] shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-[#18243A] border border-[#D5DEE8] flex items-center justify-center text-emerald-400 shrink-0">
                     <ShieldCheck className="w-4 h-4" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#263445]">Complete Order &amp; Invoice History</p>
+                    <p className="font-semibold text-[#F1F5F9]">Complete Order &amp; Invoice History</p>
                     <p className="mt-0.5 leading-relaxed">
                       Download official purchase receipts and manage your digital library from your
                       account dashboard.
@@ -250,19 +257,19 @@ const HomePage = () => {
             {banners.map((b) => (
               <div
                 key={b.id}
-                className="bg-white border border-[#D5DEE8] rounded-2xl p-6 md:p-8 flex flex-col justify-between gap-4 shadow-xs"
+                className="bg-[#111C30] border border-[#D5DEE8] rounded-2xl p-6 md:p-8 flex flex-col justify-between gap-4 shadow-xs"
               >
                 <div>
-                  <span className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8] font-semibold">
-                    <Sparkles className="w-3.5 h-3.5 text-[#2563EB]" aria-hidden="true" />
+                  <span className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full bg-[#18243A] border border-[#BFDBFE] text-[#93C5FD] font-semibold">
+                    <Sparkles className="w-3.5 h-3.5 text-[#60A5FA]" aria-hidden="true" />
                     <span>Featured Promotion</span>
                   </span>
-                  <h2 className="text-xl md:text-2xl font-bold text-[#263445] mt-3">
+                  <h2 className="text-xl md:text-2xl font-bold text-[#F1F5F9] mt-3">
                     {b.heading}
                   </h2>
-                  {b.subtitle && <p className="text-xs text-[#64748B] mt-1.5">{b.subtitle}</p>}
+                  {b.subtitle && <p className="text-xs text-[#94A3B8] mt-1.5">{b.subtitle}</p>}
                   {b.promotional_text && (
-                    <p className="text-xs text-[#64748B] mt-2 leading-relaxed">
+                    <p className="text-xs text-[#94A3B8] mt-2 leading-relaxed">
                       {b.promotional_text}
                     </p>
                   )}
@@ -270,7 +277,7 @@ const HomePage = () => {
                 {b.cta_destination && (
                   <Link
                     to={b.cta_destination}
-                    className="text-xs font-semibold text-[#2563EB] inline-flex items-center gap-1.5 hover:text-[#1D4ED8] transition"
+                    className="text-xs font-semibold text-[#60A5FA] inline-flex items-center gap-1.5 hover:text-[#93C5FD] transition"
                   >
                     <span>{b.cta_text || 'Explore Promotion'}</span>
                     <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -291,7 +298,7 @@ const HomePage = () => {
               action={
                 <Link
                   to="/categories"
-                  className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1 transition"
+                  className="text-xs font-semibold text-[#60A5FA] hover:text-[#93C5FD] inline-flex items-center gap-1 transition"
                 >
                   <span>View All Categories</span>
                   <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -306,9 +313,9 @@ const HomePage = () => {
           </section>
         )}
 
-        {/* 4. Promotional Offers & Active Discounts (Secondary Blue-Grey Band) */}
+        {/* 4. Promotional Offers & Active Discounts (Secondary Dark Navy Band) */}
         {discountedProducts.length > 0 && (
-          <section className="rounded-3xl bg-[#DCE6EF]/75 border border-[#D5DEE8] p-6 sm:p-8">
+          <section className="rounded-3xl bg-[#0D1424] border border-[#D5DEE8] p-6 sm:p-8">
             <SectionHeading
               eyebrow="Limited-Time Savings"
               title="Promotional Offers & Discounts"
@@ -316,7 +323,7 @@ const HomePage = () => {
               action={
                 <Link
                   to="/products?on_sale=true"
-                  className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1 transition"
+                  className="text-xs font-semibold text-[#60A5FA] hover:text-[#93C5FD] inline-flex items-center gap-1 transition"
                 >
                   <span>All Discounted Products</span>
                   <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -336,9 +343,9 @@ const HomePage = () => {
           </section>
         )}
 
-        {/* 5. Best-Selling & Featured Products (Soft White Band) */}
+        {/* 5. Best-Selling & Featured Products (Secondary Dark Navy Band) */}
         {bestSellers.length > 0 && (
-          <section className="rounded-3xl bg-[#F8FAFC] border border-[#D5DEE8] p-6 sm:p-8">
+          <section className="rounded-3xl bg-[#0D1424] border border-[#D5DEE8] p-6 sm:p-8">
             <SectionHeading
               eyebrow="Popular Selection"
               title="Featured & Best-Selling Products"
@@ -346,7 +353,7 @@ const HomePage = () => {
               action={
                 <Link
                   to="/products?sort_by=popularity"
-                  className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1 transition"
+                  className="text-xs font-semibold text-[#60A5FA] hover:text-[#93C5FD] inline-flex items-center gap-1 transition"
                 >
                   <span>Explore Popular</span>
                   <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -376,7 +383,7 @@ const HomePage = () => {
               action={
                 <Link
                   to="/products?sort_by=newest"
-                  className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1 transition"
+                  className="text-xs font-semibold text-[#60A5FA] hover:text-[#93C5FD] inline-flex items-center gap-1 transition"
                 >
                   <span>Browse Full Catalog</span>
                   <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -408,16 +415,16 @@ const HomePage = () => {
               {videos.slice(0, 4).map((v) => (
                 <div
                   key={v.id}
-                  className="bg-white border border-[#D5DEE8] rounded-2xl p-6 md:p-8 flex flex-col justify-between gap-4 shadow-xs"
+                  className="bg-[#111C30] border border-[#D5DEE8] rounded-2xl p-6 md:p-8 flex flex-col justify-between gap-4 shadow-xs"
                 >
                   <div>
-                    <div className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full bg-[#EAF4FC] border border-[#BFDBFE] text-[#1D4ED8] font-semibold mb-3">
-                      <PlayCircle className="w-3.5 h-3.5 text-[#2563EB]" aria-hidden="true" />
+                    <div className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full bg-[#18243A] border border-[#BFDBFE] text-[#93C5FD] font-semibold mb-3">
+                      <PlayCircle className="w-3.5 h-3.5 text-[#60A5FA]" aria-hidden="true" />
                       <span>Video Spotlight</span>
                     </div>
-                    <h3 className="text-lg font-bold text-[#263445]">{v.title}</h3>
+                    <h3 className="text-lg font-bold text-[#F1F5F9]">{v.title}</h3>
                     {v.description && (
-                      <p className="text-xs text-[#64748B] mt-2 leading-relaxed">{v.description}</p>
+                      <p className="text-xs text-[#94A3B8] mt-2 leading-relaxed">{v.description}</p>
                     )}
                   </div>
                   <div className="flex flex-wrap items-center gap-3 pt-2">

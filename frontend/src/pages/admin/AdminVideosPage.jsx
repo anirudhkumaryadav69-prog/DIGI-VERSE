@@ -112,7 +112,7 @@ const AdminVideosPage = () => {
       {/* Create Video Form */}
       <form
         onSubmit={handleCreate}
-        className="bg-white border border-[#D5DEE8] rounded-xl p-6 mb-6 space-y-4 shadow-2xs"
+        className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-6 mb-6 space-y-4 shadow-2xs"
       >
         <AdminSectionHeader
           icon={Video}
@@ -124,7 +124,7 @@ const AdminVideosPage = () => {
           <div>
             <label
               htmlFor="video-title"
-              className="block text-[12px] font-medium text-[#263445] mb-1.5"
+              className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
             >
               Video Title *
             </label>
@@ -142,7 +142,7 @@ const AdminVideosPage = () => {
           <div>
             <label
               htmlFor="video-url"
-              className="block text-[12px] font-medium text-[#263445] mb-1.5"
+              className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
             >
               Video URL *
             </label>
@@ -160,7 +160,7 @@ const AdminVideosPage = () => {
           <div>
             <label
               htmlFor="video-description"
-              className="block text-[12px] font-medium text-[#263445] mb-1.5"
+              className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
             >
               Description
             </label>
@@ -178,7 +178,7 @@ const AdminVideosPage = () => {
             <div>
               <label
                 htmlFor="video-position"
-                className="block text-[12px] font-medium text-[#263445] mb-1.5"
+                className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
               >
                 Display Position
               </label>
@@ -198,7 +198,7 @@ const AdminVideosPage = () => {
             <div>
               <label
                 htmlFor="video-priority"
-                className="block text-[12px] font-medium text-[#263445] mb-1.5"
+                className="block text-[12px] font-medium text-[#F1F5F9] mb-1.5"
               >
                 Priority
               </label>
@@ -228,7 +228,7 @@ const AdminVideosPage = () => {
       </form>
 
       {/* Videos List */}
-      <div className="bg-white border border-[#D5DEE8] rounded-xl divide-y divide-[#E5E7EB] shadow-2xs overflow-hidden">
+      <div className="bg-[#111C30] border border-[#D5DEE8] rounded-xl divide-y divide-[#E5E7EB] shadow-2xs overflow-hidden">
         {loading ? (
           <LoadingState label="Loading advertisement videos..." />
         ) : videos.length === 0 ? (
@@ -243,17 +243,17 @@ const AdminVideosPage = () => {
           videos.map((v) => (
             <div
               key={v.id}
-              className="p-5 flex flex-wrap items-center justify-between gap-4 hover:bg-[#EDF5FC]/40 transition"
+              className="p-5 flex flex-wrap items-center justify-between gap-4 hover:bg-[#18243A]/60 transition"
             >
               <div className="space-y-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[14px] font-semibold text-[#263445]">{v.title}</span>
+                  <span className="text-[14px] font-semibold text-[#F1F5F9]">{v.title}</span>
                   <AdminStatusBadge status="processing" label={v.display_position} />
                   <AdminStatusBadge status="neutral" label={`Priority ${v.display_priority}`} />
                   <AdminStatusBadge status={v.is_active ? 'active' : 'inactive'} />
                 </div>
-                {v.description && <p className="text-[12.5px] text-[#64748B]">{v.description}</p>}
-                <p className="text-[11.5px] font-mono text-[#64748B] truncate max-w-xl">
+                {v.description && <p className="text-[12.5px] text-[#94A3B8]">{v.description}</p>}
+                <p className="text-[11.5px] font-mono text-[#94A3B8] truncate max-w-xl">
                   {v.video_url}
                 </p>
               </div>
@@ -262,7 +262,7 @@ const AdminVideosPage = () => {
                 <button
                   type="button"
                   onClick={() => handleToggleActive(v)}
-                  className="inline-flex items-center gap-1.5 rounded-lg text-[12px] font-medium px-3 py-1.5 border border-[#D5DEE8] bg-white text-[#263445] hover:border-[#93C5FD] hover:bg-[#EDF5FC] hover:text-[#2563EB] transition"
+                  className="inline-flex items-center gap-1.5 rounded-lg text-[12px] font-medium px-3 py-1.5 border border-[#D5DEE8] bg-[#111C30] text-[#F1F5F9] hover:border-[#93C5FD] hover:bg-[#18243A] hover:text-[#60A5FA] transition"
                 >
                   {v.is_active ? (
                     <>
@@ -279,7 +279,7 @@ const AdminVideosPage = () => {
                 <button
                   type="button"
                   onClick={() => setConfirmDelete(v)}
-                  className="p-2 rounded-lg border border-red-200 bg-white text-[#DC2626] hover:bg-red-50 transition"
+                  className="p-2 rounded-lg border border-red-200 bg-[#111C30] text-red-300 hover:bg-red-950/60 transition"
                   title="Delete Video"
                   aria-label={`Delete video ${v.title}`}
                 >

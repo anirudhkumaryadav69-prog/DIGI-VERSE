@@ -85,13 +85,13 @@ const AdminSellersPage = () => {
         {error && <ErrorAlert message={error} onRetry={loadSellers} />}
         <ToastBanner toast={toast} onDismiss={() => setToast(null)} />
 
-        <div className="bg-white border border-[#D5DEE8] rounded-xl p-4 flex flex-col sm:flex-row gap-3 justify-between shadow-2xs">
+        <div className="bg-[#111C30] border border-[#D5DEE8] rounded-xl p-4 flex flex-col sm:flex-row gap-3 justify-between shadow-2xs">
           <div className="relative flex-1 max-w-md">
             <label htmlFor="admin-sellers-search" className="sr-only">
               Search sellers
             </label>
             <Search
-              className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2"
+              className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2"
               aria-hidden="true"
             />
             <input
@@ -124,7 +124,7 @@ const AdminSellersPage = () => {
           </select>
         </div>
 
-        <div className="bg-white border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
+        <div className="bg-[#111C30] border border-[#D5DEE8] rounded-xl overflow-hidden shadow-2xs">
           {loading ? (
             <LoadingState label="Loading seller applications..." />
           ) : !data.items.length ? (
@@ -139,7 +139,7 @@ const AdminSellersPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#F8FAFC] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#475569]">
+                  <tr className="bg-[#18243A] border-b border-[#D5DEE8] text-[11.5px] font-semibold text-[#CBD5E1]">
                     <th className="py-3 px-4">Storefront &amp; Owner</th>
                     <th className="py-3 px-4">Business &amp; Country</th>
                     <th className="py-3 px-4">Catalog</th>
@@ -149,48 +149,48 @@ const AdminSellersPage = () => {
                 </thead>
                 <tbody className="divide-y divide-[#E5E7EB] text-[13px]">
                   {data.items.map((s) => (
-                    <tr key={s.id} className="hover:bg-[#EDF5FC]/45 transition">
+                    <tr key={s.id} className="hover:bg-[#18243A]/70 transition">
                       <td className="py-3.5 px-4">
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-[#263445]">{s.store_name}</span>
+                            <span className="font-semibold text-[#F1F5F9]">{s.store_name}</span>
                             {s.application_status === 'approved' && (
                               <Link
                                 to={`/store/${s.store_slug}`}
                                 title="Open public storefront"
-                                className="text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center"
+                                className="text-[#60A5FA] hover:text-[#93C5FD] inline-flex items-center"
                               >
                                 <ExternalLink className="w-3.5 h-3.5" />
                               </Link>
                             )}
                           </div>
-                          <p className="text-[11.5px] font-mono text-[#64748B]">/{s.store_slug}</p>
-                          <p className="text-[12px] text-[#64748B]">
+                          <p className="text-[11.5px] font-mono text-[#94A3B8]">/{s.store_slug}</p>
+                          <p className="text-[12px] text-[#94A3B8]">
                             {s.seller_display_name} · {s.customer_email || s.contact_email}
                           </p>
                           {s.application_description && (
-                            <p className="text-[12px] text-[#475569] line-clamp-2 max-w-md pt-1">
+                            <p className="text-[12px] text-[#CBD5E1] line-clamp-2 max-w-md pt-1">
                               {s.application_description}
                             </p>
                           )}
                         </div>
                       </td>
                       <td className="py-3.5 px-4">
-                        <p className="text-[#263445] font-medium">{s.business_type}</p>
-                        <p className="text-[12px] text-[#64748B]">{s.country}</p>
+                        <p className="text-[#F1F5F9] font-medium">{s.business_type}</p>
+                        <p className="text-[12px] text-[#94A3B8]">{s.country}</p>
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-[12.5px] tabular-nums text-[#263445]">
+                      <td className="py-3.5 px-4 font-mono text-[12.5px] tabular-nums text-[#F1F5F9]">
                         {s.published_product_count} live / {s.product_count} total
                       </td>
                       <td className="py-3.5 px-4">
                         <AdminStatusBadge status={s.application_status} />
                         {s.rejection_reason && (
-                          <p className="text-[11px] text-[#DC2626] mt-1 max-w-44">
+                          <p className="text-[11px] text-red-300 mt-1 max-w-44">
                             {s.rejection_reason}
                           </p>
                         )}
                         {s.suspension_reason && (
-                          <p className="text-[11px] text-[#64748B] mt-1 max-w-44">
+                          <p className="text-[11px] text-[#94A3B8] mt-1 max-w-44">
                             {s.suspension_reason}
                           </p>
                         )}
@@ -217,7 +217,7 @@ const AdminSellersPage = () => {
                                 setReasonInput('');
                                 setModalAction({ seller: s, action: 'reject' });
                               }}
-                              className="px-2.5 py-1.5 rounded-lg bg-white border border-red-200 text-[#DC2626] hover:bg-red-50 text-[12px] font-medium inline-flex items-center gap-1 transition disabled:opacity-50"
+                              className="px-2.5 py-1.5 rounded-lg bg-[#111C30] border border-red-200 text-red-300 hover:bg-red-950/60 text-[12px] font-medium inline-flex items-center gap-1 transition disabled:opacity-50"
                             >
                               <XCircle className="w-3.5 h-3.5" />
                               <span>Reject</span>
@@ -231,7 +231,7 @@ const AdminSellersPage = () => {
                                 setReasonInput('');
                                 setModalAction({ seller: s, action: 'suspend' });
                               }}
-                              className="px-2.5 py-1.5 rounded-lg bg-white border border-red-200 text-[#DC2626] hover:bg-red-50 text-[12px] font-medium inline-flex items-center gap-1 transition disabled:opacity-50"
+                              className="px-2.5 py-1.5 rounded-lg bg-[#111C30] border border-red-200 text-red-300 hover:bg-red-950/60 text-[12px] font-medium inline-flex items-center gap-1 transition disabled:opacity-50"
                             >
                               <ShieldAlert className="w-3.5 h-3.5" />
                               <span>Suspend</span>

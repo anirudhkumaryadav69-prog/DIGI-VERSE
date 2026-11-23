@@ -176,9 +176,9 @@ const ProductDetailPage = () => {
 
       <nav
         aria-label="Breadcrumb"
-        className="mb-6 flex flex-wrap items-center gap-1.5 text-[13px] font-medium text-[#64748B]"
+        className="mb-6 flex flex-wrap items-center gap-1.5 text-[13px] font-medium text-[#94A3B8]"
       >
-        <Link to="/" className="hover:text-[#0F172A] transition-colors">
+        <Link to="/" className="hover:text-[#F1F5F9] transition-colors">
           Home
         </Link>
         <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" aria-hidden="true" />
@@ -186,7 +186,7 @@ const ProductDetailPage = () => {
           <>
             <Link
               to={`/categories/${product.category.slug}`}
-              className="hover:text-[#0F172A] transition-colors"
+              className="hover:text-[#F1F5F9] transition-colors"
             >
               {product.category.name}
             </Link>
@@ -194,13 +194,13 @@ const ProductDetailPage = () => {
           </>
         ) : (
           <>
-            <Link to="/products" className="hover:text-[#0F172A] transition-colors">
+            <Link to="/products" className="hover:text-[#F1F5F9] transition-colors">
               Catalog
             </Link>
             <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" aria-hidden="true" />
           </>
         )}
-        <span className="text-[#0F172A] font-semibold truncate max-w-xs sm:max-w-md">
+        <span className="text-[#F1F5F9] font-semibold truncate max-w-xs sm:max-w-md">
           {product ? product.name : 'Product details'}
         </span>
       </nav>
@@ -238,7 +238,7 @@ const ProductDetailPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             {/* Gallery Column */}
             <div className="lg:col-span-7 space-y-4">
-              <div className="aspect-16/10 bg-[#F8FAFC] border border-[#E5E7EB] rounded-2xl overflow-hidden flex items-center justify-center shadow-xs">
+              <div className="aspect-16/10 bg-[#18243A] border border-[#E5E7EB] rounded-2xl overflow-hidden flex items-center justify-center shadow-xs">
                 {activeImage ? (
                   <img
                     src={activeImage}
@@ -285,17 +285,17 @@ const ProductDetailPage = () => {
 
               {/* What the Customer Receives After Purchase */}
               <section className="dv-card p-6 space-y-4">
-                <h2 className="text-[13px] font-semibold text-[#0F172A]">
+                <h2 className="text-[13px] font-semibold text-[#F1F5F9]">
                   What you receive after verified purchase
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-[#64748B]">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-[#94A3B8]">
                   <div className="flex items-start gap-2.5">
                     <Download
-                      className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5"
+                      className="w-4 h-4 text-[#60A5FA] shrink-0 mt-0.5"
                       aria-hidden="true"
                     />
                     <div>
-                      <p className="font-semibold text-[#263445]">Instant Digital Access</p>
+                      <p className="font-semibold text-[#F1F5F9]">Instant Digital Access</p>
                       <p className="mt-0.5 leading-relaxed">
                         Unlocked immediately in your Downloads Library as soon as payment is
                         verified.
@@ -304,11 +304,11 @@ const ProductDetailPage = () => {
                   </div>
                   <div className="flex items-start gap-2.5">
                     <ShieldCheck
-                      className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5"
+                      className="w-4 h-4 text-[#60A5FA] shrink-0 mt-0.5"
                       aria-hidden="true"
                     />
                     <div>
-                      <p className="font-semibold text-[#263445]">Signed Delivery Links</p>
+                      <p className="font-semibold text-[#F1F5F9]">Signed Delivery Links</p>
                       <p className="mt-0.5 leading-relaxed">
                         Generate fresh, authenticated short-lived download tokens from your account.
                       </p>
@@ -316,11 +316,11 @@ const ProductDetailPage = () => {
                   </div>
                   <div className="flex items-start gap-2.5">
                     <FileCheck2
-                      className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5"
+                      className="w-4 h-4 text-[#60A5FA] shrink-0 mt-0.5"
                       aria-hidden="true"
                     />
                     <div>
-                      <p className="font-semibold text-[#263445]">Official Tax/Purchase Invoice</p>
+                      <p className="font-semibold text-[#F1F5F9]">Official Tax/Purchase Invoice</p>
                       <p className="mt-0.5 leading-relaxed">
                         Permanent order snapshot and printable purchase invoice stored in your
                         profile.
@@ -348,14 +348,14 @@ const ProductDetailPage = () => {
                 )}
               </div>
 
-              <h1 className="text-[28px] sm:text-[34px] leading-[1.2] font-bold tracking-tight text-[#0F172A]">
+              <h1 className="text-[28px] sm:text-[34px] leading-[1.2] font-bold tracking-tight text-[#F1F5F9]">
                 {product.name}
               </h1>
 
               {/* Seller Storefront Attribution */}
-              <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-white border border-[#E5E7EB]">
+              <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-[#111C30] border border-[#E5E7EB]">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 rounded-xl bg-[#F8FAFC] border border-[#E5E7EB] text-[#2563EB] flex items-center justify-center shrink-0 overflow-hidden">
+                  <div className="w-9 h-9 rounded-xl bg-[#18243A] border border-[#E5E7EB] text-[#60A5FA] flex items-center justify-center shrink-0 overflow-hidden">
                     {product.seller?.logo_url ? (
                       <img
                         src={product.seller.logo_url}
@@ -367,25 +367,25 @@ const ProductDetailPage = () => {
                     )}
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[11px] font-medium text-[#64748B]">
+                    <p className="text-[11px] font-medium text-[#94A3B8]">
                       {product.seller?.store_slug ? 'Verified creator storefront' : 'Platform catalog'}
                     </p>
                     {product.seller?.store_slug ? (
                       <Link
                         to={`/store/${product.seller.store_slug}`}
-                        className="text-[14px] font-semibold text-[#0F172A] hover:text-[#1D4ED8] hover:underline truncate block"
+                        className="text-[14px] font-semibold text-[#F1F5F9] hover:text-[#93C5FD] hover:underline truncate block"
                       >
                         {product.seller.store_name}
                       </Link>
                     ) : (
-                      <p className="text-[14px] font-semibold text-[#0F172A]">DIGI-VERSE Official</p>
+                      <p className="text-[14px] font-semibold text-[#F1F5F9]">DIGI-VERSE Official</p>
                     )}
                   </div>
                 </div>
                 {product.seller?.store_slug && (
                   <Link
                     to={`/store/${product.seller.store_slug}`}
-                    className="text-[13px] font-semibold text-[#2563EB] hover:text-[#1D4ED8] hover:underline shrink-0"
+                    className="text-[13px] font-semibold text-[#60A5FA] hover:text-[#93C5FD] hover:underline shrink-0"
                   >
                     Visit store
                   </Link>
@@ -395,7 +395,7 @@ const ProductDetailPage = () => {
               {/* Pricing & Purchase Actions Card */}
               <div className="dv-card p-6 space-y-4">
                 <div className="flex items-baseline gap-3 tabular-nums">
-                  <span className="text-[32px] leading-none font-bold text-[#0F172A]">
+                  <span className="text-[32px] leading-none font-bold text-[#F1F5F9]">
                     {formatINR(product.effective_price)}
                   </span>
                   {product.is_on_sale && (
@@ -406,8 +406,8 @@ const ProductDetailPage = () => {
                 </div>
 
                 {product.is_on_sale && product.active_discount && (
-                  <div className="flex items-center gap-2 text-[13px] text-[#1D4ED8] bg-[#F8FAFC] border border-[#BFDBFE] rounded-xl px-3.5 py-2.5">
-                    <Sparkles className="w-4 h-4 shrink-0 text-[#2563EB]" aria-hidden="true" />
+                  <div className="flex items-center gap-2 text-[13px] text-[#93C5FD] bg-[#18243A] border border-[#BFDBFE] rounded-xl px-3.5 py-2.5">
+                    <Sparkles className="w-4 h-4 shrink-0 text-[#60A5FA]" aria-hidden="true" />
                     <span>
                       Limited-time deal: Save{' '}
                       <strong>{formatINR(product.active_discount.discount_amount)}</strong> (
@@ -416,7 +416,7 @@ const ProductDetailPage = () => {
                   </div>
                 )}
 
-                <div className="flex items-center gap-2 text-[13px] text-emerald-700 font-medium">
+                <div className="flex items-center gap-2 text-[13px] text-emerald-300 font-medium">
                   <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
                   <span>
                     {product.is_available
@@ -429,7 +429,7 @@ const ProductDetailPage = () => {
                   <div className="flex items-center gap-2 text-[13px]">
                     <label
                       htmlFor="product-quantity"
-                      className="font-medium text-[#64748B]"
+                      className="font-medium text-[#94A3B8]"
                     >
                       Qty
                     </label>
@@ -461,7 +461,7 @@ const ProductDetailPage = () => {
                     onClick={() => handleAddToWishlist(product)}
                     aria-label="Save to Wishlist"
                     title="Save to wishlist"
-                    className="h-11 w-11 inline-flex items-center justify-center rounded-xl border border-[#E5E7EB] bg-white text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#1D4ED8] hover:border-[#CBD5E1] transition"
+                    className="h-11 w-11 inline-flex items-center justify-center rounded-xl border border-[#E5E7EB] bg-[#111C30] text-[#94A3B8] hover:bg-[#18243A] hover:text-[#93C5FD] hover:border-[#CBD5E1] transition"
                   >
                     <Heart className="w-4 h-4" aria-hidden="true" />
                   </button>
@@ -469,17 +469,17 @@ const ProductDetailPage = () => {
               </div>
 
               {product.short_description && (
-                <p className="text-[15px] text-[#334155] font-medium leading-relaxed">
+                <p className="text-[15px] text-[#CBD5E1] font-medium leading-relaxed">
                   {product.short_description}
                 </p>
               )}
 
               {product.main_description && (
                 <div className="space-y-2">
-                  <h2 className="text-[13px] font-semibold text-[#0F172A]">
+                  <h2 className="text-[13px] font-semibold text-[#F1F5F9]">
                     Overview
                   </h2>
-                  <p className="text-[14px] text-[#475569] leading-relaxed whitespace-pre-line">
+                  <p className="text-[14px] text-[#CBD5E1] leading-relaxed whitespace-pre-line">
                     {product.main_description}
                   </p>
                 </div>
@@ -488,16 +488,16 @@ const ProductDetailPage = () => {
               {/* Product Metadata Attributes (Sanitized on Backend) */}
               {metadataEntries.length > 0 && (
                 <div className="space-y-2.5 pt-4 border-t border-[#E5E7EB]">
-                  <h2 className="text-[13px] font-semibold text-[#0F172A]">
+                  <h2 className="text-[13px] font-semibold text-[#F1F5F9]">
                     Specifications
                   </h2>
                   <dl className="dv-card divide-y divide-[#F1F5F9] text-[13px] overflow-hidden">
                     {metadataEntries.map(([key, value]) => (
                       <div key={key} className="px-4 py-2.5 flex justify-between gap-4">
-                        <dt className="capitalize font-medium text-[#64748B]">
+                        <dt className="capitalize font-medium text-[#94A3B8]">
                           {key.replace(/_/g, ' ')}
                         </dt>
-                        <dd className="font-medium text-[#0F172A] text-right">
+                        <dd className="font-medium text-[#F1F5F9] text-right">
                           {Array.isArray(value)
                             ? value.join(', ')
                             : typeof value === 'object'
@@ -512,10 +512,10 @@ const ProductDetailPage = () => {
 
               {product.detailed_description && (
                 <div className="space-y-2 pt-4 border-t border-[#E5E7EB]">
-                  <h2 className="text-[13px] font-semibold text-[#0F172A]">
+                  <h2 className="text-[13px] font-semibold text-[#F1F5F9]">
                     What&apos;s included &amp; details
                   </h2>
-                  <p className="text-[13px] text-[#475569] leading-relaxed whitespace-pre-line">
+                  <p className="text-[13px] text-[#CBD5E1] leading-relaxed whitespace-pre-line">
                     {product.detailed_description}
                   </p>
                 </div>
