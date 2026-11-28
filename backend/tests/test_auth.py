@@ -481,3 +481,43 @@ def test_csrf_protection_enforced_on_cookie_authenticated_mutations(api_client):
     no_csrf_res = api_client.patch("/api/auth/profile", json={"full_name": "Blocked Name"})
     assert no_csrf_res.status_code == 403
     assert "csrf" in no_csrf_res.json()["detail"].lower()
+
+
+def test_customer_phone_change_upstream_failure_does_not_persist_pending_phone(api_client, db, monkeypatch):
+    from app.models.enums import OTPPurpose
+    from app.services import customer_auth_service
+    from app.services.sms_service import SMSDeliveryResult
+
+    reg_res, _, _, _ = _register_sample_customer(api_client)
+    assert reg_res.status_code == 201
+    cust_id = reg_res.json()["customer"]["id"]
+    headers = _csrf_headers(api_client)
+    new_phone = "+919711223355"
+
+    class _FailingProvider:
+        def send_otp(self, phone_number: str, otp_code: str, expires_minutes: int) -> SMSDeliveryResult:
+            return SMSDeliveryResult(
+                status="failed",
+                provider="whatsapp",
+                safe_detail="WhatsApp OTP request was rejected.",
+            )
+
+    monkeypatch.setattr(customer_auth_service, "get_sms_provider", lambda: _FailingProvider())
+
+    fail_res = api_client.post(
+        "/api/auth/phone/change",
+        json={"phone_number": new_phone},
+        headers=headers,
+    )
+    assert fail_res.status_code == 502
+
+    db.expire_all()
+    cust = db.get(Customer, uuid.UUID(cust_id))
+    assert cust.pending_phone_number is None
+    pending_challenges = db.scalars(
+        select(PhoneOTPChallenge).where(
+            PhoneOTPChallenge.customer_id == cust.id,
+            PhoneOTPChallenge.purpose == OTPPurpose.PHONE_CHANGE,
+        )
+    ).all()
+    assert pending_challenges == []

@@ -665,3 +665,136 @@ def test_mixed_seller_checkout_isolation_retention_and_refund_safety(
     api_client.cookies.update(cookies_a)
     r_ov_after_refund = api_client.get("/api/seller/overview").json()
     assert Decimal(str(r_ov_after_refund["gross_product_sales"])) == Decimal("0.00")
+
+
+def test_wishlist_visibility_respects_moderation_and_seller_suspension(api_client, db, make_category):
+    from app.models.catalog import Product
+
+    cat = make_category(name="Wishlist Vis Cat", slug="wishlist-vis-cat", is_active=True)
+    headers_s, cookies_s, seller = _apply_and_approve_seller(
+        api_client,
+        db,
+        name="Vis Seller",
+        store_name="Vis Studio",
+        store_slug="vis-studio",
+    )
+
+    api_client.cookies.clear()
+    api_client.cookies.update(cookies_s)
+    r_prod = api_client.post(
+        "/api/seller/products",
+        json={
+            "name": "Vis Icon Set",
+            "slug": "vis-icon-set",
+            "category_id": str(cat.id),
+            "original_price": "299.00",
+        },
+        headers=headers_s,
+    )
+    assert r_prod.status_code == 201
+    prod_id = uuid.UUID(r_prod.json()["id"])
+
+    # Upload private asset, submit for review & approve product so buyer can wishlist it
+    vis_zip = _make_zip_bytes("vis-kit.txt", b"Visibility Private Asset")
+    assert (
+        api_client.post(
+            f"/api/seller/products/{prod_id}/asset",
+            files={"file": ("vis-kit.zip", io.BytesIO(vis_zip), "application/zip")},
+            headers=headers_s,
+        ).status_code
+        == 201
+    )
+    assert (
+        api_client.patch(
+            f"/api/seller/products/{prod_id}/status",
+            json={"action": "submit_for_review"},
+            headers=headers_s,
+        ).status_code
+        == 200
+    )
+    api_client.cookies.clear()
+    admin_headers = _login_admin(api_client, db)
+    assert (
+        api_client.post(
+            f"/api/admin/products/{prod_id}/moderate",
+            json={"action": "approve"},
+            headers=admin_headers,
+        ).status_code
+        == 200
+    )
+
+    # Buyer wishlists approved product -> is_available True
+    api_client.cookies.clear()
+    buyer_headers, _, buyer_cookies = _register_customer(api_client, name="Wishlist Buyer")
+    r_w_add = api_client.post(f"/api/wishlist/{prod_id}", headers=buyer_headers)
+    assert r_w_add.status_code == 201
+    assert r_w_add.json()["items"][0]["is_available"] is True
+
+    # Unapprove / set product to pending_review -> wishlist shows is_available False
+    prod_row = db.get(Product, prod_id)
+    prod_row.approval_status = ProductApprovalStatus.PENDING_REVIEW
+    db.flush()
+    r_w_unapproved = api_client.get("/api/wishlist")
+    assert r_w_unapproved.status_code == 200
+    assert r_w_unapproved.json()["items"][0]["is_available"] is False
+
+    # Re-publish product, then suspend seller -> wishlist shows is_available False
+    prod_row.approval_status = ProductApprovalStatus.PUBLISHED
+    db.flush()
+    api_client.cookies.clear()
+    admin_headers = _login_admin(api_client, db)
+    assert (
+        api_client.post(
+            f"/api/admin/sellers/{seller['id']}/review",
+            json={"action": "suspend", "reason": "Audit review"},
+            headers=admin_headers,
+        ).status_code
+        == 200
+    )
+    api_client.cookies.clear()
+    api_client.cookies.update(buyer_cookies)
+    r_w_suspended = api_client.get("/api/wishlist")
+    assert r_w_suspended.status_code == 200
+    assert r_w_suspended.json()["items"][0]["is_available"] is False
+
+
+def test_seller_branding_image_upload_per_customer_rate_limit(api_client):
+    png_bytes = (
+        b"\x89PNG\r\n\x1a\n"
+        b"\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89"
+        b"\x00\x00\x00\nIDATx\x9cc\x00\x01\x00\x00\x05\x00\x01\r\n-\xb4\x00\x00\x00\x00IEND\xaeB`\x82"
+    )
+    # Unauthenticated upload -> 401
+    assert (
+        api_client.post(
+            "/api/seller/branding-image",
+            files={"file": ("logo.png", io.BytesIO(png_bytes), "image/png")},
+        ).status_code
+        == 401
+    )
+
+    h1, _, _ = _register_customer(api_client, name="Brand Uploader 1")
+    for _ in range(10):
+        r_ok = api_client.post(
+            "/api/seller/branding-image",
+            files={"file": ("logo.png", io.BytesIO(png_bytes), "image/png")},
+            headers=h1,
+        )
+        assert r_ok.status_code == 200
+
+    r_limited = api_client.post(
+        "/api/seller/branding-image",
+        files={"file": ("logo.png", io.BytesIO(png_bytes), "image/png")},
+        headers=h1,
+    )
+    assert r_limited.status_code == 429
+
+    # A second customer retains their own quota
+    api_client.cookies.clear()
+    h2, _, _ = _register_customer(api_client, name="Brand Uploader 2")
+    r_other = api_client.post(
+        "/api/seller/branding-image",
+        files={"file": ("logo.png", io.BytesIO(png_bytes), "image/png")},
+        headers=h2,
+    )
+    assert r_other.status_code == 200

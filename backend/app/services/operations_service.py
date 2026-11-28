@@ -70,6 +70,7 @@ from app.schemas.operations import (
     WorkerHeartbeatResponse,
 )
 from app.services.campaign_worker import (
+    ACTIVE_CAMPAIGN_PROCESSING_STATUSES,
     _check_live_recipient_consent,
     _execute_provider_send,
     _persist_job_outcome,
@@ -179,9 +180,7 @@ def get_advanced_dashboard_overview(
     active_email_camp = (
         db.scalar(
             select(func.count(EmailCampaign.id)).where(
-                EmailCampaign.status.in_(
-                    [CampaignStatus.SCHEDULED, CampaignStatus.SENDING, CampaignStatus.COMPLETED]
-                )
+                EmailCampaign.status.in_(ACTIVE_CAMPAIGN_PROCESSING_STATUSES)
             )
         )
         or 0
@@ -189,9 +188,7 @@ def get_advanced_dashboard_overview(
     active_wa_camp = (
         db.scalar(
             select(func.count(WhatsAppCampaign.id)).where(
-                WhatsAppCampaign.status.in_(
-                    [CampaignStatus.SCHEDULED, CampaignStatus.SENDING, CampaignStatus.COMPLETED]
-                )
+                WhatsAppCampaign.status.in_(ACTIVE_CAMPAIGN_PROCESSING_STATUSES)
             )
         )
         or 0

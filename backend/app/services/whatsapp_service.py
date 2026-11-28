@@ -8,10 +8,12 @@ Security & reliability guarantees:
   headers; pre-send `ConnectTimeout`/`ConnectError` are safely retried, whereas post-submission read
   timeouts are flagged ambiguous (`is_ambiguous_timeout=True`) rather than blindly re-sent.
 """
+import copy
 import logging
 import re
 import uuid
 from abc import ABC, abstractmethod
+from decimal import Decimal
 from typing import Any, Optional
 
 import httpx
@@ -60,6 +62,118 @@ def _parse_retry_after(header_value: Optional[str]) -> Optional[int]:
     return None
 
 
+def _resolve_template_language(
+    template_language: Optional[str],
+    metadata: Optional[dict[str, Any]],
+) -> str:
+    if template_language and str(template_language).strip():
+        return str(template_language).strip()
+    if isinstance(metadata, dict):
+        meta_lang = metadata.get("template_language") or metadata.get("language_code")
+        if isinstance(meta_lang, str) and meta_lang.strip():
+            return meta_lang.strip()
+    configured = (settings.WHATSAPP_TEMPLATE_LANGUAGE or "").strip()
+    return configured or "en_US"
+
+
+def _normalize_template_parameter_item(item: Any) -> dict[str, Any]:
+    """Validate and normalize a single Meta WhatsApp Cloud API body parameter."""
+    if isinstance(item, dict):
+        raw_type = item.get("type")
+        if not isinstance(raw_type, str) or not raw_type.strip():
+            raise WhatsAppDeliveryError(
+                "Invalid template_parameters entry: parameter dictionary requires a non-empty 'type'.",
+                code="invalid_template_parameters",
+                retryable=False,
+            )
+        param_type = raw_type.strip()
+        param_name = item.get("parameter_name")
+        if param_name is not None and (not isinstance(param_name, str) or not param_name.strip()):
+            raise WhatsAppDeliveryError(
+                "Invalid template_parameters entry: 'parameter_name' must be a non-empty string.",
+                code="invalid_template_parameters",
+                retryable=False,
+            )
+
+        if param_type == "text":
+            text_val = item.get("text")
+            if not isinstance(text_val, str) or not text_val.strip():
+                raise WhatsAppDeliveryError(
+                    "Invalid template_parameters entry: 'text' parameter requires a non-empty string.",
+                    code="invalid_template_parameters",
+                    retryable=False,
+                )
+            normalized: dict[str, Any] = {"type": "text", "text": text_val.strip()}
+            if param_name is not None:
+                normalized["parameter_name"] = param_name.strip()
+            return normalized
+
+        if param_type in {"currency", "date_time"}:
+            nested = item.get(param_type)
+            if not isinstance(nested, dict) or not nested:
+                raise WhatsAppDeliveryError(
+                    f"Invalid template_parameters entry: '{param_type}' parameter requires a non-empty object.",
+                    code="invalid_template_parameters",
+                    retryable=False,
+                )
+            normalized = copy.deepcopy(item)
+            normalized["type"] = param_type
+            if param_name is not None:
+                normalized["parameter_name"] = param_name.strip()
+            return normalized
+
+        raise WhatsAppDeliveryError(
+            f"Unsupported WhatsApp body template parameter type: '{param_type}'.",
+            code="invalid_template_parameters",
+            retryable=False,
+        )
+
+    if isinstance(item, bool) or item is None or isinstance(item, (list, tuple, set)):
+        raise WhatsAppDeliveryError(
+            "Invalid template_parameters entry: unsupported parameter value type.",
+            code="invalid_template_parameters",
+            retryable=False,
+        )
+
+    if isinstance(item, (str, int, float, Decimal)):
+        text_val = str(item).strip()
+        if not text_val:
+            raise WhatsAppDeliveryError(
+                "Invalid template_parameters entry: text parameter cannot be empty.",
+                code="invalid_template_parameters",
+                retryable=False,
+            )
+        return {"type": "text", "text": text_val}
+
+    raise WhatsAppDeliveryError(
+        "Invalid template_parameters entry: unsupported parameter value type.",
+        code="invalid_template_parameters",
+        retryable=False,
+    )
+
+
+def _build_template_body_parameters(
+    content: str,
+    metadata: Optional[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    if isinstance(metadata, dict) and "template_parameters" in metadata:
+        raw_params = metadata.get("template_parameters")
+        if raw_params is not None:
+            if not isinstance(raw_params, (list, tuple)):
+                raise WhatsAppDeliveryError(
+                    "Invalid template_parameters: expected a list or tuple of parameter values.",
+                    code="invalid_template_parameters",
+                    retryable=False,
+                )
+            if len(raw_params) > 0:
+                return [_normalize_template_parameter_item(item) for item in raw_params]
+
+    cleaned_content = (content or "").strip()
+    if not cleaned_content:
+        return []
+    return [{"type": "text", "text": cleaned_content}]
+
+
 class WhatsAppProvider(ABC):
     @abstractmethod
     def send_template_message(
@@ -69,6 +183,7 @@ class WhatsAppProvider(ABC):
         content: str,
         metadata: Optional[dict[str, Any]] = None,
         idempotency_key: Optional[str] = None,
+        template_language: Optional[str] = None,
     ) -> str:
         """Send an approved WhatsApp template message and return the provider message ID."""
 
@@ -88,6 +203,7 @@ class DevelopmentWhatsAppProvider(WhatsAppProvider):
         content: str,
         metadata: Optional[dict[str, Any]] = None,
         idempotency_key: Optional[str] = None,
+        template_language: Optional[str] = None,
     ) -> str:
         if settings.is_production:
             raise RuntimeError("DevelopmentWhatsAppProvider cannot be used in production.")
@@ -108,15 +224,18 @@ class DevelopmentWhatsAppProvider(WhatsAppProvider):
                 code="simulated_failure",
                 retryable=True,
             )
+        body_parameters = _build_template_body_parameters(content, metadata)
         msg_id = f"wamid_dev_{uuid.uuid4().hex[:16]}"
         self.sent_messages.append(
             {
                 "phone_number": cleaned_phone,
                 "approved_template_name": approved_template_name,
+                "template_language": _resolve_template_language(template_language, metadata),
+                "template_parameters": copy.deepcopy(body_parameters),
                 "content": content,
                 "provider_message_id": msg_id,
                 "idempotency_key": idempotency_key,
-                "metadata": metadata or {},
+                "metadata": copy.deepcopy(metadata) if isinstance(metadata, dict) else {},
             }
         )
         return msg_id
@@ -143,6 +262,7 @@ class MetaWhatsAppCloudProvider(WhatsAppProvider):
         content: str,
         metadata: Optional[dict[str, Any]] = None,
         idempotency_key: Optional[str] = None,
+        template_language: Optional[str] = None,
     ) -> str:
         cleaned_phone = (phone_number or "").strip()
         if not E164_PHONE_RE.match(cleaned_phone):
@@ -160,14 +280,26 @@ class MetaWhatsAppCloudProvider(WhatsAppProvider):
                 retryable=False,
             )
 
+        language_code = _resolve_template_language(template_language, metadata)
+        body_parameters = _build_template_body_parameters(content, metadata)
+        template_payload: dict[str, Any] = {
+            "name": approved_template_name,
+            "language": {"code": language_code},
+        }
+        if body_parameters:
+            template_payload["components"] = [
+                {
+                    "type": "body",
+                    "parameters": body_parameters,
+                }
+            ]
+
         payload = {
             "messaging_product": "whatsapp",
+            "recipient_type": "individual",
             "to": cleaned_phone.lstrip("+"),
             "type": "template",
-            "template": {
-                "name": approved_template_name,
-                "language": {"code": "en"},
-            },
+            "template": template_payload,
         }
         timeout_s = float(settings.CAMPAIGN_PROVIDER_TIMEOUT_SECONDS or 10.0)
         try:
@@ -299,6 +431,7 @@ class DisabledWhatsAppProvider(WhatsAppProvider):
         content: str,
         metadata: Optional[dict[str, Any]] = None,
         idempotency_key: Optional[str] = None,
+        template_language: Optional[str] = None,
     ) -> str:
         log_background_event("whatsapp.disabled_dispatch", level=logging.WARNING)
         raise WhatsAppDeliveryError(

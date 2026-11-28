@@ -57,6 +57,7 @@ from app.schemas.commerce import (
 from app.services.catalog_service import (
     _resolve_primary_image_url,
     compute_product_pricing,
+    is_product_publicly_visible,
     record_admin_audit,
 )
 from app.services.asset_storage_service import AssetStorageError, get_asset_storage
@@ -157,6 +158,9 @@ def get_customer_wishlist(db: Session, customer: Customer) -> WishlistResponse:
         select(Wishlist)
         .options(
             selectinload(Wishlist.product).selectinload(Product.category),
+            selectinload(Wishlist.product)
+            .selectinload(Product.seller)
+            .selectinload(SellerProfile.customer),
             selectinload(Wishlist.product).selectinload(Product.images),
             selectinload(Wishlist.product).selectinload(Product.sales),
         )
@@ -172,7 +176,7 @@ def get_customer_wishlist(db: Session, customer: Customer) -> WishlistResponse:
         if not p:
             continue
         eff_price, is_live_sale, active_disc = compute_product_pricing(p, now)
-        available = bool(p.is_active and p.category and p.category.is_active)
+        available = is_product_publicly_visible(p)
         items.append(
             WishlistItemResponse(
                 id=w.id,

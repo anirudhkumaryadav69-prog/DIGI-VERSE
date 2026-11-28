@@ -498,10 +498,10 @@ def test_cookie_security_attributes_and_vercel_json_routing_preserved(monkeypatc
     assert rewrites[api_idx]["destination"] == "https://digi-verse-backend.onrender.com/api/:path*"
 
     spa_rewrite = rewrites[spa_idx]
-    assert spa_rewrite["source"] == "/((?!api/).*)"
+    assert spa_rewrite["source"] == "/((?!api(?:/|$)).*)"
     assert spa_rewrite["destination"] == "/index.html"
 
-    for api_path in ("/api/health", "/api/ready", "/api/auth/me", "/api/products", "/api/banners", "/api/uploads/images/sample.png"):
+    for api_path in ("/api", "/api/health", "/api/ready", "/api/auth/login", "/api/auth/me", "/api/products", "/api/banners", "/api/uploads/images/sample.png"):
         assert re.fullmatch(spa_rewrite["source"], api_path) is None
     for api_proxy_path in ("/api", "/api/health", "/api/ready", "/api/auth/me", "/api/uploads/images/sample.png"):
         assert re.fullmatch(r"/api(?:/.*)?", api_proxy_path) is not None

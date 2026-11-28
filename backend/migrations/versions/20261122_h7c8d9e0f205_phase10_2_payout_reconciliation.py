@@ -105,5 +105,5 @@ def downgrade() -> None:
         "financial_transaction_type_valid",
         "financial_transactions",
         "transaction_type IN ('payment_capture', 'refund_reversal', 'payment_reversal', "
-        "'financial_correction', 'payout_settlement')",
+        "'financial_correction')",
     )

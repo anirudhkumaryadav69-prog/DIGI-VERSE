@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.permissions import get_current_customer, require_admin, require_approved_seller
-from app.core.rate_limit import get_client_ip
+from app.core.rate_limit import get_client_ip, rate_limit_customer
 from app.models.admin import Admin
 from app.models.customer import Customer
 from app.models.enums import (
@@ -106,7 +106,12 @@ def seller_submit_application(
     return created
 
 
-@router.post("/branding-image")
+@router.post(
+    "/branding-image",
+    dependencies=[
+        Depends(rate_limit_customer("seller_branding_upload", max_requests=10, window_seconds=300))
+    ],
+)
 def seller_upload_branding_image(
     file: UploadFile = File(...),
     customer: Customer = Depends(get_current_customer),

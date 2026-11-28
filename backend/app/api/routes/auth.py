@@ -222,11 +222,13 @@ def send_phone_otp(
             detail="OTP delivery is disabled or misconfigured.",
         ) from exc
     if otp_delivery.status == "failed":
+        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=otp_delivery.safe_detail or "OTP delivery provider could not accept the request.",
         )
     if otp_delivery.status == "disabled":
+        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="OTP delivery is disabled.",
@@ -347,10 +349,14 @@ def request_phone_number_change(
     try:
         updated = initiate_customer_phone_change(db, customer, payload)
     except RuntimeError as exc:
+        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="OTP delivery is disabled or misconfigured.",
         ) from exc
+    except Exception:
+        db.rollback()
+        raise
     db.commit()
     db.refresh(updated)
     return CustomerProfileResponse.model_validate(updated)

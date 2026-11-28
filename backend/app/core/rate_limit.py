@@ -217,3 +217,22 @@ def rate_limit(bucket: str, max_requests: int, window_seconds: int) -> Callable[
         )
 
     return _dep
+
+
+def rate_limit_customer(bucket: str, max_requests: int, window_seconds: int) -> Callable[..., None]:
+    """Rate-limit an authenticated customer endpoint per customer identity using SharedRateLimiter."""
+    from app.core.permissions import get_current_customer
+
+    def _dep(
+        customer=Depends(get_current_customer),
+        db: Session = Depends(get_db),
+    ) -> None:
+        rate_limiter.check(
+            bucket,
+            f"customer:{customer.id}",
+            max_requests=max_requests,
+            window_seconds=window_seconds,
+            db=db,
+        )
+
+    return _dep

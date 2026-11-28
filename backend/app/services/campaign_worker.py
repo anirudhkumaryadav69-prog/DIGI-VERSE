@@ -12,6 +12,7 @@ Architecture highlights:
 """
 from __future__ import annotations
 
+import copy
 import logging
 import socket
 import uuid
@@ -90,6 +91,8 @@ class ClaimedRecipientJob:
     content: str
     campaign_name: str
     approved_template_name: Optional[str]
+    template_language: Optional[str] = None
+    template_parameters: Optional[Any] = None
 
 
 def make_recipient_idempotency_key(
@@ -431,6 +434,8 @@ def claim_recipient_batch(
             subject = camp.subject
             content = camp.content
             approved_tpl = None
+            template_lang = None
+            template_params = None
             cid = camp.id
         else:
             camp = db.get(WhatsAppCampaign, rec.whatsapp_campaign_id)
@@ -443,6 +448,11 @@ def claim_recipient_batch(
             subject = None
             content = camp.content
             approved_tpl = camp.approved_template_name
+            criteria = camp.audience_criteria if isinstance(camp.audience_criteria, dict) else {}
+            raw_lang = criteria.get("template_language") or criteria.get("language_code")
+            template_lang = raw_lang.strip() if isinstance(raw_lang, str) and raw_lang.strip() else None
+            raw_params = criteria.get("template_parameters")
+            template_params = copy.deepcopy(raw_params) if raw_params is not None else None
             cid = camp.id
 
         if not rec.idempotency_key:
@@ -468,6 +478,8 @@ def claim_recipient_batch(
                 content=content,
                 campaign_name=camp_name,
                 approved_template_name=approved_tpl,
+                template_language=template_lang,
+                template_parameters=template_params,
             )
         )
 
@@ -523,12 +535,16 @@ def _execute_provider_send(
             }
         else:
             provider = get_whatsapp_provider()
+            wa_metadata = dict(metadata)
+            if job.template_parameters is not None:
+                wa_metadata["template_parameters"] = copy.deepcopy(job.template_parameters)
             msg_id = provider.send_template_message(
                 phone_number=customer.phone_number or "",
                 approved_template_name=job.approved_template_name or "",
                 content=job.content,
-                metadata=metadata,
+                metadata=wa_metadata,
                 idempotency_key=job.idempotency_key,
+                template_language=job.template_language,
             )
             return {
                 "outcome": "accepted",

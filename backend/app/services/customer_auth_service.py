@@ -662,10 +662,31 @@ def initiate_customer_phone_change(
             detail="This phone number is already associated with another account.",
         )
 
-    customer.pending_phone_number = payload.phone_number
-    db.flush()
+    previous_pending_phone = customer.pending_phone_number
+    try:
+        with db.begin_nested():
+            customer.pending_phone_number = payload.phone_number
+            db.flush()
 
-    issue_phone_otp_challenge(db, customer, payload.phone_number, OTPPurpose.PHONE_CHANGE)
+            _, otp_delivery = issue_phone_otp_challenge(
+                db, customer, payload.phone_number, OTPPurpose.PHONE_CHANGE
+            )
+            if otp_delivery.status == "disabled":
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail=otp_delivery.safe_detail
+                    or "Phone number verification via OTP is currently unavailable.",
+                )
+            if otp_delivery.status == "failed":
+                raise HTTPException(
+                    status_code=status.HTTP_502_BAD_GATEWAY,
+                    detail=otp_delivery.safe_detail
+                    or "OTP delivery provider could not accept the request.",
+                )
+    except Exception:
+        customer.pending_phone_number = previous_pending_phone
+        raise
+
     return customer
 
 

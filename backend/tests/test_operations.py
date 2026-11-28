@@ -533,3 +533,33 @@ def test_store_settings_security_guardrails_and_audit_logs(api_client, db):
     logs_data = r_logs.json()
     assert logs_data["total"] >= 2
     assert any(item["action"] in ("settings.updated", "settings.batch_updated") for item in logs_data["items"])
+
+
+def test_dashboard_overview_counts_only_active_campaign_statuses(api_client, db):
+    from app.models.campaign import EmailCampaign, WhatsAppCampaign
+    from app.models.enums import CampaignStatus
+
+    for idx, st in enumerate(CampaignStatus):
+        db.add(
+            EmailCampaign(
+                name=f"Email {st.value} {idx}",
+                subject="Sub",
+                content="Body",
+                status=st,
+            )
+        )
+        db.add(
+            WhatsAppCampaign(
+                name=f"WA {st.value} {idx}",
+                content="Body",
+                approved_template_name="tpl_v1",
+                status=st,
+            )
+        )
+    db.flush()
+
+    admin_headers = _login_admin(api_client, db)
+    r_ov = api_client.get("/api/admin/dashboard/overview", headers=admin_headers)
+    assert r_ov.status_code == 200
+    # 4 active email (SCHEDULED, QUEUED, SENDING, PROCESSING) + 4 active WA = 8
+    assert r_ov.json()["metrics"]["active_promotional_campaigns"] == 8

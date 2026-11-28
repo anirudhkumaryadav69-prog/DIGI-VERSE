@@ -410,9 +410,9 @@ test('17. Stage A: Razorpay Checkout SDK loads lazily, prevents duplicates, and 
   );
   assert.ok(
     vercelJson.rewrites?.some(
-      (r) => r.source === '/((?!api/).*)' && r.destination === '/index.html'
+      (r) => r.source === '/((?!api(?:/|$)).*)' && r.destination === '/index.html'
     ),
-    'vercel.json must preserve SPA fallback rewrite while excluding /api/* routes'
+    'vercel.json must preserve SPA fallback rewrite while excluding /api and /api/* routes'
   );
 
   const { loadRazorpaySdk, RAZORPAY_CHECKOUT_SCRIPT_URL, resetRazorpayLoaderForTests } = await import(
@@ -504,9 +504,18 @@ test('17. Stage A: Razorpay Checkout SDK loads lazily, prevents duplicates, and 
 
 test('18. Production stability: Vercel /api exclusion, HTML fallback guard, HomePage/AuthContext safety & ErrorBoundary', async () => {
   const vercelJson = JSON.parse(fs.readFileSync(path.join(FRONTEND_ROOT, 'vercel.json'), 'utf8'));
+  const apiProxyRewrite = vercelJson.rewrites?.find(
+    (r) => r.source === '/api/:path*' && /^https:\/\/.+\/api\/:path\*$/.test(r.destination || '')
+  );
+  assert.ok(apiProxyRewrite, 'vercel.json must preserve the /api/:path* backend reverse proxy');
+
   const spaRewrite = vercelJson.rewrites?.find((r) => r.destination === '/index.html');
   assert.ok(spaRewrite, 'vercel.json must include an /index.html SPA rewrite');
+  assert.equal(spaRewrite.source, '/((?!api(?:/|$)).*)');
   const spaRegex = new RegExp(`^${spaRewrite.source}$`);
+  assert.equal(spaRegex.test('/api'), false, 'bare /api must not match SPA rewrite');
+  assert.equal(spaRegex.test('/api/health'), false, '/api/health must not match SPA rewrite');
+  assert.equal(spaRegex.test('/api/auth/login'), false, '/api/auth/login must not match SPA rewrite');
   assert.equal(spaRegex.test('/api/banners'), false, '/api/banners must not match SPA rewrite');
   assert.equal(spaRegex.test('/api/auth/me'), false, '/api/auth/me must not match SPA rewrite');
   assert.equal(spaRegex.test('/'), true, '/ must match SPA rewrite');
