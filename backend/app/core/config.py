@@ -154,6 +154,7 @@ class Settings(BaseSettings):
     # Rate Limiting & Proxy Trust
     RATE_LIMIT_USE_DB: bool = True
     TRUST_PROXY_HEADERS: bool = False
+    TRUST_CLOUDFLARE_HEADERS: bool = False
 
     # CORS & Trusted Hosts
     CORS_ORIGINS: Union[List[str], str] = ["http://localhost:5173", "http://127.0.0.1:5173"]

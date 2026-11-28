@@ -11,7 +11,13 @@ from app.core.permissions import (
     get_current_customer_with_session,
     require_verified_customer,
 )
-from app.core.rate_limit import get_client_ip, get_valid_inet_or_none, rate_limit
+from app.core.rate_limit import (
+    check_identifier_rate_limit,
+    get_client_ip,
+    get_valid_inet_or_none,
+    rate_limit,
+    rate_limit_customer,
+)
 from app.core.security import (
     CSRF_COOKIE_NAME,
     CSRF_HEADER_NAME,
@@ -74,7 +80,17 @@ def get_csrf_token(response: Response) -> dict[str, str]:
     "/register",
     response_model=CustomerAuthResponse,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(rate_limit("customer_register", max_requests=10, window_seconds=60))],
+    dependencies=[
+        Depends(
+            rate_limit(
+                "customer_register",
+                max_requests=10,
+                window_seconds=60,
+                unknown_ip_max_requests=120,
+                unknown_ip_window_seconds=60,
+            )
+        )
+    ],
 )
 def register(
     payload: CustomerRegisterRequest,
@@ -82,6 +98,22 @@ def register(
     response: Response,
     db: Session = Depends(get_db),
 ) -> CustomerAuthResponse:
+    check_identifier_rate_limit(
+        "customer_register_email",
+        payload.email,
+        kind="email",
+        max_requests=5,
+        window_seconds=300,
+        db=db,
+    )
+    check_identifier_rate_limit(
+        "customer_register_phone",
+        payload.phone_number,
+        kind="phone",
+        max_requests=5,
+        window_seconds=300,
+        db=db,
+    )
     try:
         customer, access_token, refresh_token, otp_delivery = register_customer(
             db=db,
@@ -116,7 +148,17 @@ def register(
 @router.post(
     "/login",
     response_model=CustomerAuthResponse,
-    dependencies=[Depends(rate_limit("customer_login", max_requests=15, window_seconds=60))],
+    dependencies=[
+        Depends(
+            rate_limit(
+                "customer_login",
+                max_requests=15,
+                window_seconds=60,
+                unknown_ip_max_requests=240,
+                unknown_ip_window_seconds=60,
+            )
+        )
+    ],
 )
 def login(
     payload: CustomerLoginRequest,
@@ -124,6 +166,14 @@ def login(
     response: Response,
     db: Session = Depends(get_db),
 ) -> CustomerAuthResponse:
+    check_identifier_rate_limit(
+        "customer_login_email",
+        payload.email,
+        kind="email",
+        max_requests=15,
+        window_seconds=60,
+        db=db,
+    )
     try:
         customer, access_token, refresh_token = login_customer(
             db=db,
@@ -208,7 +258,17 @@ def logout_all_devices(
 @router.post(
     "/otp/send",
     response_model=GenericMessageResponse,
-    dependencies=[Depends(rate_limit("customer_otp_send", max_requests=10, window_seconds=60))],
+    dependencies=[
+        Depends(
+            rate_limit_customer(
+                "customer_otp_send",
+                max_requests=10,
+                window_seconds=60,
+                ip_max_requests=15,
+                ip_window_seconds=60,
+            )
+        )
+    ],
 )
 def send_phone_otp(
     customer: Customer = Depends(get_current_customer),
@@ -249,7 +309,17 @@ def send_phone_otp(
 @router.post(
     "/otp/verify",
     response_model=CustomerProfileResponse,
-    dependencies=[Depends(rate_limit("customer_otp_verify", max_requests=15, window_seconds=60))],
+    dependencies=[
+        Depends(
+            rate_limit_customer(
+                "customer_otp_verify",
+                max_requests=15,
+                window_seconds=60,
+                ip_max_requests=25,
+                ip_window_seconds=60,
+            )
+        )
+    ],
 )
 def verify_phone_otp(
     payload: OTPVerifyRequest,
@@ -270,13 +340,31 @@ def verify_phone_otp(
 @router.post(
     "/forgot-password",
     response_model=GenericMessageResponse,
-    dependencies=[Depends(rate_limit("customer_forgot_password", max_requests=10, window_seconds=60))],
+    dependencies=[
+        Depends(
+            rate_limit(
+                "customer_forgot_password",
+                max_requests=10,
+                window_seconds=60,
+                unknown_ip_max_requests=120,
+                unknown_ip_window_seconds=60,
+            )
+        )
+    ],
 )
 def forgot_password(
     payload: ForgotPasswordRequest,
     request: Request,
     db: Session = Depends(get_db),
 ) -> GenericMessageResponse:
+    check_identifier_rate_limit(
+        "customer_forgot_email",
+        payload.email,
+        kind="email",
+        max_requests=5,
+        window_seconds=300,
+        db=db,
+    )
     initiate_forgot_password(db, payload.email, get_client_ip(request))
     db.commit()
     return GenericMessageResponse(
@@ -287,13 +375,31 @@ def forgot_password(
 @router.post(
     "/reset-password",
     response_model=GenericMessageResponse,
-    dependencies=[Depends(rate_limit("customer_reset_password", max_requests=10, window_seconds=60))],
+    dependencies=[
+        Depends(
+            rate_limit(
+                "customer_reset_password",
+                max_requests=10,
+                window_seconds=60,
+                unknown_ip_max_requests=120,
+                unknown_ip_window_seconds=60,
+            )
+        )
+    ],
 )
 def reset_password(
     payload: ResetPasswordRequest,
     response: Response,
     db: Session = Depends(get_db),
 ) -> GenericMessageResponse:
+    check_identifier_rate_limit(
+        "customer_reset_token",
+        payload.token,
+        kind="token",
+        max_requests=5,
+        window_seconds=300,
+        db=db,
+    )
     complete_password_reset(db, payload.token, payload.new_password)
     db.commit()
     clear_customer_auth_cookies(response)

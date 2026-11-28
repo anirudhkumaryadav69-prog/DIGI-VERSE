@@ -10,7 +10,7 @@ from app.core.permissions import (
     get_current_admin_with_session,
     require_admin,
 )
-from app.core.rate_limit import get_client_ip, rate_limit
+from app.core.rate_limit import check_identifier_rate_limit, get_client_ip, rate_limit
 from app.core.security import (
     ADMIN_REFRESH_COOKIE,
     clear_admin_auth_cookies,
@@ -39,7 +39,17 @@ router = APIRouter(prefix="/admin", tags=["Administrator Authentication & Portal
 @router.post(
     "/auth/login",
     response_model=AdminAuthResponse,
-    dependencies=[Depends(rate_limit("admin_login", max_requests=15, window_seconds=60))],
+    dependencies=[
+        Depends(
+            rate_limit(
+                "admin_login",
+                max_requests=15,
+                window_seconds=60,
+                unknown_ip_max_requests=120,
+                unknown_ip_window_seconds=60,
+            )
+        )
+    ],
 )
 def admin_login(
     payload: AdminLoginRequest,
@@ -47,6 +57,14 @@ def admin_login(
     response: Response,
     db: Session = Depends(get_db),
 ) -> AdminAuthResponse:
+    check_identifier_rate_limit(
+        "admin_login_username",
+        payload.username,
+        kind="username",
+        max_requests=15,
+        window_seconds=60,
+        db=db,
+    )
     try:
         admin, access_token, refresh_token = login_admin(
             db=db,

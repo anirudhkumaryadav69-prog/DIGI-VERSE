@@ -7,7 +7,10 @@ Why PostgreSQL-backed?
 - When running inside single-connection rolled-back test fixtures (or if DB is unavailable), falls back
   to a bounded in-memory sliding window so tests remain isolated and rate limiting never fails open.
 """
+import hashlib
+import hmac
 import ipaddress
+import re
 import secrets
 import threading
 import time
@@ -180,18 +183,49 @@ class SharedRateLimiter:
 rate_limiter = SharedRateLimiter()
 
 
+def _parse_single_ip(raw_value: str | None) -> str | None:
+    """Validate and normalize a single IPv4/IPv6 literal, rejecting multi-value headers."""
+    if raw_value is None:
+        return None
+    cleaned = raw_value.strip()
+    if not cleaned or "," in cleaned or any(ch.isspace() for ch in cleaned):
+        return None
+    try:
+        return str(ipaddress.ip_address(cleaned))
+    except ValueError:
+        return None
+
+
 def get_client_ip(request: Request) -> str:
-    if settings.TRUST_PROXY_HEADERS:
-        forwarded_for = request.headers.get("x-forwarded-for")
-        if forwarded_for:
-            candidate = forwarded_for.split(",")[0].strip()
-            try:
-                ipaddress.ip_address(candidate)
-                return candidate
-            except ValueError:
-                pass
+    """Extract client IP using fail-closed proxy semantics; never trusts X-Forwarded-For."""
+    if not settings.TRUST_PROXY_HEADERS:
+        if request.client and request.client.host:
+            parsed_peer = _parse_single_ip(request.client.host)
+            if parsed_peer is not None:
+                return parsed_peer
+            stripped_peer = request.client.host.strip()
+            return stripped_peer if stripped_peer else "unknown"
+        return "unknown"
+
+    if settings.TRUST_CLOUDFLARE_HEADERS:
+        cf_connecting_ip = request.headers.get("cf-connecting-ip")
+        if cf_connecting_ip is not None:
+            parsed_cf = _parse_single_ip(cf_connecting_ip)
+            return parsed_cf if parsed_cf is not None else "unknown"
+
     if request.client and request.client.host:
-        return request.client.host
+        parsed_peer = _parse_single_ip(request.client.host)
+        if parsed_peer is not None:
+            ip_obj = ipaddress.ip_address(parsed_peer)
+            if (
+                ip_obj.is_global
+                and not ip_obj.is_private
+                and not ip_obj.is_loopback
+                and not ip_obj.is_link_local
+                and not ip_obj.is_multicast
+                and not ip_obj.is_unspecified
+            ):
+                return parsed_peer
     return "unknown"
 
 
@@ -205,25 +239,122 @@ def get_valid_inet_or_none(request: Request) -> str | None:
         return None
 
 
-def rate_limit(bucket: str, max_requests: int, window_seconds: int) -> Callable[[Request, Session], None]:
+def normalize_rate_limit_identifier(raw_value: str | None, *, kind: str = "generic") -> str | None:
+    """Normalize an identifier consistently before hashing for rate-limit keys."""
+    if not isinstance(raw_value, str):
+        return None
+    cleaned = raw_value.strip()
+    if not cleaned:
+        return None
+    if kind in {"email", "username"}:
+        return cleaned.lower()
+    if kind == "phone":
+        compact = re.sub(r"[\s().-]+", "", cleaned)
+        return compact or None
+    if kind == "token":
+        return cleaned
+    return cleaned.lower()
+
+
+def hash_rate_limit_identifier(
+    namespace: str,
+    raw_value: str | None,
+    *,
+    kind: str = "generic",
+) -> str | None:
+    """Return a fixed-width HMAC-SHA256 hex digest for a normalized identifier."""
+    normalized = normalize_rate_limit_identifier(raw_value, kind=kind)
+    if normalized is None:
+        return None
+    secret_material = (settings.JWT_SECRET_KEY or "digiverse:rate-limit:fallback").encode("utf-8")
+    msg = f"digiverse:rl:v1:{namespace}:{kind}:{normalized}".encode("utf-8")
+    return hmac.new(secret_material, msg, hashlib.sha256).hexdigest()
+
+
+def check_identifier_rate_limit(
+    bucket: str,
+    identifier: str | None,
+    *,
+    kind: str = "generic",
+    max_requests: int,
+    window_seconds: int,
+    db: Optional[Session],
+) -> None:
+    """Enforce a shared rate limit keyed by a domain-separated HMAC-SHA256 digest."""
+    digest = hash_rate_limit_identifier(bucket, identifier, kind=kind)
+    if digest is None:
+        return
+    rate_limiter.check(
+        bucket,
+        f"id:{digest}",
+        max_requests=max_requests,
+        window_seconds=window_seconds,
+        db=db,
+    )
+
+
+def rate_limit(
+    bucket: str,
+    max_requests: int,
+    window_seconds: int,
+    *,
+    unknown_ip_max_requests: int | None = None,
+    unknown_ip_window_seconds: int | None = None,
+) -> Callable[[Request, Session], None]:
+    """Rate-limit by verified client IP; never pools 'unknown' traffic into a narrow IP bucket."""
+
     def _dep(request: Request, db: Session = Depends(get_db)) -> None:
         client_ip = get_client_ip(request)
-        rate_limiter.check(
-            bucket,
-            client_ip,
-            max_requests=max_requests,
-            window_seconds=window_seconds,
-            db=db,
-        )
+        if client_ip != "unknown":
+            rate_limiter.check(
+                bucket,
+                client_ip,
+                max_requests=max_requests,
+                window_seconds=window_seconds,
+                db=db,
+            )
+            return
+        if unknown_ip_max_requests is not None:
+            rate_limiter.check(
+                bucket,
+                "cb:unknown",
+                max_requests=unknown_ip_max_requests,
+                window_seconds=unknown_ip_window_seconds or window_seconds,
+                db=db,
+            )
 
     return _dep
 
 
-def rate_limit_customer(bucket: str, max_requests: int, window_seconds: int) -> Callable[..., None]:
+def rate_limit_customer(
+    bucket: str,
+    max_requests: int,
+    window_seconds: int,
+    *,
+    ip_max_requests: int | None = None,
+    ip_window_seconds: int | None = None,
+) -> Callable[..., None]:
     """Rate-limit an authenticated customer endpoint per customer identity using SharedRateLimiter."""
     from app.core.permissions import get_current_customer
 
-    def _dep(
+    if ip_max_requests is None:
+
+        def _dep(
+            customer=Depends(get_current_customer),
+            db: Session = Depends(get_db),
+        ) -> None:
+            rate_limiter.check(
+                bucket,
+                f"customer:{customer.id}",
+                max_requests=max_requests,
+                window_seconds=window_seconds,
+                db=db,
+            )
+
+        return _dep
+
+    def _dep_with_verified_ip(
+        request: Request,
         customer=Depends(get_current_customer),
         db: Session = Depends(get_db),
     ) -> None:
@@ -234,5 +365,14 @@ def rate_limit_customer(bucket: str, max_requests: int, window_seconds: int) -> 
             window_seconds=window_seconds,
             db=db,
         )
+        client_ip = get_client_ip(request)
+        if client_ip != "unknown":
+            rate_limiter.check(
+                f"{bucket}:ip",
+                client_ip,
+                max_requests=ip_max_requests,
+                window_seconds=ip_window_seconds or window_seconds,
+                db=db,
+            )
 
-    return _dep
+    return _dep_with_verified_ip

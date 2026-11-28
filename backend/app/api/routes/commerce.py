@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.permissions import get_current_customer
-from app.core.rate_limit import get_client_ip, rate_limit
+from app.core.rate_limit import get_client_ip, rate_limit_customer
 from app.models.customer import Customer
 from app.models.enums import DownloadStatus, OrderPaymentStatus, OrderStatus
 from app.models.order import DownloadRecord, Order
@@ -184,7 +184,17 @@ def clear_cart(
     "/checkout",
     response_model=CheckoutResponse,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(rate_limit("checkout_init", max_requests=30, window_seconds=60))],
+    dependencies=[
+        Depends(
+            rate_limit_customer(
+                "checkout_init",
+                max_requests=30,
+                window_seconds=60,
+                ip_max_requests=45,
+                ip_window_seconds=60,
+            )
+        )
+    ],
 )
 def checkout(
     payload: Optional[CheckoutRequest] = Body(default=None),
@@ -315,7 +325,17 @@ def customer_list_downloads(
     "/downloads/{order_item_id}",
     response_model=DownloadGrantResponse,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(rate_limit("download_grant", max_requests=30, window_seconds=60))],
+    dependencies=[
+        Depends(
+            rate_limit_customer(
+                "download_grant",
+                max_requests=30,
+                window_seconds=60,
+                ip_max_requests=45,
+                ip_window_seconds=60,
+            )
+        )
+    ],
 )
 def customer_initiate_download(
     order_item_id: uuid.UUID,
